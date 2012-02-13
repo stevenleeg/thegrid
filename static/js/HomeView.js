@@ -8,7 +8,10 @@ var HomeView = (function() {
 		if(data['status'] == 200) {
 			alert("Yeah it exists!");
 		} else {
-			ViewController.load(CreateView, {"name": $("input[name=room]").val()})
+			ViewController.load(CreateView, {
+				"name": $("input[name=room]").val(),
+				"color": $("input[name=color]").val()
+			})
 		}
 	}
 	

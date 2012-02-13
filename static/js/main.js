@@ -74,8 +74,13 @@ var SyncServer = (function() {
 		$.getJSON("/api/" + command, args, callback);
 	}
 
+	function post(command, args, callback) {
+		$.post("/api/" + command, args, callback, "json");
+	}
+
 	return {
-		"get": get
+		"get": get,
+	 	"post": post
 	};
 })();
 

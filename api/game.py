@@ -4,12 +4,35 @@ from utility.template import jsonify
 
 class Exists(tornado.web.RequestHandler):
 	def get(self):
-		try:
-			game = Game(self.request.arguments['name'])
-		except KeyError:
-			return jsonify(self, {'status':406})
-		
-		if game.exists():
-			return jsonify(self, {'status':200})
+		game = Game.fromName(self.get_argument("name", None))
 
-		return jsonify(self, {'status':404})
+		if game is None:
+			return jsonify(self, status=406)
+		
+		if game is None:
+			return jsonify(self, status=404)
+
+		return jsonify(self, status=200)
+
+class Create(tornado.web.RequestHandler):
+	def post(self):
+		name = self.get_argument("name", None)
+		size = self.get_argument("size", None)
+
+		if name is None or size is None:
+			return jsonify(self, status=406, error = "name")
+		try:
+			int(size)
+		except ValueError:
+			return jsonify(self, status=406, error = "size")
+
+
+		if size not in ['16', '32', '64']:
+			return jsonify(self, status=404)
+
+		status, g = Game.create(name, size)
+
+		if status == False:
+			return jsonify(self, status=406, error=g)
+
+		return jsonify(self, status=200, gid = g['id'])
