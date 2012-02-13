@@ -1,0 +1,184 @@
+@bg: #FFFFFF;
+
+@yellow: #FEBE07;
+@blue: #10A1FF;
+@red: #FF401C;
+@green: #3FCD45;
+
+@dark: #1D1D1D;
+@light: #FFF;
+@gray: #F0F3F6;
+
+body {
+	background: @bg url('/static/img/grid_noise.png');
+	font-family: Helvetica-Neue, Helvetica, Arial, sans-serif;
+	font-weight:300;
+	font-size:16px;
+}
+
+a {
+	text-decoration:none;
+}
+
+input {
+	font-family: Helvetica-Neue, Helvetica, Arial, sans-serif;
+	font-size:16px;
+	font-weight:300;
+}
+
+input[type=button] {
+	background:@blue;
+	color:@gray;
+	border:0px;
+	padding:5px 10px 5px 10px;
+	cursor:pointer;
+}
+
+input[type=button]:active {
+	background:@red;
+}
+
+div.loading {
+	position:fixed;
+	top:0px;
+	right:0px;
+	padding:5px 10px 5px 10px;
+	text-align:center;
+	background:@yellow;
+	color:@dark;
+	display:none;
+}
+
+div.central {
+	width:400px;
+	margin:10px auto 0px auto;
+}
+
+div.central.title {
+	font-size:36px;
+	font-weight:bold;
+}
+
+div.menu {
+	padding:10px;
+
+	h1 {
+		font-size:18px;
+		font-weight:400;
+		margin:0px 0px 5px 0px;
+	}
+
+	h2 {
+		font-size:16px;
+		font-weight:300;
+		margin:0px;
+	}
+
+	input[type=text] {
+		display:inline-block;
+		margin:3px auto 10px auto;
+		padding:5px;
+		width:370px;
+		font-size:18px;
+		border:0px;
+		background:@light;
+		outline:none;
+	}
+
+	input[type=button] {
+		margin:0px;
+		font-size:18px;
+	}
+
+	div.selector {
+		display:inline-block;
+		background:@gray;
+		width:85px;
+		text-align:center;
+		padding:5px;
+		margin:7px 0px 0px 5px;
+
+		a.option {
+			display:inline-block;
+			margin-top:2px;
+			border:1px solid @gray;
+			color:@dark;
+		}
+		a.option:hover, a.option.selected {
+			border:1px solid @dark;
+		}
+	}
+}
+
+div.room_select {
+	background: @yellow;
+	color: @dark;
+
+	input[type=button] {
+		float:right;
+		position:relative;
+		top:8px;
+	}
+
+	a.option {
+		width:16px;
+		height:16px;
+		padding:0px;
+	}
+}
+
+div.room_create {
+	background: @blue;
+	color:@light;
+	padding:10px;
+
+	input[type=button] {
+		background: @gray;
+		color:@dark;
+		float:right;
+		position:relative;
+		top:8px;
+	}
+
+	input[type=button]:hover {
+		background:@light;
+	}
+
+	a.option {
+		color:@light;
+		padding:2px;
+	}
+}
+
+div.screen {
+	background:#000;
+	opacity:.2;
+	position:fixed;
+	z-index:2;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	display:none;
+}
+
+// Color classes
+.yellow {
+	background:@yellow;
+	color: @dark;
+}
+
+.red {
+	background:@red;
+	color: @light;
+}
+
+.blue {
+	background:@blue;
+	color: @light;
+}
+
+.green {
+	background:@green;
+	color: @dark;
+}

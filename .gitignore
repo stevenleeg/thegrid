@@ -1,0 +1,10 @@
+*.pyc
+.DS_Store
+bin
+build
+include
+lib
+.Python
+*.swp
+dump.rdb
+.vagrant
