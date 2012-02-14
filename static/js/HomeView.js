@@ -6,13 +6,26 @@ var HomeView = (function() {
 	function roomEnterCb(data) {
 		BaseUI.done();
 		if(data['status'] == 200) {
-			alert("Yeah it exists!");
+			// Get room info
+			SyncServer.get("game/info", {"name": $("input[name=room]").val()}, roomInfoCb);
 		} else {
 			ViewController.load(CreateView, {
 				"name": $("input[name=room]").val(),
 				"color": $("input[name=color]").val()
 			})
 		}
+	}
+
+	function roomInfoCb(data) {
+		if(data['status'] != 200) {
+			return alert("Error while trying to get room info! " + data['status']);
+		}
+
+		ViewController.load(GameView, { 
+			"gid": data['data']['gid'],
+			"size": data['data']['size'],
+			"color": $("input[name=color]").val()
+		});
 	}
 	
 	function onLoad(pass) {

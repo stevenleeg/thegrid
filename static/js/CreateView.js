@@ -14,7 +14,6 @@ var CreateView = (function() {
 		SyncServer.post("game/create", {
 			"name": $("input[name=room]").val(),
 			"size": $("input[name=size]").val(),
-			"color": color
 		}, createGameCb);
 	}
 
@@ -24,7 +23,11 @@ var CreateView = (function() {
 			return;
 		}
 
-		alert("It worked! Game created with id " + data['gid']);
+		ViewController.load(GameView, {
+			"gid": data['gid'], 
+			"size": $("input[name=size]").val(),
+			"color": color
+		});
 	}
 
 	return {
