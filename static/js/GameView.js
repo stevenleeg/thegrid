@@ -25,6 +25,7 @@ var GameView = (function() {
 
 	function postFade(pass) {
 		view_size = [$("#container").width(), $("#container").height()];
+		GameEvents.setupKeys()
 	}
 
 	function joinGame() {
@@ -43,14 +44,14 @@ var GameView = (function() {
 	/*
 	 * GAME INTERFACE FUNCTIONS
 	 */
-	function panView(x, y) {
+	function panViewport(x, y) {
 		var cont;
 		cont = $("#container");
 		cont.scrollTop(cont.scrollTop() - y);
 		cont.scrollLeft(cont.scrollLeft() + x);
 	}
 
-	function setView(x, y) {
+	function setViewport(x, y) {
 		var cont;
 		cont = $("#container");
 		cont.scrollTop(view_size[1] - y);
@@ -66,7 +67,7 @@ var GameView = (function() {
 		"view_size": view_size,
 
 		// Public methods
-		"panView": panView,
-		"setView": setView
+		"panViewport": panViewport,
+		"setViewport": setViewport
 	}
 })();
