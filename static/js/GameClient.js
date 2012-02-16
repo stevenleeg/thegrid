@@ -13,8 +13,8 @@ var GameClient = (function() {
 		// Generate a random callback identifier
 		cid = parseInt(Math.random() * 100);
 
-		data['f'] = func
-		data['cid'] = cid
+		data['f'] = func;
+		data['cid'] = cid;
 		ws.send(JSON.stringify(data));
 		callbacks[cid] = callback;
 	}
@@ -23,7 +23,7 @@ var GameClient = (function() {
 		data = JSON.parse(evt.data);
 		// Run the callback for the identifier we get back
 		callbacks[data['cid']](data);
-		delete callbacks[data['cid']]
+		delete callbacks[data['cid']];
 	}
 
 	function closeSocket() {
