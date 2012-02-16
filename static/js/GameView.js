@@ -1,9 +1,10 @@
 var GameView = (function() {
 	var tpl = "game.html";
-	var gid;
-	var color;
-	var uid;
+	var gid, color, uid, view_size;
 	
+	/*
+	 * INITIAL LOADING FUNCTIONS/CALLBACKS
+	 */
 	function onLoad(pass) {
 		var x, y, grid;
 
@@ -22,6 +23,10 @@ var GameView = (function() {
 		}
 	}
 
+	function postFade(pass) {
+		view_size = [$("#container").width(), $("#container").height()];
+	}
+
 	function joinGame() {
 		GameClient.send("joinGame", {
 			"gid": gid,
@@ -33,12 +38,35 @@ var GameView = (function() {
 		if(data['status'] != 200) {
 			return alert("Something went wrong while trying to join the room! " + data['status']);
 		}
+	}
 
-		alert("Joined the room!");
+	/*
+	 * GAME INTERFACE FUNCTIONS
+	 */
+	function panView(x, y) {
+		var cont;
+		cont = $("#container");
+		cont.scrollTop(cont.scrollTop() - y);
+		cont.scrollLeft(cont.scrollLeft() + x);
+	}
+
+	function setView(x, y) {
+		var cont;
+		cont = $("#container");
+		cont.scrollTop(view_size[1] - y);
+		cont.scrollLeft(x);
 	}
 
 	return {
 		"tpl": tpl,
-	 	"onLoad": onLoad
+		"onLoad": onLoad,
+		"postFade": postFade,
+
+		// Variables
+		"view_size": view_size,
+
+		// Public methods
+		"panView": panView,
+		"setView": setView
 	}
 })();

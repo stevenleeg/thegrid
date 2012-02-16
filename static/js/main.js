@@ -20,6 +20,9 @@ var ViewController = (function() {
 				$("#content2").fadeIn(250, function() {
 					$("#content2").attr("id", "content")
 					BaseUI.done()
+					if(current.hasOwnProperty("postFade")) {
+						current.postFade(pass);
+					}
 				});
 			});
 		});
@@ -85,12 +88,11 @@ var SyncServer = (function() {
 })();
 
 $(document).ready(function() {
-	ViewController.load(HomeView);
+	//ViewController.load(HomeView);
 	// Artificially load a game
-	/*
 	ViewController.load(GameView,{ 
 		"gid": 1,
 		"size": 64,
 		"color":"#FF0000"
-	}); */
+	});
 });
