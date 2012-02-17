@@ -1,23 +1,43 @@
 var GameEvents = (function() {
+	var scrolling = {};
+
 	function setupKeys() {
 		//key('up, down, left, right', moveViewport);
+		$(document).bind("keydown","up down left right", moveViewport)
+		$(document).bind("keyup","up down left right", stopMoveViewport)
 	}
 
-	function moveViewport(e, h) {
-		switch(h.shortcut) {
-			case "up":
-				GameView.panViewport(0,5);
+	function moveViewport(e) {
+		var x, y, move;
+		if(scrolling[e.which] != undefined) {
+			return;
+		}
+		x = 0;
+		y = 0;
+		move = 10;
+		switch(e.which) {
+			case 38: // Up
+				y = -move;
 				break;
-			case "down":
-				GameView.panViewport(0, -5);
+			case 40: // Down
+				y = move;
 				break;
-			case "left":
-				GameView.panViewport(-5, 0);
+			case 37: // Left
+				x = -move;
 				break;
-			case "right":
-				GameView.panViewport(5, 0);
+			case 39: // Right
+				x = move;
 				break;
 		}
+
+		scrolling[e.which] = setInterval(function() {
+			GameView.panViewport(x, y);
+		}, 10);
+	}
+
+	function stopMoveViewport(e) {
+		clearInterval(scrolling[e.which]);
+		delete scrolling[e.which];
 	}
 
 	return {
