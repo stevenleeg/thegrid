@@ -5,9 +5,15 @@ import unittest
 class TestGrid(unittest.TestCase):
 	def setUp(self):
 		db.flushdb()
-		self.g = Grid(1)
+		status, self.g = Grid.create("test", 16)
 	
-	def testCoordStorage(self):
+	def testFromName(self):
+		self.assertEqual(Grid.fromName("test"), self.g)
+	
+	def testExists(self):
+		self.assertTrue(self.g.exists())
+
+	def testGet(self):
 		c = self.g.get(0,5)
 		c['test'] = "Hello world" 
 		
