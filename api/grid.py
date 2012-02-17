@@ -10,7 +10,7 @@ class Exists(tornado.web.RequestHandler):
 			return jsonify(self, status=406)
 
 		grid = Grid.fromName(name)
-		if grid is None:
+		if grid.exists() is False:
 			return jsonify(self, status=404)
 
 		return jsonify(self, status=200)

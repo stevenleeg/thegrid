@@ -11,6 +11,7 @@ class TestGrid(unittest.TestCase):
 		self.assertEqual(Grid.fromName("test"), self.g)
 	
 	def testExists(self):
+		self.assertFalse(Grid(23).exists())
 		self.assertTrue(self.g.exists())
 
 	def testGet(self):
