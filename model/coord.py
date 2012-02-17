@@ -7,6 +7,9 @@ class Coord:
 			split = x.split("_")
 			x = split[0]
 			y = split[1]
+		else:
+			if y is None:
+				raise TypeError
 
 		# Set some instance variables
 		self.x = x
@@ -14,6 +17,9 @@ class Coord:
 
 		self.dbid = "c:%s:%s" % (grid, str(self))
 	
+	def exists(self):
+		return db.exists(self.dbid)
+
 	def __str__(self):
 		return "%s_%s" % (self.x, self.y)
 
@@ -22,3 +28,9 @@ class Coord:
 
 	def __setitem__(self, key, val):
 		return db.hset(self.dbid, key, val)
+
+	def __repr__(self):
+		return "<Coord: (%s, %s)>" % (self.x, self.y)
+
+	def __eq__(self, other):
+		return str(self) == str(other)

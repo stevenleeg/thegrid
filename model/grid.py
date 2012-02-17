@@ -1,5 +1,6 @@
 from utility import db
-from model import Coord
+from coord import Coord
+import itertools
 
 class Grid:
 	def __init__(self, gid):
@@ -11,11 +12,22 @@ class Grid:
 		""" Loads a dict of coord data onto the grid """
 		pass
 
-	def dump(self):
+	def around(self, point, radius):
 		""" 
-		Dumps all coord data to a json object 
-		This is usually used for initial data loading
+		Finds all points located around the radius
+		Used for vision tiles
 		"""
+		pts = []
+		# Get a range of coords to try
+		x = range(point.x - radius, point.x + radius)
+		y = range(point.y - radius, point.y + radius)
+		points = itertools.product(x, y)
+		for point in points:
+			c = self.get(point[0], point[1])
+			if c.exists():
+				pts.append(c)
+
+		return pts
 
 	def get(self, x, y):
 		""" Gets a coordinate from the grid """
