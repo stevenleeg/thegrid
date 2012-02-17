@@ -48,14 +48,14 @@ var GameView = (function() {
 	function panViewport(x, y) {
 		var cont;
 		cont = $("#container");
-		cont.scrollTop(cont.scrollTop() - y);
+		cont.scrollTop(cont.scrollTop() + y);
 		cont.scrollLeft(cont.scrollLeft() + x);
 	}
 
 	function setViewport(x, y) {
 		var cont;
 		cont = $("#container");
-		cont.scrollTop(view_size[1] - y);
+		cont.scrollTop(y);
 		cont.scrollLeft(x);
 	}
 
