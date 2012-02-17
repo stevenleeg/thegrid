@@ -11,7 +11,7 @@ var CreateView = (function() {
 	}
 
 	function createGame() {
-		SyncServer.post("game/create", {
+		SyncClient.post("game/create", {
 			"name": $("input[name=room]").val(),
 			"size": $("input[name=size]").val(),
 		}, createGameCb);

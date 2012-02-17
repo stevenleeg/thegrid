@@ -12,7 +12,7 @@ var GameView = (function() {
 		color = pass['color'];
 
 		// Start the client
-		GameClient.connect(joinGame)
+		AsyncClient.connect(joinGame)
 		// Populate the grid
 		grid = $("#grid")
 		for(y = 0; y < pass['size']; y++) {
@@ -29,7 +29,7 @@ var GameView = (function() {
 	}
 
 	function joinGame() {
-		GameClient.send("joinGame", {
+		AsyncClient.send("joinGame", {
 			"gid": gid,
 			"color": color
 		}, joinGameCb);

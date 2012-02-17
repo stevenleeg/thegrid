@@ -1,6 +1,6 @@
 var GameEvents = (function() {
 	function setupKeys() {
-		key('up, down, left, right', moveViewport);
+		//key('up, down, left, right', moveViewport);
 	}
 
 	function moveViewport(e, h) {
