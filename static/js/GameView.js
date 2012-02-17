@@ -37,7 +37,8 @@ var GameView = (function() {
 
 	function joinGameCb(data) {
 		if(data['status'] != 200) {
-			return alert("Something went wrong while trying to join the room! " + data['status']);
+			alert("Something went wrong while trying to join the room! " + data['status']);
+			ViewController.load(HomeView)
 		}
 	}
 

@@ -87,16 +87,6 @@ var SyncClient = (function() {
 	};
 })();
 
-$(document).ready(function() {
-	//ViewController.load(HomeView);
-	// Artificially load a game
-	ViewController.load(GameView,{ 
-		"gid": 1,
-		"size": 64,
-		"color":"#FF0000"
-	});
-});
-
 var AsyncClient = (function() {
 	var ws;
 	var callbacks = {};
@@ -135,3 +125,14 @@ var AsyncClient = (function() {
 		"callbacks":callbacks
 	};
 })();
+
+$(document).ready(function() {
+	//ViewController.load(HomeView);
+	// Artificially load a game
+	ViewController.load(GameView,{ 
+		"gid": 1,
+		"size": 64,
+		"color":"#FF0000"
+	});
+});
+
