@@ -69,3 +69,9 @@ class Grid:
 
 	def __setitem__(self, key, value):
 		return db.hset(self.dbid, key, value)
+	
+	def __eq__(self, other):
+		return int(self.uid) == int(other.uid)
+
+	def __repr__(self):
+		return "<Grid id:%s>" % (self.uid)
