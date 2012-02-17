@@ -11,7 +11,7 @@ var CreateView = (function() {
 	}
 
 	function createGame() {
-		SyncClient.post("game/create", {
+		SyncClient.post("grid/create", {
 			"name": $("input[name=room]").val(),
 			"size": $("input[name=size]").val(),
 		}, createGameCb);

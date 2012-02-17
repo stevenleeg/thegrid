@@ -1,4 +1,4 @@
-from model import Game
+from model import Grid
 
 def test(handler, **args):
 	return {"hello":"world"}
@@ -12,9 +12,9 @@ def joinGame(handler, **args):
 	except KeyError:
 		return {"status":406}
 
-	g = Game(gid)
+	g = Grid(gid)
 	if g.exists() is False:
-		return {"status":404, "error":"Room not found."}
+		return {"status":404, "error":"Grid not found."}
 	
-	uid = handler.joinGame(gid, color)
+	uid = handler.joinGrid(gid, color)
 	return {"status":200, "uid":uid}

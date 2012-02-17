@@ -1,6 +1,6 @@
 from tornado.websocket import WebSocketHandler
-from model import Game
-from utility import clients, games
+from model import Grid
+from utility import clients, grids
 import async
 import json
 from uuid import uuid4
@@ -25,23 +25,23 @@ class Client(WebSocketHandler):
 		ret['cid'] = message['cid']
 		self.send(ret)
 	
-	def joinGame(self, gid, color):
+	def joinGrid(self, gid, color):
 		# Generate a unique id
 		self.uid = str(uuid4())[0:5]
 		# Make sure it doesn't exist already
 		while self.uid in clients:
 			self.uid = str(uuid4())[0:5]
 
-		# Add the client to a game
-		if gid not in games:
-			games[gid] = []
+		# Add the client to a grid 
+		if gid not in grids:
+			grids[gid] = []
 
-		games[gid].append(self.uid)
+		grids[gid].append(self.uid)
 
 		# Add the client to the clients dict
 		clients[self.uid] = {
 			"cb": self,
-			"game": gid,
+			"grid": gid,
 			"color": color
 		}
 
@@ -50,7 +50,7 @@ class Client(WebSocketHandler):
 	def on_close(self):
 		if self.uid in clients:
 			del(clients[self.uid])
-		if self.gid in games:
-			if self.uid in games[self.gid]:
-				games[self.gid].remove(self.uid)
+		if self.gid in grids:
+			if self.uid in grids[self.gid]:
+				grids[self.gid].remove(self.uid)
 

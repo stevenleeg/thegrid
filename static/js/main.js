@@ -127,12 +127,13 @@ var AsyncClient = (function() {
 })();
 
 $(document).ready(function() {
-	//ViewController.load(HomeView);
+	ViewController.load(HomeView);
 	// Artificially load a game
+	/*
 	ViewController.load(GameView,{ 
 		"gid": 1,
 		"size": 64,
 		"color":"#FF0000"
-	});
+	}); */
 });
 

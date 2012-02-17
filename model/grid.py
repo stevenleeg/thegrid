@@ -1,6 +1,8 @@
 from utility import db
 from coord import Coord
+from time import time
 import itertools
+import re
 
 class Grid:
 	def __init__(self, gid):
@@ -8,6 +10,30 @@ class Grid:
 		self.dbid = "g:%s" % gid
 		self.uid = gid
 	
+	@classmethod	
+	def fromName(obj, name):
+		uid = db.hget("nameid", name)
+
+		return obj(uid)
+
+	@classmethod
+	def create(obj, name, size):
+		if re.match("^[A-z0-9]*$", name) is None:
+				return (False, "name")
+
+		# Generate an id for the game
+		uid = db.incr("uid")
+		# For matching names with ids
+		db.hset("nameid", name, uid)
+
+		db.hmset("g:%s" % uid, {
+			"name": name,
+			"size": size,
+			"started": int(time()),
+		})
+
+		return (True, obj(uid))
+
 	def loadMap(self):
 		""" Loads a dict of coord data onto the grid """
 		pass
@@ -32,3 +58,14 @@ class Grid:
 	def get(self, x, y):
 		""" Gets a coordinate from the grid """
 		return Coord(self.uid, x, y)
+
+	def exists(self):
+		return db.exists(self.dbid)
+
+	def __getitem__(self, key):
+		if key == "id":
+			return self.uid
+		return db.hget(self.dbid, key)
+
+	def __setitem__(self, key, value):
+		return db.hset(self.dbid, key, value)

@@ -7,7 +7,7 @@ var HomeView = (function() {
 		BaseUI.done();
 		if(data['status'] == 200) {
 			// Get room info
-			SyncClient.get("game/info", {"name": $("input[name=room]").val()}, roomInfoCb);
+			SyncClient.get("grid/info", {"name": $("input[name=room]").val()}, roomInfoCb);
 		} else {
 			ViewController.load(CreateView, {
 				"name": $("input[name=room]").val(),
@@ -52,7 +52,7 @@ var HomeView = (function() {
 
 		BaseUI.loading();
 		SyncClient.get(
-			"game/exists", 
+			"grid/exists", 
 			{ name: $("input[name=room]").val() },
 			roomEnterCb
 		);
@@ -63,7 +63,7 @@ var HomeView = (function() {
 		clearInterval(check_timeout);
 		check_timeout = setTimeout(function() {
 			SyncClient.get(
-				"game/exists",
+				"grid/exists",
 				{ name: $("input[name=room]").val() },
 				roomCheckCb
 			);

@@ -2,18 +2,18 @@ import redis
 import json
 
 # Used for storing active WebSocket clients
-games = {}
+grids = {}
 clients = {}
 """
 Structure of these variables:
-games = {
+grids = {
 	"gid": ["uid1", "uid2"]
 }
 
 clients {
 	"uid1": {
 		"cb": [tornado WebSocketHandler]
-		"game": gid,
+		"grid": gid,
 		"color": color,
 	}, etc...
 }
@@ -29,9 +29,9 @@ def Listener():
 			continue
 		message = json.loads(message['data'])
 
-		# Sending to all clients in a game
-		if 'game' in message and message['game'] in games:
-			for cid in games[message['game']]:
+		# Sending to all clients in a grid 
+		if 'game' in message and message['grid'] in grids:
+			for cid in grids[message['grid']]:
 				clients[cid]['cb'].write_message(message['data'])
 
 		# Sending to only one client

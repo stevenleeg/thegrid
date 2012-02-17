@@ -10,9 +10,9 @@ import utility
 # URL Routing
 app = tornado.web.Application([
   # The API... Hereeee we go.
-  ('/api/game/exists', api.game.Exists),
-  ('/api/game/create', api.game.Create),
-  ('/api/game/info', api.game.Info),
+  ('/api/grid/exists', api.grid.Exists),
+  ('/api/grid/create', api.grid.Create),
+  ('/api/grid/info', api.grid.Info),
 
   ('/api/socket', controller.Client),
 

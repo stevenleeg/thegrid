@@ -1,16 +1,16 @@
 import tornado.web
-from model import Game
+from model import Grid
 from utility.template import jsonify
-from utility import games
+from utility import grids
 
 class Exists(tornado.web.RequestHandler):
 	def get(self):
-		game = Game.fromName(self.get_argument("name", None))
-
-		if game is None:
+		name = self.get_argument("name", None)
+		if name is None:
 			return jsonify(self, status=406)
-		
-		if game is None:
+
+		grid = Grid.fromName(name)
+		if grid is None:
 			return jsonify(self, status=404)
 
 		return jsonify(self, status=200)
@@ -31,7 +31,11 @@ class Create(tornado.web.RequestHandler):
 		if size not in ['16', '32', '64']:
 			return jsonify(self, status=404)
 
-		status, g = Game.create(name, size)
+		# Make sure the name doesn't already exist
+		if Grid.fromName(name).exists():
+			return jsonify(self, status=406, error = "Name taken")
+
+		status, g = Grid.create(name, size)
 
 		if status == False:
 			return jsonify(self, status=406, error=g)
@@ -44,7 +48,7 @@ class Info(tornado.web.RequestHandler):
 		if name is None:
 			return jsonify(self, status=406)
 		
-		g = Game.fromName(name)
+		g = Grid.fromName(name)
 		if g is None:
 			return jsonify(self, status=404)
 
