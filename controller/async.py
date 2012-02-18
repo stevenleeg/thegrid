@@ -3,7 +3,7 @@ from model import Grid
 def test(handler, **args):
 	return {"hello":"world"}
 
-def joinGame(handler, **args):
+def joinGrid(handler, **args):
 	# Make sure we have what we need
 	try:
 		#TODO: Check these for sanity
@@ -17,4 +17,8 @@ def joinGame(handler, **args):
 		return {"status":404, "error":"Grid not found."}
 	
 	uid = handler.joinGrid(gid, color)
-	return {"status":200, "uid":uid}
+	return {
+    "status":200, 
+    "uid":uid,
+    "coords": g.dump()
+  }

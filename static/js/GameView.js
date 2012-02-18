@@ -18,7 +18,7 @@ var GameView = (function() {
 		for(y = 0; y < pass['size']; y++) {
 			tr = $("<tr id='"+y+"'></tr>").appendTo(grid)
 			for(x = 0; x < pass['size']; x++) {
-				$("<td id='"+x+"_"+y+"' class='hidden'>&nbsp;</td>").appendTo(tr)
+				$("<td id='"+x+"_"+y+"'>&nbsp;</td>").appendTo(tr)
 			}
 		}
 	}
@@ -29,7 +29,7 @@ var GameView = (function() {
 	}
 
 	function joinGame() {
-		AsyncClient.send("joinGame", {
+		AsyncClient.send("joinGrid", {
 			"gid": gid,
 			"color": color
 		}, joinGameCb);
@@ -40,6 +40,7 @@ var GameView = (function() {
 			alert("Something went wrong while trying to join the room! " + data['status']);
 			ViewController.load(HomeView)
 		}
+		Grid.load(data['coords'])
 	}
 
 	/*

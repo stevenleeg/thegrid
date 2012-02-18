@@ -1,36 +1,41 @@
 from utility import db
 
 class Coord:
-	def __init__(self, grid, x, y = None):
+  def __init__(self, grid, x, y = None):
 		# Convert a strcoord into a regular one
-		if type(x) is str:
-			split = x.split("_")
-			x = split[0]
-			y = split[1]
-		else:
-			if y is None:
-				raise TypeError
-
+    if type(x) is str:
+      split = x.split("_")
+      x = split[0]
+      y = split[1]
+    else:
+      if y is None:
+        raise TypeError
+    
 		# Set some instance variables
-		self.x = x
-		self.y = y
+    self.x = x
+    self.y = y
 
-		self.dbid = "c:%s:%s" % (grid, str(self))
-	
-	def exists(self):
-		return db.exists(self.dbid)
+    self.dbid = "c:%s:%s" % (grid, str(self))
+  
+  def baseInfo(self):
+    keys = ["type", "player", "health"]
+    vals = db.hmget(self.dbid, keys)
+    return dict(zip(keys, vals))
 
-	def __str__(self):
-		return "%s_%s" % (self.x, self.y)
+  def exists(self):
+    return db.exists(self.dbid)
 
-	def __getitem__(self, key):
-		return db.hget(self.dbid, key)
+  def __str__(self):
+    return "%s_%s" % (self.x, self.y)
 
-	def __setitem__(self, key, val):
-		return db.hset(self.dbid, key, val)
+  def __getitem__(self, key):
+    return db.hget(self.dbid, key)
 
-	def __repr__(self):
-		return "<Coord: (%s, %s)>" % (self.x, self.y)
+  def __setitem__(self, key, val):
+    return db.hset(self.dbid, key, val)
 
-	def __eq__(self, other):
-		return str(self) == str(other)
+  def __repr__(self):
+    return "<Coord: (%s, %s)>" % (self.x, self.y)
+
+  def __eq__(self, other):
+    return str(self) == str(other)

@@ -45,6 +45,16 @@ class Grid:
 
 		return True
 
+	def dump(self):
+		""" Dumps all coords on the grid """
+		coords = db.keys("c:%s:*" % self.uid)
+		rets = {}
+		for coord in coords:
+			coord = coord.replace("c:%s:" % self.uid, "")
+			rets[coord] = self.get(coord).baseInfo()
+
+		return rets
+
 	def around(self, point, radius):
 		""" 
 		Finds all points located around the radius
@@ -64,6 +74,8 @@ class Grid:
 
 	def get(self, x, y = None):
 		""" Gets a coordinate from the grid """
+		if type(x) is str and y is None:
+			return Coord(self.uid, x)
 		return Coord(self.uid, x, y)
 
 	def exists(self):
