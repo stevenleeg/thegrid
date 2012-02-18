@@ -34,9 +34,16 @@ class Grid:
 
 		return (True, obj(uid))
 
-	def loadMap(self):
+	def load(self, coords):
 		""" Loads a dict of coord data onto the grid """
-		pass
+		for coord in coords:
+			c = coord.split("_")
+			print c
+			c = self.get(int(c[0]), int(c[1]))
+			for key in coords[coord]:
+				c[key] = coords[coord][key]
+
+		return True
 
 	def around(self, point, radius):
 		""" 
@@ -55,7 +62,7 @@ class Grid:
 
 		return pts
 
-	def get(self, x, y):
+	def get(self, x, y = None):
 		""" Gets a coordinate from the grid """
 		return Coord(self.uid, x, y)
 

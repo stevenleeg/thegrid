@@ -2,6 +2,7 @@ import tornado.web
 from model import Grid
 from utility.template import jsonify
 from utility import grids
+import json, os
 
 class Exists(tornado.web.RequestHandler):
 	def get(self):
@@ -19,6 +20,7 @@ class Create(tornado.web.RequestHandler):
 	def post(self):
 		name = self.get_argument("name", None)
 		size = self.get_argument("size", None)
+		mapfile = "default"
 
 		if name is None or size is None:
 			return jsonify(self, status=406, error = "name")
@@ -39,6 +41,13 @@ class Create(tornado.web.RequestHandler):
 
 		if status == False:
 			return jsonify(self, status=406, error=g)
+
+		# Now preload the grid with a mapfile
+		# TODO: Get map from URL
+		f = open("static/maps/%s_%s.json" % (size, mapfile), "r")
+		data = json.loads(f.read())
+		f.close()
+		g.load(data['coords'])
 
 		return jsonify(self, status=200, gid = g['id'])
 
