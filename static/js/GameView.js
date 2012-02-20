@@ -40,7 +40,9 @@ var GameView = (function() {
 			alert("Something went wrong while trying to join the room! " + data['status']);
 			ViewController.load(HomeView)
 		}
-		Grid.load(data['coords'])
+		Grid.colors = data['colors'];
+		Grid.pid = data['pid'];
+		Grid.load(data['coords']);
 	}
 
 	/*

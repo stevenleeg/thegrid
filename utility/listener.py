@@ -7,7 +7,7 @@ clients = {}
 """
 Structure of these variables:
 grids = {
-	"gid": ["uid1", "uid2"]
+	"gid": {0: "uid1", 1: "uid2"}
 }
 
 clients {

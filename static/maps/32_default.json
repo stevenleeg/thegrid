@@ -1,18 +1,21 @@
 {
 	"name": "Hello",
-	"size": 16,
-	"players": 2,
+	"size": 32,
+	"players": 4,
 
 	"coords": {
 		"1_1": {
-			"type": 2,
-			"health": 100,
-			"player": 0
-		},
-		"0_0": {
 			"type": 1,
 			"health": 100,
-			"player": 0
+			"player": 1
+		},
+		"1_0": {
+			"health": 25,
+			"player": 1
+		},
+		"0_1": {
+			"health": 25,
+			"player": 1
 		}
 	}
 }

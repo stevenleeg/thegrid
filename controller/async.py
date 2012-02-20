@@ -1,4 +1,5 @@
 from model import Grid
+from utility import grids, clients
 
 def test(handler, **args):
 	return {"hello":"world"}
@@ -16,9 +17,22 @@ def joinGrid(handler, **args):
 	if g.exists() is False:
 		return {"status":404, "error":"Grid not found."}
 	
-	uid = handler.joinGrid(gid, color)
+	status, client = handler.joinGrid(g, color)
+
+	# Generate a player/color list
+	colors = {}
+	# Get uids
+	for pid in grids[gid]:
+		uid = grids[gid][pid]
+		colors[pid] = clients[client.uid]['color']
+	
+	if status is not True:
+		return { "status":406, "error": uid }
+
 	return {
     "status":200, 
-    "uid":uid,
-    "coords": g.dump()
+    "uid":client.uid,
+	 "pid": client.pid,
+    "coords": g.dump(),
+	 "colors": colors
   }

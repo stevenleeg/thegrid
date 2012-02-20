@@ -1,7 +1,12 @@
 var Grid = (function() {
+	var colors, pid;
+
   function load(coords) {
     var coord, c;
     for(coord in coords) {
+		 if(coords[coord]['player'] > 0) {
+			$("#" + coord).css("background-color", Grid.colors[coords[coord]['player']]);
+		 }
       $("#" + coord).attr("class", "t" + coords[coord]['type']).data("d", coords[coord]);
     }
   }
@@ -17,6 +22,7 @@ var Grid = (function() {
   return {
     "load": load,
     "get": get,
-    "getInfo": getInfo
+    "getInfo": getInfo,
+	 "colors": colors
   };
 })();

@@ -48,6 +48,7 @@ class Create(tornado.web.RequestHandler):
 		data = json.loads(f.read())
 		f.close()
 		g.load(data['coords'])
+		g['players'] = data['players']
 
 		return jsonify(self, status=200, gid = g['id'])
 
