@@ -54,11 +54,16 @@ class Create(tornado.web.RequestHandler):
 class Info(tornado.web.RequestHandler):
 	def get(self):
 		name = self.get_argument("name", None)
-		if name is None:
+		gid = self.get_argument("gid", None)
+		if name is None and gid is None:
 			return jsonify(self, status=406)
 		
-		g = Grid.fromName(name)
-		if g is None:
+		if gid is None:
+			g = Grid.fromName(name)
+		elif name is None:
+			g = Grid(gid)
+
+		if g.exists() is False:
 			return jsonify(self, status=404)
 
 		return jsonify(self, status=200, data = {
