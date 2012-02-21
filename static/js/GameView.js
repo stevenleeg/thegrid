@@ -47,6 +47,10 @@ var GameView = (function() {
 	}
 
 	function rejoinGameCb(data) {
+		if(data['status'] == 404) {
+			$.cookie("uid", null);
+			return ViewController.load(HomeView);
+		}
 		if(data['status'] != 200) {
 			alert("Something went wrong while trying to join the room! " + data['status']);
 			$.cookie("uid", null);
