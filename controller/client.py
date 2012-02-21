@@ -39,3 +39,5 @@ class SocketHandler(WebSocketHandler):
 		if self.user['grid'] != None:
 			g = Grid(self.user['grid'])
 			g.delUser(self.user)
+
+			self.user['active'] = False

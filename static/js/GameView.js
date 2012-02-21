@@ -1,6 +1,6 @@
 var GameView = (function() {
 	var tpl = "game.html";
-	var gid, color, uid, view_size;
+	var gid, color, uid, view_size, size;
 	
 	/*
 	 * INITIAL LOADING FUNCTIONS/CALLBACKS
@@ -10,6 +10,11 @@ var GameView = (function() {
 
 		gid = pass['gid'];
 		color = pass['color'];
+		size = pass['size'];
+
+		if(pass['uid'] != undefined) {
+			Grid.uid = pass['uid'];
+		}
 
 		// Start the client
 		AsyncClient.connect(joinGame)
@@ -29,19 +34,39 @@ var GameView = (function() {
 	}
 
 	function joinGame() {
-		AsyncClient.send("joinGrid", {
-			"gid": gid,
-			"color": color
-		}, joinGameCb);
+		if(Grid.uid != undefined) {
+			AsyncClient.send("rejoinGrid", {
+				"uid": Grid.uid
+			}, rejoinGameCb);
+		} else {
+			AsyncClient.send("joinGrid", {
+				"gid": gid,
+				"color": color
+			}, joinGameCb);
+		}
 	}
 
+	function rejoinGameCb(data) {
+		if(data['status'] != 200) {
+			alert("Something went wrong while trying to join the room! " + data['status']);
+			$.cookie("uid", null);
+			ViewController.load(HomeView);
+		}
+		Grid.colors = data['colors'];
+		pid = data['pid'];
+		color = data['color'];
+		Grid.load(data['coords']);
+	}
 	function joinGameCb(data) {
 		if(data['status'] != 200) {
 			alert("Something went wrong while trying to join the room! " + data['status']);
 			ViewController.load(HomeView)
 		}
 		Grid.colors = data['colors'];
-		Grid.pid = data['pid'];
+		pid = data['pid'];
+		uid = data['uid'];
+		$.cookie("uid", uid, 1);
+		$.cookie("size", size, 1);
 		Grid.load(data['coords']);
 	}
 

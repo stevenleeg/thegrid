@@ -35,7 +35,14 @@ class Grid:
 		return (True, obj(uid))
 
 	# Client handling
-	def addUser(self, user):
+	def addUser(self, user, pid = None):
+		if pid != None:
+			if db.hexists(self.dbid + ":usr", pid):
+				return False
+
+			db.hset(self.dbid + ":usr", pid, user['id'])
+			return pid
+		
 		# Get a pid
 		pid = 0
 		if db.hlen(self.dbid + ":usr") >= int(self['players']):

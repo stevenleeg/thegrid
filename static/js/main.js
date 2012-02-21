@@ -132,7 +132,14 @@ var AsyncClient = (function() {
 })();
 
 $(document).ready(function() {
-	ViewController.load(HomeView);
+	if($.cookie("uid") != undefined) {
+		ViewController.load(GameView, {
+			"uid": $.cookie("uid"),
+			"size": $.cookie("size"),
+		});
+	} else {
+		ViewController.load(HomeView);
+	}
 	// Artificially load a game
 	/*
 	ViewController.load(GameView,{ 
