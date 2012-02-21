@@ -6,7 +6,7 @@ var GameView = (function() {
 	 * INITIAL LOADING FUNCTIONS/CALLBACKS
 	 */
 	function onLoad(pass) {
-		var x, y, grid;
+		var x, y, grid, open;
 
 		gid = pass['gid'];
 		color = pass['color'];
@@ -26,11 +26,17 @@ var GameView = (function() {
 				$("<td id='"+x+"_"+y+"'>&nbsp;</td>").appendTo(tr)
 			}
 		}
+
+		setupEvents()
 	}
 
 	function postFade(pass) {
 		view_size = [$("#container").width(), $("#container").height()];
 		GameEvents.setupKeys()
+	}
+
+	function setupEvents() {
+		$(".menu").click(clickMenu);
 	}
 
 	function joinGame() {
@@ -89,6 +95,31 @@ var GameView = (function() {
 		cont = $("#container");
 		cont.scrollTop(y);
 		cont.scrollLeft(x);
+	}
+
+
+	/*
+	 * Menu interactions
+	 */
+	function clickMenu() {
+		var menu;
+		menu = $(this)
+		open = menu.attr("opens");
+		$(".menu").fadeOut(50, function() {
+			menu.addClass("selected");
+			$(".menu.selected, #menu_"+open).fadeIn(50)
+		});
+		$(menu).off().click(returnMain);
+	}
+
+	function returnMain() {
+		var menu;
+		menu = $(".menu.selected");
+		$(".menu.selected, #menu_" + open).fadeOut(50, function() {
+			$(menu).off().click(clickMenu);
+			menu.removeClass("selected");
+			$(".menu").fadeIn(50);
+		});
 	}
 
 	return {

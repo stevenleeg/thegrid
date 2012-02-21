@@ -51,7 +51,7 @@
 	border-bottom:1px solid @dark;
 	background: @gray;
 	line-height:32px;
-	padding:0px 5px 0px 5px;
+	padding:0px;
 
 	a.menu {
 		display:inline-block;
@@ -63,6 +63,29 @@
 
 	a.menu:hover {
 		background:@light;
+	}
+
+	a.menu.selected {
+		font-weight:bold;
+		background:@blue;
+		color:@light;
+	}
+
+	div.submenu {
+		display:inline-block;
+		display:none;
+
+		a {
+			display:inline-block;
+			color:@dark;
+			font-size:14px;
+			padding:0px 10px 0px 10px;
+			margin-right:1px;
+			float:left;
+		}
+		a:hover {
+			background:@light;
+		}
 	}
 
 	a.stat {
