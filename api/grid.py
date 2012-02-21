@@ -1,7 +1,6 @@
 import tornado.web
 from model import Grid
 from utility.template import jsonify
-from utility import grids
 import json, os
 
 class Exists(tornado.web.RequestHandler):

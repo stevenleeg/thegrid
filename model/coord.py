@@ -3,7 +3,7 @@ from utility import db
 class Coord:
   def __init__(self, grid, x, y = None):
 		# Convert a strcoord into a regular one
-    if type(x) is str:
+    if type(x) in (str, unicode):
       split = x.split("_")
       x = split[0]
       y = split[1]

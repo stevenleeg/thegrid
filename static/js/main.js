@@ -111,8 +111,12 @@ var AsyncClient = (function() {
 	function newMessage(evt) {
 		data = JSON.parse(evt.data);
 		// Run the callback for the identifier we get back
-		callbacks[data['cid']](data);
-		delete callbacks[data['cid']];
+		if(data['cid'] == undefined) {
+			GameClient[data['f']](data);
+		} else {
+			callbacks[data['cid']](data);
+			delete callbacks[data['cid']];
+		}
 	}
 
 	function closeSocket() {
@@ -122,17 +126,24 @@ var AsyncClient = (function() {
 	return {
 		"connect": connect,
 		"send": send,
-		"callbacks":callbacks
+		"callbacks":callbacks,
+		"ws": ws
 	};
 })();
 
 $(document).ready(function() {
-	//ViewController.load(HomeView);
+	ViewController.load(HomeView);
 	// Artificially load a game
+	/*
 	ViewController.load(GameView,{ 
 		"gid": 1,
 		"size": 64,
 		"color":"#FF0000"
-	});
+	}); */
 });
 
+$(document).unload(function() {
+	if(AsyncClient.ws != undefined) {
+		AsyncClient.ws.close()
+	}
+});

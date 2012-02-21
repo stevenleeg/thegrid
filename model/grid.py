@@ -34,11 +34,37 @@ class Grid:
 
 		return (True, obj(uid))
 
+	# Client handling
+	def addUser(self, user):
+		# Get a pid
+		pid = 0
+		if db.hlen(self.dbid + ":usr") >= int(self['players']):
+			return False
+
+		for i in range(1, int(self['players']) + 1):
+			if db.hexists(self.dbid + ":usr", i):
+				continue
+			pid = i
+			break
+
+		db.hset(self.dbid + ":usr", pid, user['id'])
+		return pid
+
+	def delUser(self, user):
+		db.hdel(self.dbid + ":usr", user['pid'])
+	
+	def getUsers(self):
+		uids = []
+		users = db.hgetall(self.dbid + ":usr")
+		for pid in users:
+			uids.append(users[pid])
+
+		return uids
+
 	def load(self, coords):
 		""" Loads a dict of coord data onto the grid """
 		for coord in coords:
 			c = coord.split("_")
-			print c
 			c = self.get(int(c[0]), int(c[1]))
 			for key in coords[coord]:
 				c[key] = coords[coord][key]
@@ -74,8 +100,9 @@ class Grid:
 
 	def get(self, x, y = None):
 		""" Gets a coordinate from the grid """
-		if type(x) is str and y is None:
+		if type(x) in (str, unicode) and y is None:
 			return Coord(self.uid, x)
+
 		return Coord(self.uid, x, y)
 
 	def exists(self):

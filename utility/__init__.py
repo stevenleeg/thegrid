@@ -1,5 +1,5 @@
 import template
-from listener import *
+from updatemanager import *
 
 import redis
 db = redis.Redis()

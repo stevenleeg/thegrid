@@ -2,9 +2,9 @@ import tornado.web
 import tornado.ioloop
 import threading
 
+import utility
 import controller
 import api
-import utility
 
 
 # URL Routing
@@ -14,7 +14,7 @@ app = tornado.web.Application([
   ('/api/grid/create', api.grid.Create),
   ('/api/grid/info', api.grid.Info),
 
-  ('/api/socket', controller.Client),
+  ('/api/socket', controller.SocketHandler),
 
 	("/static/(.*)", tornado.web.StaticFileHandler, {"path":"static"}),
 	("/", controller.Index),
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 	app.listen(8080)
 
 	# Thread for listener process
-	listener = threading.Thread(target = utility.Listener)
+	listener = threading.Thread(target = utility.UpdateManager.listen)
 	listener.daemon = True
 	listener.start()
 

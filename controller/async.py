@@ -1,38 +1,41 @@
-from model import Grid
-from utility import grids, clients
+from model import Grid, User
+from utility import UpdateManager
 
 def test(handler, **args):
 	return {"hello":"world"}
 
 def joinGrid(handler, **args):
-	# Make sure we have what we need
 	try:
-		#TODO: Check these for sanity
+		#TODO: Sanity checks
 		gid = args['gid']
 		color = args['color']
 	except KeyError:
-		return {"status":406}
+		return {"status": 406}
 
 	g = Grid(gid)
 	if g.exists() is False:
 		return {"status":404, "error":"Grid not found."}
-	
-	status, client = handler.joinGrid(g, color)
 
-	# Generate a player/color list
+	handler.user['color'] = color
+	# Add the user to the grid/UpdateManager
+	pid = g.addUser(handler.user)
+	if pid is False:
+		return { "status":406, "error": "Grid is full" }
+
+	handler.user['pid'] = pid
+	handler.user['grid'] = gid
+	UpdateManager.addClient(handler.user, handler)
+
+	# List the pid:colors
 	colors = {}
-	# Get uids
-	for pid in grids[gid]:
-		uid = grids[gid][pid]
-		colors[pid] = clients[client.uid]['color']
-	
-	if status is not True:
-		return { "status":406, "error": uid }
+	for uid in g.getUsers():
+		u = User(uid)
+		colors[u['pid']] = u['color']
 
 	return {
-    "status":200, 
-    "uid":client.uid,
-	 "pid": client.pid,
-    "coords": g.dump(),
-	 "colors": colors
-  }
+		"status":200,
+		"uid": handler.user['uid'],
+		"pid": pid,
+		"colors": colors,
+		"coords": g.dump()
+	}
