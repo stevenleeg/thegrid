@@ -30,6 +30,13 @@ var Grid = (function() {
 		}).mouseleave(function() {
 			$(this).removeClass("place_bad").removeClass("place_good");
 		});
+		$(this)
+  }
+
+  function normalMode() {
+		$("#grid").removeClass("place_mode");
+		$("#grid td.place_good, #grid td.place_bad").removeClass("place_good").removeClass("place_bad");
+		$("#grid td").off();
   }
 
   return {
@@ -38,6 +45,7 @@ var Grid = (function() {
     "getInfo": getInfo,
 	 "colors": colors,
 	 "placeMode": placeMode,
+	 "normalMode": normalMode,
   };
 })();
 

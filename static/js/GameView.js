@@ -37,7 +37,7 @@ var GameView = (function() {
 
 	function setupEvents() {
 		$(".menu").click(clickMenu);
-		$(".submenu a").click(selectType);
+		$(".submenu a").on("click",selectType);
 	}
 
 	function joinGame() {
@@ -117,6 +117,7 @@ var GameView = (function() {
 	function returnMain() {
 		var menu;
 		menu = $(".menu.selected");
+		deselectType();
 		$(".menu.selected, #menu_" + open).fadeOut(50, function() {
 			$(menu).off().click(clickMenu);
 			menu.removeClass("selected");
@@ -127,8 +128,17 @@ var GameView = (function() {
 	function selectType() {
 		var places;
 		$(this).addClass("selected");
+		$(".submenu a").off("click", selectType).on("click",deselectType);
+		$(".submenu a:not(.selected)").hide();
 		places = $(this).attr("places");
 		Grid.placeMode(places);
+	}
+
+	function deselectType() {
+		$(".submenu a.selected").removeClass("selected");
+		$(".submenu a").show();
+		$(".submenu a").off("click", deselectType).on("click",selectType);
+		Grid.normalMode();
 	}
 
 	return {
