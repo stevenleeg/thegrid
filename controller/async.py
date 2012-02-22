@@ -1,4 +1,4 @@
-from model import Grid, User
+from model import Grid, User, TileChecks, TileProps
 from utility import UpdateManager
 
 def test(handler, **args):
@@ -79,3 +79,33 @@ def rejoinGrid(handler, **args):
 		"colors": colors,
 		"coords": g.dump()
 	}
+
+def place(handler, **args):
+	try:
+		coord = args['coord']
+		tile = int(args['tile'])
+	except KeyError, ValueError:
+		return { "status": 406 }
+
+	g = Grid(handler.user['grid'])
+	c = g.get(coord)
+	if c.exists():
+		return { "status":405, "coord": coord, "error": "coord exists" }
+
+	try:
+		placeable = TileChecks[tile](c)
+	except KeyError:
+		return { "status": 406, "coord": coord, "error": "invalid tile" }
+
+	c['type'] = tile
+	c['player'] = handler.user['pid']
+	c['health'] = TileProps[tile]
+
+	UpdateManager.sendGrid(g, "set", handler.user,
+		coord = str(c),
+		tile = tile,
+		player = handler.user['pid'],
+		health = TileProps[tile]
+	)
+
+	return { "status": 200 }

@@ -35,10 +35,17 @@ class UpdateManager(object):
 		obj.clients[user['id']].call(function, **kwargs)
 	
 	@classmethod
-	def sendGrid(obj, grid, function, **kwargs):
+	def sendGrid(obj, grid, function, exclude = None, **kwargs):
 		if grid.exists() is False:
 			return
 
-		for uid in grid.getUsers():
+		users = grid.getUsers()
+		if exclude != None:
+			try:
+				users.remove(exclude['id'])
+			except ValueError:
+				pass
+
+		for uid in users:
 			obj.clients[uid].call(function, **kwargs)
 

@@ -49,6 +49,10 @@ var Grid = (function() {
 		}
   }
 
+  function destroy(coord) {
+		$("#" + coord).attr("class", "").css("background-color", "");
+  }
+
   return {
     "load": load,
     "get": get,
@@ -57,7 +61,8 @@ var Grid = (function() {
 	 "placeMode": placeMode,
 	 "normalMode": normalMode,
 	 "place": place,
-	 "place_type": place_type
+	 "place_type": place_type,
+	 "destroy": destroy
   };
 })();
 

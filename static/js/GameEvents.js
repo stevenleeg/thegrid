@@ -41,14 +41,27 @@ var GameEvents = (function() {
 	}
 
 	function placeTile() {
-		var color;
+		var color, coord;
 		if(Grid.place_type == 1) {
 			color = Grid.colors[Grid.pid];
 		}
-		Grid.place($(this).attr("id"), Grid.place_type, color);
+		coord = $(this).attr("id");
+		Grid.place(coord, Grid.place_type, color);
+
+		AsyncClient.send("place", {
+			"coord": coord,
+			"tile": Grid.place_type,
+			"color": color
+		}, placeTileCb);
 
 		Grid.normalMode();
 		GameView.returnMain();
+	}
+
+	function placeTileCb(data) {
+		if(data['status'] != 200) {
+			Grid.destroy(data['coord']);
+		}
 	}
 
 	return {
