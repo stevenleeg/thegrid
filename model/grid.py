@@ -1,5 +1,6 @@
 from utility import db
 from coord import Coord
+from user import User
 from time import time
 import itertools
 import re
@@ -55,6 +56,9 @@ class Grid:
 			break
 
 		db.hset(self.dbid + ":usr", pid, user['id'])
+		if db.hget(self.dbid + ":clr", pid) is None:
+			db.hset(self.dbid + ":clr", pid, user['color'])
+
 		return pid
 
 	def delUser(self, user):
@@ -67,6 +71,9 @@ class Grid:
 			uids.append(users[pid])
 
 		return uids
+
+	def getColors(self):
+		return db.hgetall(self.dbid + ":clr")
 
 	def load(self, coords):
 		""" Loads a dict of coord data onto the grid """

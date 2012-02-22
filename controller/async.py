@@ -27,17 +27,11 @@ def joinGrid(handler, **args):
 	handler.user['active'] = True
 	UpdateManager.addClient(handler.user, handler)
 
-	# List the pid:colors
-	colors = {}
-	for uid in g.getUsers():
-		u = User(uid)
-		colors[u['pid']] = u['color']
-
 	return {
 		"status":200,
 		"uid": handler.user['id'],
 		"pid": pid,
-		"colors": colors,
+		"colors": g.getColors(),
 		"coords": g.dump()
 	}
 
@@ -67,16 +61,11 @@ def rejoinGrid(handler, **args):
 	handler.user['active'] = True
 	UpdateManager.addClient(handler.user, handler)
 
-	colors = {}
-	for uid in g.getUsers():
-		u = User(uid)
-		colors[u['pid']] = u['color']
-
 	return {
 		"status":200,
 		"uid": handler.user['id'],
 		"pid": pid,
-		"colors": colors,
+		"colors": g.getColors(),
 		"coords": g.dump()
 	}
 
