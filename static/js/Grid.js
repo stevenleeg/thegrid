@@ -1,5 +1,5 @@
 var Grid = (function() {
-	var colors, pid;
+	var colors, pid, place_type;
 
   function load(coords) {
     var coord, c;
@@ -20,7 +20,8 @@ var Grid = (function() {
   }
 
   function placeMode(type) {
-	  	$("#grid").addClass("place_mode");
+	   Grid.place_type = type;
+		$("#grid").addClass("place_mode");
 		$("#grid td").off().mouseenter(function() {
 			if(PlaceCheck[type](this)) {
 				$(this).addClass("place_good");
@@ -29,14 +30,23 @@ var Grid = (function() {
 			}
 		}).mouseleave(function() {
 			$(this).removeClass("place_bad").removeClass("place_good");
-		});
-		$(this)
-  }
+		}).click(GameEvents.placeTile);
+	}
 
   function normalMode() {
 		$("#grid").removeClass("place_mode");
 		$("#grid td.place_good, #grid td.place_bad").removeClass("place_good").removeClass("place_bad");
 		$("#grid td").off();
+		Grid.place_type = 0;
+  }
+
+  function place(coord, type, color) {
+	  	var coord;
+	  	coord = $("#" + coord)
+		coord.addClass("t" + type)
+		if(color != undefined) {
+			coord.css("background-color", color);
+		}
   }
 
   return {
@@ -46,6 +56,8 @@ var Grid = (function() {
 	 "colors": colors,
 	 "placeMode": placeMode,
 	 "normalMode": normalMode,
+	 "place": place,
+	 "place_type": place_type
   };
 })();
 

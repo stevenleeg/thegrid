@@ -1,6 +1,6 @@
 var GameView = (function() {
 	var tpl = "game.html";
-	var gid, color, uid, view_size, size;
+	var gid, uid, view_size, size;
 	
 	/*
 	 * INITIAL LOADING FUNCTIONS/CALLBACKS
@@ -64,8 +64,8 @@ var GameView = (function() {
 			ViewController.load(HomeView);
 		}
 		Grid.colors = data['colors'];
-		pid = data['pid'];
-		color = data['color'];
+		Grid.pid = data['pid'];
+		Grid.color = data['color'];
 		Grid.load(data['coords']);
 	}
 
@@ -151,6 +151,8 @@ var GameView = (function() {
 
 		// Public methods
 		"panViewport": panViewport,
-		"setViewport": setViewport
+		"setViewport": setViewport,
+		"deselectType": deselectType,
+		"returnMain": returnMain
 	}
 })();

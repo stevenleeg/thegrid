@@ -40,7 +40,19 @@ var GameEvents = (function() {
 		delete scrolling[e.which];
 	}
 
+	function placeTile() {
+		var color;
+		if(Grid.place_type == 1) {
+			color = Grid.colors[Grid.pid];
+		}
+		Grid.place($(this).attr("id"), Grid.place_type, color);
+
+		Grid.normalMode();
+		GameView.returnMain();
+	}
+
 	return {
-		"setupKeys": setupKeys
+		"setupKeys": setupKeys,
+		"placeTile": placeTile,
 	};
 })();
