@@ -19,10 +19,30 @@ var Grid = (function() {
     return $("#" + x + "_" + y).data("d")[key];
   }
 
+  function placeMode(type) {
+	  	$("#grid").addClass("place_mode");
+		$("#grid td").off().mouseenter(function() {
+			if(PlaceCheck[type](this)) {
+				$(this).addClass("place_good");
+			} else {
+				$(this).addClass("place_bad");
+			}
+		}).mouseleave(function() {
+			$(this).removeClass("place_bad").removeClass("place_good");
+		});
+  }
+
   return {
     "load": load,
     "get": get,
     "getInfo": getInfo,
-	 "colors": colors
+	 "colors": colors,
+	 "placeMode": placeMode,
   };
 })();
+
+var PlaceCheck = {
+	1: function() {
+		return true;
+	}
+};

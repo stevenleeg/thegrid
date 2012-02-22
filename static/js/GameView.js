@@ -37,6 +37,7 @@ var GameView = (function() {
 
 	function setupEvents() {
 		$(".menu").click(clickMenu);
+		$(".submenu a").click(selectType);
 	}
 
 	function joinGame() {
@@ -67,6 +68,7 @@ var GameView = (function() {
 		color = data['color'];
 		Grid.load(data['coords']);
 	}
+
 	function joinGameCb(data) {
 		if(data['status'] != 200) {
 			alert("Something went wrong while trying to join the room! " + data['status']);
@@ -120,6 +122,13 @@ var GameView = (function() {
 			menu.removeClass("selected");
 			$(".menu").fadeIn(50);
 		});
+	}
+
+	function selectType() {
+		var places;
+		$(this).addClass("selected");
+		places = $(this).attr("places");
+		Grid.placeMode(places);
 	}
 
 	return {

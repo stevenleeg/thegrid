@@ -5,15 +5,17 @@
 
 	"coords": {
 		"1_1": {
-			"type": 1,
+			"type": 2,
 			"health": 100,
 			"player": 1
 		},
 		"1_0": {
+			"type": 1,
 			"health": 25,
 			"player": 1
 		},
 		"0_1": {
+			"type": 1,
 			"health": 25,
 			"player": 1
 		}
