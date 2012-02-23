@@ -42,6 +42,9 @@ var GameEvents = (function() {
 
 	function placeTile() {
 		var color, coord;
+		if($(this).hasClass("place_good") == false) {
+			return;
+		}
 		if(Grid.place_type == 1) {
 			color = Grid.colors[Grid.pid];
 		}

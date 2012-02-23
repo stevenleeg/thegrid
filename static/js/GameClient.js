@@ -5,6 +5,8 @@ var GameClient = (function() {
 
 	function set(data) {
 		Grid.place(data['coord'], data['tile'], Grid.colors[data['player']]);
+		$("#" + data['coord']).data("player", data['player']);
+		$("#" + data['coord']).data("health", data['health']);
 	}
 
 	function addPlayer(data) {
