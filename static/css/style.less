@@ -110,8 +110,14 @@ div.menu {
 			border:1px solid @gray;
 			color:@dark;
 		}
-		a.option:hover, a.option.selected {
+
+		a.option:hover:not(.disabled), a.option.selected {
 			border:1px solid @dark;
+		}
+
+		a.option.disabled {
+			background-color: @gray;
+			cursor: default;
 		}
 	}
 }

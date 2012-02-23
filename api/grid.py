@@ -13,7 +13,7 @@ class Exists(tornado.web.RequestHandler):
 		if grid.exists() is False:
 			return jsonify(self, status=404)
 
-		return jsonify(self, status=200)
+		return jsonify(self, status=200, colors = grid.getUsedColors())
 
 class Create(tornado.web.RequestHandler):
 	def post(self):

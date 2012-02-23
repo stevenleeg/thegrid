@@ -51,6 +51,9 @@ var BaseUI = (function() {
 		// Set some initial variables
 		targ = $(e.target);
 		selector = $(e.target).parent();
+		if(targ.hasClass("disabled")) {
+			return;
+		}
 		name = selector.attr("name");
 		
 		// Set the value

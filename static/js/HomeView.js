@@ -73,6 +73,11 @@ var HomeView = (function() {
 	function roomCheckCb(data) {
 		if(data['status'] == 200) {
 			$("input[name=finish]").removeClass("red").val("enter");
+			$("div[name=color] a").each(function() {
+				if(data['colors'].indexOf($(this).attr("value")) >= 0) {
+					$(this).addClass("disabled");
+				}
+			});
 		} else {
 			$("input[name=finish]").addClass("red").val("create room");
 		}

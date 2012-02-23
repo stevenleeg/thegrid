@@ -75,6 +75,13 @@ class Grid:
 	def getColors(self):
 		return db.hgetall(self.dbid + ":clr")
 
+	def getUsedColors(self):
+		colors = []
+		for uid in self.getUsers():
+			colors.append(User(uid)['color'])
+
+		return colors
+
 	def load(self, coords):
 		""" Loads a dict of coord data onto the grid """
 		for coord in coords:
