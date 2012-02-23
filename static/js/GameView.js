@@ -114,6 +114,7 @@ var GameView = (function() {
 			$(".menu.selected, #menu_"+open).fadeIn(50)
 		});
 		$(menu).off().click(returnMain);
+		KeyEvents.setScope("build", returnMain);
 	}
 
 	function returnMain() {
@@ -125,6 +126,7 @@ var GameView = (function() {
 			menu.removeClass("selected");
 			$(".menu").fadeIn(50);
 		});
+		KeyEvents.clearScope();
 	}
 
 	function selectType(e) {
@@ -134,6 +136,7 @@ var GameView = (function() {
 		$(".submenu a:not(.selected)").hide();
 		places = $(e.target).attr("places");
 		Grid.placeMode(places);
+		KeyEvents.setScope("place", returnMain);
 	}
 
 	function deselectType() {
@@ -141,6 +144,7 @@ var GameView = (function() {
 		$(".submenu a").show();
 		$(".submenu a").off("click", deselectType).on("click",selectType);
 		Grid.normalMode();
+		KeyEvents.setScope("build", returnMain);
 	}
 
 	return {

@@ -3,7 +3,7 @@ var KeyEvents = (function() {
 	var callback = function() {};
 
 	function setup() {
-		$(document).bind("keyup", "esc", esc);
+		$(document).bind("keydown", "esc", esc);
 		$(document).bind("keypress", "b", b);
 		$(document).bind("keypress", "t", t);
 
@@ -20,6 +20,11 @@ var KeyEvents = (function() {
 		}
 	}
 
+	function clearScope() {
+		KeyEvents.scope = "main";
+		KeyEvents.callback = function() {};
+	}
+
 	function esc() {
 		KeyEvents.scope = "main";
 		KeyEvents.callback();
@@ -30,7 +35,6 @@ var KeyEvents = (function() {
 		if(KeyEvents.scope == "main") {
 			e.target = $(".menu[opens=buildings]");
 			GameView.clickMenu(e)
-			setScope("build", GameView.returnMain);
 		}
 	}
 
@@ -39,13 +43,13 @@ var KeyEvents = (function() {
 		if(KeyEvents.scope == "build") {
 			e.target = $(".submenu a[places=1]");
 			GameView.selectType(e);
-			setScope("place", GameView.returnMain);
 		}
 	}
 
 	return {
 		"setup": setup,
 	 	"setScope": setScope,
+		"clearScope": clearScope,
 		"scope": scope
 	};
 })();
