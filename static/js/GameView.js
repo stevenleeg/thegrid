@@ -56,6 +56,7 @@ var GameView = (function() {
 	function rejoinGameCb(data) {
 		if(data['status'] == 404) {
 			$.cookie("uid", null);
+			Grid.uid = undefined;
 			return ViewController.load(HomeView);
 		}
 		if(data['status'] != 200) {
