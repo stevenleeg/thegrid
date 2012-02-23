@@ -19,6 +19,7 @@ def joinGrid(handler, **args):
 	handler.user['color'] = color
 	# Add the user to the grid/UpdateManager
 	pid = g.addUser(handler.user)
+
 	if pid is False:
 		return { "status":406, "error": "Grid is full" }
 
@@ -29,6 +30,16 @@ def joinGrid(handler, **args):
 
 	# Announce our color to all other clients
 	UpdateManager.sendGrid(g, "addPlayer", handler.user, pid = pid, color = color)
+
+	# Add their new coords 
+	updated = g.loadEvent("join_%s" % pid)
+	for coord in updated:
+		UpdateManager.sendGrid(g, "set", handler.user,
+			coord = str(coord),
+			tile = coord['type'],
+			player = pid,
+			health = coord['health']
+		)
 
 	return {
 		"status":200,

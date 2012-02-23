@@ -1,9 +1,8 @@
-from utility import db
+from utility import db, UpdateManager
 from coord import Coord
 from user import User
 from time import time
-import itertools
-import re
+import re, json, itertools
 
 class Grid:
 	def __init__(self, gid):
@@ -18,7 +17,7 @@ class Grid:
 		return obj(uid)
 
 	@classmethod
-	def create(obj, name, size):
+	def create(obj, name, size, mapname):
 		if re.match("^[A-z0-9]*$", name) is None:
 				return (False, "name")
 
@@ -30,10 +29,15 @@ class Grid:
 		db.hmset("g:%s" % uid, {
 			"name": name,
 			"size": size,
+			"map": mapname,
 			"started": int(time()),
 		})
 
-		return (True, obj(uid))
+		# Load the initial coords from the map file
+		g = obj(uid)
+		g.loadEvent("init")
+
+		return (True, g)
 
 	# Client handling
 	def addUser(self, user, pid = None):
@@ -91,6 +95,27 @@ class Grid:
 				c[key] = coords[coord][key]
 
 		return True
+
+	def loadEvent(self, event):
+		f = open("static/maps/%s_%s.json" % (self['size'], self['map']), "r")
+		data = json.loads(f.read())
+		f.close()
+
+		if event == "init":
+			self['players'] = data['players']
+
+		# Load event
+		coords = {}
+		for coord in data['events'][event]:
+			coords[coord] = data['coords'][coord]
+
+		self.load(coords)
+
+		coords = []
+		for coord in data['events'][event]:
+			coords.append(self.get(coord))
+
+		return coords
 
 	def dump(self):
 		""" Dumps all coords on the grid """

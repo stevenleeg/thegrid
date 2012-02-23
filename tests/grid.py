@@ -5,7 +5,7 @@ import unittest
 class TestGrid(unittest.TestCase):
 	def setUp(self):
 		db.flushdb()
-		status, self.g = Grid.create("test", 16)
+		status, self.g = Grid.create("test", 32, "default")
 	
 	def testFromName(self):
 		self.assertEqual(Grid.fromName("test"), self.g)

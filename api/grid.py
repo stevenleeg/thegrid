@@ -36,18 +36,10 @@ class Create(tornado.web.RequestHandler):
 		if Grid.fromName(name).exists():
 			return jsonify(self, status=406, error = "Name taken")
 
-		status, g = Grid.create(name, size)
+		status, g = Grid.create(name, size, "default")
 
 		if status == False:
 			return jsonify(self, status=406, error=g)
-
-		# Now preload the grid with a mapfile
-		# TODO: Get map from URL
-		f = open("static/maps/%s_%s.json" % (size, mapfile), "r")
-		data = json.loads(f.read())
-		f.close()
-		g.load(data['coords'])
-		g['players'] = data['players']
 
 		return jsonify(self, status=200, gid = g['id'])
 
