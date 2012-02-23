@@ -76,9 +76,9 @@ var GameView = (function() {
 			ViewController.load(HomeView)
 		}
 		Grid.colors = data['colors'];
-		pid = data['pid'];
-		uid = data['uid'];
-		$.cookie("uid", uid, 1);
+		Grid.pid = data['pid'];
+		Grid.uid = data['uid'];
+		$.cookie("uid", Grid.uid, 1);
 		$.cookie("size", size, 1);
 		Grid.load(data['coords']);
 	}
