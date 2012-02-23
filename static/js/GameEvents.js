@@ -1,12 +1,6 @@
 var GameEvents = (function() {
 	var scrolling = {};
 
-	function setupKeys() {
-		//key('up, down, left, right', moveViewport);
-		$(document).bind("keydown","up down left right", moveViewport)
-		$(document).bind("keyup","up down left right", stopMoveViewport)
-	}
-
 	function moveViewport(e) {
 		var x, y, move;
 		if(scrolling[e.which] != undefined) {
@@ -67,7 +61,8 @@ var GameEvents = (function() {
 	}
 
 	return {
-		"setupKeys": setupKeys,
 		"placeTile": placeTile,
+		"moveViewport": moveViewport,
+		"stopMoveViewport": stopMoveViewport,
 	};
 })();

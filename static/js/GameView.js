@@ -32,12 +32,13 @@ var GameView = (function() {
 
 	function postFade(pass) {
 		view_size = [$("#container").width(), $("#container").height()];
-		GameEvents.setupKeys()
 	}
 
 	function setupEvents() {
 		$(".menu").click(clickMenu);
 		$(".submenu a").on("click",selectType);
+
+		KeyEvents.setup();
 	}
 
 	function joinGame() {
@@ -104,9 +105,9 @@ var GameView = (function() {
 	/*
 	 * Menu interactions
 	 */
-	function clickMenu() {
+	function clickMenu(e) {
 		var menu;
-		menu = $(this)
+		menu = $(e.target)
 		open = menu.attr("opens");
 		$(".menu").fadeOut(50, function() {
 			menu.addClass("selected");
@@ -126,12 +127,12 @@ var GameView = (function() {
 		});
 	}
 
-	function selectType() {
+	function selectType(e) {
 		var places;
-		$(this).addClass("selected");
+		$(e.target).addClass("selected");
 		$(".submenu a").off("click", selectType).on("click",deselectType);
 		$(".submenu a:not(.selected)").hide();
-		places = $(this).attr("places");
+		places = $(e.target).attr("places");
 		Grid.placeMode(places);
 	}
 
@@ -153,6 +154,8 @@ var GameView = (function() {
 		// Public methods
 		"panViewport": panViewport,
 		"setViewport": setViewport,
+		"clickMenu": clickMenu,
+		"selectType": selectType,
 		"deselectType": deselectType,
 		"returnMain": returnMain
 	}
