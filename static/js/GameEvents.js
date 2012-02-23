@@ -34,14 +34,14 @@ var GameEvents = (function() {
 		delete scrolling[e.which];
 	}
 
-	function placeTile() {
+	function placeTile(e) {
 		var color, coord;
-		if($(this).hasClass("place_good") == false) {
+		if($(e.target).hasClass("place_good") == false) {
 			return;
 		}
 
 		color = Grid.colors[Grid.pid];
-		coord = $(this).attr("id");
+		coord = $(e.target).attr("id");
 		Grid.place(coord, Grid.place_type, color);
 
 		AsyncClient.send("place", {

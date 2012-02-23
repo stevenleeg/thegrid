@@ -12,6 +12,28 @@ var Grid = (function() {
     }
   }
 
+  function setupEvents() {
+		$("#grid td").off().mouseenter(function() {
+			Grid.hover = $(this).attr("id");
+			if(Grid.place_mode) {
+				if(PlaceCheck[Grid.place_type]($(this).attr("id"))) {
+						$(this).addClass("place_good");
+					} else {
+						$(this).addClass("place_bad");
+				}
+			}
+		}).mouseleave(function() {
+			Grid.hover = null;
+			if(Grid.place_mode) {
+				$(this).removeClass("place_bad").removeClass("place_good");
+			}
+		}).click(function(e) {
+			if(Grid.place_mode) {
+				GameEvents.placeTile(e);
+			}
+		});
+  }
+
   function get(x, y) {
 	  return $("#" + x + "_" + y).data("d");
   }
@@ -31,23 +53,22 @@ var Grid = (function() {
 
   function placeMode(type) {
 	   Grid.place_type = type;
+		Grid.place_mode = true;
 		$("#grid").addClass("place_mode");
-		$("#grid td").off().mouseenter(function() {
-			if(PlaceCheck[type]($(this).attr("id"))) {
-				$(this).addClass("place_good");
-			} else {
-				$(this).addClass("place_bad");
+		if(Grid.hover != null) {
+			if(PlaceCheck[Grid.place_type](Grid.hover)) {
+					$("#" + Grid.hover).addClass("place_good");
+				} else {
+					$("#" + Grid.hover).addClass("place_bad");
 			}
-		}).mouseleave(function() {
-			$(this).removeClass("place_bad").removeClass("place_good");
-		}).click(GameEvents.placeTile);
+		}
 	}
 
   function normalMode() {
 		$("#grid").removeClass("place_mode");
 		$("#grid td.place_good, #grid td.place_bad").removeClass("place_good").removeClass("place_bad");
-		$("#grid td").off();
 		Grid.place_type = 0;
+		Grid.place_mode = false;
   }
 
   function place(coord, type, color) {
@@ -111,6 +132,9 @@ var Grid = (function() {
 	 "destroy": destroy,
 	 "parseCoord": parseCoord,
 	 "inRangeOf": inRangeOf,
+	 "setupEvents": setupEvents,
+	 "place_mode": false,
+	 "hover": null,
   };
 })();
 
