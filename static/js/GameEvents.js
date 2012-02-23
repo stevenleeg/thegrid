@@ -45,9 +45,8 @@ var GameEvents = (function() {
 		if($(this).hasClass("place_good") == false) {
 			return;
 		}
-		if(Grid.place_type == 1) {
-			color = Grid.colors[Grid.pid];
-		}
+
+		color = Grid.colors[Grid.pid];
 		coord = $(this).attr("id");
 		Grid.place(coord, Grid.place_type, color);
 

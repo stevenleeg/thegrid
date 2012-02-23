@@ -87,10 +87,12 @@ var Grid = (function() {
 		}
 		for(var y = startY; y <= (coord[1] + radius); y++) {
 			selected = getCoord(coord[0], y);
-			if(owner && selected.data("player") == owner) {
-				return true;
-			} else if(!owner) {
-				return true;
+			if(selected.hasClass("t" + type) && y != coord[1]) {
+				if(owner && selected.data("player") == owner) {
+					return true;
+				} else if(!owner) {
+					return true;
+				}
 			}
 		}
 
@@ -119,9 +121,17 @@ var PlaceCheck = {
 		} else {
 			return false;
 		}
+	},
+	3: function(coord) {
+		if(Grid.inRangeOf(coord, 99, 1)) {
+			return true;
+		} 
+
+		return false
 	}
 };
 
 var TileHealth = {
 	1: 25,
+	3: 50
 }

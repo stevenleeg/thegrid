@@ -4,9 +4,13 @@ def territory(coord):
 def headquarters(coord):
 	return False
 
+def miner(coord):
+	return True
+
 TileChecks = {
 	1: territory,
-	2: headquarters
+	2: headquarters,
+	3: miner
 }
 
 TileProps = {
@@ -15,5 +19,8 @@ TileProps = {
 	},
 	2: {
 		"health": 100,
+	},
+	3: {
+		"health": 50,
 	}
 }

@@ -92,7 +92,7 @@ def place(handler, **args):
 
 	g = Grid(handler.user['grid'])
 	c = g.get(coord)
-	if c.exists():
+	if c.exists() and c['type'] != "1":
 		return { "status":405, "coord": coord, "error": "coord exists" }
 
 	try:
