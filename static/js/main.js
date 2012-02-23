@@ -68,10 +68,39 @@ var BaseUI = (function() {
 		targ.addClass("selected");
 	}
 
+	function notify(message, error, sticky) {
+		// Yellow or red notification
+		if(error) {
+			notification = $("<div class='notification error'></div>");
+		} else {
+			notification = $("<div class='notification'></div>");
+		}
+		// Show it
+		notification.hide().text(message).prependTo(".notifications").fadeIn(250);
+		notification.click(function() {
+			clearInterval($(this).data("timeout"));
+			$(this).fadeOut(function() {
+				$(this).remove();
+			});
+		});
+
+		// If it's sticky, keep it there, otherwise kill it in a second
+		if(sticky) {
+			return;
+		}
+
+		notification.data("timeout", setTimeout(function() {
+			notification.fadeOut(250, function() {
+				$(this).remove();
+			});
+		}, 2000));
+	}
+
 	return {
 		"loading": loading,
 	 	"done": done,
-	 	"optionSelect": optionSelect
+	 	"optionSelect": optionSelect,
+		"notify": notify
 	};
 })();
 
