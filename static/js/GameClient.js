@@ -9,6 +9,7 @@ var GameClient = (function() {
 
 	function addPlayer(data) {
 		Grid.colors[data['pid']] = data['color'];
+		BaseUI.notify("A new player has joined");
 	}
 
 	return {
