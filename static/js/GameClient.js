@@ -14,9 +14,14 @@ var GameClient = (function() {
 		BaseUI.notify("A new player has joined");
 	}
 
+	function newMessage(data) {
+		BaseUI.newMessage(Grid.colors[data['pid']], data['text']);
+	}
+
 	return {
 		"test": test,
 	 	"set": set,
 	 	"addPlayer": addPlayer,
+		"newMessage": newMessage
 	}
 })();

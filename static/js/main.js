@@ -138,8 +138,17 @@ var BaseUI = (function() {
 		$(".chatbox").removeClass("show");
 		if(msgbox.val().length > 0) {
 			newMessage(Grid.colors[Grid.pid], msgbox.val());
+			AsyncClient.send("sendMessage", {
+				"text": msgbox.val()
+			}, sendMessageCb);
 		}
 		msgbox.val("").blur().off();
+	}
+
+	function sendMessageCb(data) {
+		if(data['status'] != 200) {
+			BaseUI.notify("There was an error while trying to send your message.", true);
+		}
 	}
 
 	return {

@@ -112,3 +112,11 @@ def place(handler, **args):
 	)
 
 	return { "status": 200 }
+
+def sendMessage(handler, **args):
+	UpdateManager.sendGrid(Grid(handler.user['grid']), "newMessage", handler.user,
+		pid = handler.user['pid'],
+		text = args['text']
+	)
+
+	return { "status": 200 }
