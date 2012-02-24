@@ -35,6 +35,8 @@ var ViewController = (function() {
 })();
 
 var BaseUI = (function() {
+	var show_msg = false;
+	
 	function loading() {
 		load_timeout = setTimeout(function() {
 			$("#loading").show();
@@ -96,11 +98,59 @@ var BaseUI = (function() {
 		}, 2000));
 	}
 
+	function newMessage(color, text) {
+		var msg;
+		msg = $("<div class='message'>" + text + "</div>").hide().insertBefore("input[name=message]");
+		msg.css("border-color", color);
+		msg.data("in", true);
+		if(!BaseUI.show_msg) {
+			msg.fadeIn(500, function() {
+				$(this).data("in", false);
+			});
+			msg.data("timeout", setTimeout(function() {
+				msg.fadeOut(500);
+			}, 3000));
+		} else {
+			msg.fadeIn(250, function() {
+				$(this).data("in", false);
+			});
+		}
+	}
+
+	function showChatbox() {
+		$(".chatbox .message").each(function() {
+			clearTimeout($(this).data("timeout"));
+			$(this).show();
+		});
+		$(".chatbox").addClass("show");
+		$(".chatbox input").focus().bind("keydown", "return", hideChatbox);
+		BaseUI.show_msg = true;
+	}
+
+	function hideChatbox() {
+		$(".chatbox .message").each(function() {
+			if(!$(this).data("in")) {
+				$(this).hide();
+			}
+		});
+		BaseUI.show_msg = false;
+		msgbox = $(".chatbox input");
+		$(".chatbox").removeClass("show");
+		if(msgbox.val().length > 0) {
+			newMessage(Grid.colors[Grid.pid], msgbox.val());
+		}
+		msgbox.val("").blur().off();
+	}
+
 	return {
 		"loading": loading,
 	 	"done": done,
 	 	"optionSelect": optionSelect,
-		"notify": notify
+		"notify": notify,
+		"newMessage": newMessage,
+		"showChatbox": showChatbox,
+		"hideChatbox": hideChatbox,
+		"show_msg": show_msg
 	};
 })();
 

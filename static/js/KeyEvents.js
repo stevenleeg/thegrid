@@ -10,6 +10,7 @@ var KeyEvents = (function() {
 
 		$(document).bind("keydown","up down left right", GameEvents.moveViewport)
 		$(document).bind("keyup","up down left right", GameEvents.stopMoveViewport)
+		$(document).bind("keydown", "return", enter);
 	}
 
 	function setScope(to, backCb) {
@@ -53,6 +54,10 @@ var KeyEvents = (function() {
 			e.target = $(".submenu a[places=3]");
 			GameView.selectType(e);
 		}
+	}
+
+	function enter() {
+		BaseUI.showChatbox();
 	}
 
 	return {
