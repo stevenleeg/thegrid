@@ -16,6 +16,7 @@ var Grid = (function() {
 		$("#grid td").off().mouseenter(function() {
 			Grid.hover = $(this).attr("id");
 			if(Grid.place_mode) {
+				$(this).css("background-color", "");
 				if(PlaceCheck[Grid.place_type]($(this).attr("id"))) {
 						$(this).addClass("place_good");
 					} else {
@@ -26,6 +27,7 @@ var Grid = (function() {
 			Grid.hover = null;
 			if(Grid.place_mode) {
 				$(this).removeClass("place_bad").removeClass("place_good");
+				$(this).css("background-color", Grid.colors[$(this).data("player")]);
 			}
 		}).click(function(e) {
 			if(Grid.place_mode) {
@@ -56,6 +58,7 @@ var Grid = (function() {
 		Grid.place_mode = true;
 		$("#grid").addClass("place_mode");
 		if(Grid.hover != null) {
+			$("#" + Grid.hover).css("background-color", "");
 			if(PlaceCheck[Grid.place_type](Grid.hover)) {
 					$("#" + Grid.hover).addClass("place_good");
 				} else {
@@ -66,7 +69,11 @@ var Grid = (function() {
 
   function normalMode() {
 		$("#grid").removeClass("place_mode");
-		$("#grid td.place_good, #grid td.place_bad").removeClass("place_good").removeClass("place_bad");
+		$("#grid td.place_good, #grid td.place_bad").each(function() {
+			$(this).removeClass("place_good").removeClass("place_bad");
+			$(this).css("background-color", Grid.colors[$(this).data("player")]);
+		});
+			
 		Grid.place_type = 0;
 		Grid.place_mode = false;
   }
