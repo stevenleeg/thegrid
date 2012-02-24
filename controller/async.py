@@ -25,6 +25,8 @@ def joinGrid(handler, **args):
 
 	handler.user['pid'] = pid
 	handler.user['grid'] = gid
+	handler.user['cash'] = 500 # Starting cash value
+	handler.user['inc'] = 0
 	handler.user['active'] = True
 	UpdateManager.addClient(handler.user, handler)
 
@@ -45,6 +47,8 @@ def joinGrid(handler, **args):
 		"status":200,
 		"uid": handler.user['id'],
 		"pid": pid,
+		"cash": 500,
+		"inc": 0,
 		"colors": g.getColors(),
 		"coords": g.dump()
 	}
@@ -78,6 +82,8 @@ def rejoinGrid(handler, **args):
 	return {
 		"status":200,
 		"uid": handler.user['id'],
+		"cash": handler.user['cash'],
+		"inc": handler.user['inc'],
 		"pid": pid,
 		"colors": g.getColors(),
 		"coords": g.dump()

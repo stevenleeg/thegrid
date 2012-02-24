@@ -70,6 +70,8 @@ var GameView = (function() {
 		Grid.pid = data['pid'];
 		Grid.color = data['color'];
 		Grid.load(data['coords']);
+		GameView.setCash(data['cash']);
+		GameView.setIncome(data['inc']);
 	}
 
 	function joinGameCb(data) {
@@ -83,6 +85,8 @@ var GameView = (function() {
 		$.cookie("uid", Grid.uid, 1);
 		$.cookie("size", size, 1);
 		Grid.load(data['coords']);
+		GameView.setCash(data['cash']);
+		GameView.setIncome(data['inc']);
 	}
 
 	/*
@@ -102,6 +106,13 @@ var GameView = (function() {
 		cont.scrollLeft(x);
 	}
 
+	function setCash(amt) {
+		$("#cash").text(amt);
+	}
+
+	function setIncome(val) {
+		$("#inc").text( val);
+	}
 
 	/*
 	 * Menu interactions
@@ -159,6 +170,8 @@ var GameView = (function() {
 		// Public methods
 		"panViewport": panViewport,
 		"setViewport": setViewport,
+		"setCash": setCash,
+		"setIncome": setIncome,
 		"clickMenu": clickMenu,
 		"selectType": selectType,
 		"deselectType": deselectType,
