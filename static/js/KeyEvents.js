@@ -6,6 +6,7 @@ var KeyEvents = (function() {
 		$(document).bind("keydown", "esc", esc);
 		$(document).bind("keypress", "b", b);
 		$(document).bind("keypress", "t", t);
+		$(document).bind("keypress", "m", m);
 
 		$(document).bind("keydown","up down left right", GameEvents.moveViewport)
 		$(document).bind("keyup","up down left right", GameEvents.stopMoveViewport)
@@ -42,6 +43,14 @@ var KeyEvents = (function() {
 		var e = {};
 		if(KeyEvents.scope == "build") {
 			e.target = $(".submenu a[places=1]");
+			GameView.selectType(e);
+		}
+	}
+
+	function m() {
+		var e = {};
+		if(KeyEvents.scope == "build") {
+			e.target = $(".submenu a[places=3]");
 			GameView.selectType(e);
 		}
 	}
