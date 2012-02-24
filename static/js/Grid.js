@@ -116,9 +116,18 @@ var Grid = (function() {
 				}
 			}
 		}
-
-		return false;
   }
+
+	function isOwned(coord, pid) {
+		if($("#" + coord).data("player") == pid) {
+			return true;
+		}
+		return false;
+	}
+
+	function exists(coord) {
+		return $("#" + coord).hasClass("t1");
+	}
 
   return {
     "load": load,
@@ -132,6 +141,8 @@ var Grid = (function() {
 	 "destroy": destroy,
 	 "parseCoord": parseCoord,
 	 "inRangeOf": inRangeOf,
+	 "isOwned": isOwned,
+	 "exists": exists,
 	 "setupEvents": setupEvents,
 	 "place_mode": false,
 	 "hover": null,
@@ -140,14 +151,14 @@ var Grid = (function() {
 
 var PlaceCheck = {
 	1: function(coord) {
-		if(Grid.inRangeOf(coord, 1, 1, Grid.pid)) {
+		if(Grid.inRangeOf(coord, 1, 1, Grid.pid) && !Grid.exists(coord)) {
 			return true;
 		} else {
 			return false;
 		}
 	},
 	3: function(coord) {
-		if(Grid.inRangeOf(coord, 99, 1)) {
+		if(Grid.inRangeOf(coord, 99, 1) && Grid.isOwned(coord, Grid.pid)) {
 			return true;
 		} 
 
