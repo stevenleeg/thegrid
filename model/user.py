@@ -25,6 +25,10 @@ class User:
 		self['cash'] = int(self['cash']) + amt
 		return self['cash']
 
+	def addIncome(self, amt):
+		db.hincrby(self.dbid, "inc", amt)
+		return self['inc']
+
 	def __getitem__(self, key):
 		if key == "id":
 			return self.uid

@@ -144,6 +144,30 @@ class Grid:
 
 		return pts
 
+	def inRangeOf(self, coord, tile, radius):
+		minX = coord.x - radius
+		minY = coord.y - radius
+		if minX < 0:
+			minX = 0
+		if minY < 0:
+			minY = 0
+
+		x_range = range(minX, coord.x + radius + 1)
+		y_range = range(minY, coord.y + radius + 1)
+		in_range = 0
+
+		for x in x_range:
+			c = self.get(x, coord.y)
+			if c.exists() and int(c['type']) == tile and c != coord:
+				in_range += 1
+
+		for y in y_range:
+			c = self.get(coord.x, y)
+			if c.exists() and int(c['type']) == tile and c != coord:
+				in_range += 1
+
+		return in_range
+
 	def get(self, x, y = None):
 		""" Gets a coordinate from the grid """
 		if type(x) in (str, unicode) and y is None:

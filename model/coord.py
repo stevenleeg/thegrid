@@ -11,9 +11,9 @@ class Coord:
       if y is None:
         raise TypeError
     
-		# Set some instance variables
-    self.x = x
-    self.y = y
+	# Set some instance variables
+    self.x = int(x)
+    self.y = int(y)
 
     self.dbid = "c:%s:%s" % (grid, str(self))
   

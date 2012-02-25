@@ -1,10 +1,21 @@
-def add_territory(coord):
+from utility import UpdateManager
+
+def add_territory(grid, coord, user):
 	return True
 
-def add_headquarters(coord):
+def add_headquarters(grid, coord, user):
 	return False
 
-def add_miner(coord):
+def add_miner(grid, coord, user):
+	mines = grid.inRangeOf(coord, 99, 1)
+	if mines == 0:
+		return False
+	
+	income = mines * 5
+	total = user.addIncome(income)
+
+	UpdateManager.sendClient(user, "setInc", inc = total)
+
 	return True
 
 TileAdd = {

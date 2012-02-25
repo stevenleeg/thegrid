@@ -38,5 +38,19 @@ class TestGrid(unittest.TestCase):
 		for coord in compare:
 			self.assertIn(coord, around)
 	
+	def testInRangeOf(self):
+		self.g.loadEvent("join_1")
+		# Test horizontal
+		c = self.g.get(0, 1)
+		self.assertEqual(self.g.inRangeOf(c, 99, 1), 1)
+
+		# And vertical
+		c = self.g.get(1, 0)
+		self.assertEqual(self.g.inRangeOf(c, 99, 1), 1)
+
+		# And distance!
+		c = self.g.get(10,0)
+		self.assertEqual(self.g.inRangeOf(c, 99, 10), 1)
+	
 	def tearDown(self):
 		db.flushdb()

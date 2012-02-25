@@ -22,11 +22,16 @@ var GameClient = (function() {
 		GameView.setCash(data['cash']);
 	}
 
+	function setInc(data) {
+		GameView.setIncome(data['inc']);
+	}
+
 	return {
 		"test": test,
 	 	"set": set,
 	 	"addPlayer": addPlayer,
 		"newMessage": newMessage,
 		"setCash": setCash,
+		"setInc": setInc,
 	}
 })();

@@ -103,7 +103,7 @@ def place(handler, **args):
 		return { "status":405, "coord": coord, "error": "coord exists" }
 
 	try:
-		placeable = TileAdd[tile](c)
+		placeable = TileAdd[tile](g, c, handler.user)
 	except KeyError:
 		return { "status": 406, "coord": coord, "error": "invalid tile" }
 
