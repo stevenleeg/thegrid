@@ -114,6 +114,10 @@ var GameView = (function() {
 		$("#inc").text( val);
 	}
 
+	function getCash() {
+		return parseInt($("#cash").text());
+	}
+
 	/*
 	 * Menu interactions
 	 */
@@ -171,6 +175,7 @@ var GameView = (function() {
 		"panViewport": panViewport,
 		"setViewport": setViewport,
 		"setCash": setCash,
+		"getCash": getCash,
 		"setIncome": setIncome,
 		"clickMenu": clickMenu,
 		"selectType": selectType,

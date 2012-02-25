@@ -18,10 +18,15 @@ var GameClient = (function() {
 		BaseUI.newMessage(Grid.colors[data['pid']], data['text']);
 	}
 
+	function setCash(data) {
+		GameView.setCash(data['cash']);
+	}
+
 	return {
 		"test": test,
 	 	"set": set,
 	 	"addPlayer": addPlayer,
-		"newMessage": newMessage
+		"newMessage": newMessage,
+		"setCash": setCash,
 	}
 })();

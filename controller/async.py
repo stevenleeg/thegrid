@@ -93,6 +93,7 @@ def place(handler, **args):
 	try:
 		coord = args['coord']
 		tile = int(args['tile'])
+		props = TileProps[int(args['tile'])]
 	except KeyError, ValueError:
 		return { "status": 406 }
 
@@ -106,15 +107,23 @@ def place(handler, **args):
 	except KeyError:
 		return { "status": 406, "coord": coord, "error": "invalid tile" }
 
+	# Make sure they have enough cash for it
+	if int(handler.user['cash']) < props['price']:
+		return { "status": 412, "coord": coord, "error": "not enough cash" }
+
+	# Subtract the cash
+	handler.user.addCash(-props['price'])
+	UpdateManager.sendClient(handler.user, "setCash", cash = handler.user['cash'])
+
 	c['type'] = tile
 	c['player'] = handler.user['pid']
-	c['health'] = TileProps[tile]
+	c['health'] = props['health']
 
 	UpdateManager.sendGrid(g, "set", handler.user,
 		coord = str(c),
 		tile = tile,
 		player = handler.user['pid'],
-		health = TileProps[tile]
+		health = props['health']
 	)
 
 	return { "status": 200 }

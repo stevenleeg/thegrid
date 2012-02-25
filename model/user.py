@@ -1,4 +1,4 @@
-from utility import db
+from utility import db, UpdateManager
 from uuid import uuid4
 import time
 
@@ -20,6 +20,10 @@ class User:
 
 	def remove(self):
 		return db.delete(self.dbid)
+
+	def addCash(self, amt):
+		self['cash'] = int(self['cash']) + amt
+		return self['cash']
 
 	def __getitem__(self, key):
 		if key == "id":

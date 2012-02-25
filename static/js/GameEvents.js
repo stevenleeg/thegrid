@@ -40,6 +40,12 @@ var GameEvents = (function() {
 			return;
 		}
 
+		// Make sure they have enough cash for it
+		if(GameView.getCash() < TileProps[Grid.place_type]['price']) {
+			BaseUI.notify("Not enough cash", true);
+			return;
+		}
+
 		color = Grid.colors[Grid.pid];
 		coord = $(e.target).attr("id");
 		Grid.place(coord, Grid.place_type, color);

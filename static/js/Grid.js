@@ -82,7 +82,7 @@ var Grid = (function() {
 	  	var coord;
 	  	coord = $("#" + coord)
 		coord.addClass("t" + type)
-		coord.data("player", Grid.pid).data("health", TileHealth[type]);
+		coord.data("player", Grid.pid).data("health", TileProps[type]['health']);
 		if(color != undefined) {
 			coord.css("background-color", color);
 		}
@@ -173,7 +173,13 @@ var PlaceCheck = {
 	}
 };
 
-var TileHealth = {
-	1: 25,
-	3: 50
+var TileProps = {
+	1: { 
+		"health": 25,
+		"price": 25
+	},
+	3: { 
+		"health": 50,
+		"price": 100
+	},
 }
