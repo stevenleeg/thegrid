@@ -17,6 +17,9 @@ class UpdateManager(object):
 			if message['data'] == "clients":
 				print "clients"
 				print obj.clients
+			if message['data'] == "income":
+				from model.periodical import payDay
+				payDay()
 	
 	@classmethod
 	def addClient(obj, user, callback):
@@ -32,7 +35,10 @@ class UpdateManager(object):
 	
 	@classmethod
 	def sendClient(obj, user, function, **kwargs):
-		obj.clients[user['id']].call(function, **kwargs)
+		try:
+			obj.clients[user['id']].call(function, **kwargs)
+		except KeyError:
+			pass
 	
 	@classmethod
 	def sendGrid(obj, grid, function, exclude = None, **kwargs):

@@ -5,6 +5,7 @@ import threading
 import utility
 import controller
 import api
+import model.periodical
 
 
 # URL Routing
@@ -28,4 +29,7 @@ if __name__ == "__main__":
 	listener.daemon = True
 	listener.start()
 
-	tornado.ioloop.IOLoop.instance().start()
+	loop = tornado.ioloop.IOLoop.instance()
+	tornado.ioloop.PeriodicCallback(model.periodical.payDay, 5000, loop).start()
+
+	loop.start()

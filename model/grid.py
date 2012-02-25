@@ -17,6 +17,14 @@ class Grid:
 		return obj(uid)
 
 	@classmethod
+	def all(obj):
+		grids = []
+		for gid in db.hvals("nameid"):
+			grids.append(obj(gid))
+
+		return grids
+
+	@classmethod
 	def create(obj, name, size, mapname):
 		if re.match("^[A-z0-9]*$", name) is None:
 				return (False, "name")
