@@ -71,6 +71,7 @@ var BaseUI = (function() {
 	}
 
 	function notify(message, error, sticky) {
+		var notification;
 		// Yellow or red notification
 		if(error) {
 			notification = $("<div class='notification error'></div>");
