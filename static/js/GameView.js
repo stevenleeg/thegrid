@@ -107,11 +107,27 @@ var GameView = (function() {
 	}
 
 	function setCash(amt) {
+		current = parseInt($("#cash").text());
+		if(amt < current) {
+			$("#cash").css("color", "#FF0000");
+			$("#cash").animate({"color": "#1D1D1D"}, 500);
+		} else if(amt > current) {
+			$("#cash").css("color", "#00FF00");
+			$("#cash").animate({"color": "#1D1D1D"}, 500);
+		}
 		$("#cash").text(amt);
 	}
 
 	function setIncome(val) {
-		$("#inc").text( val);
+		current = parseInt($("#inc").text());
+		if(val < current) {
+			$("#inc").css("color", "#FF0000");
+			$("#inc").animate({"color": "#1D1D1D"}, 500);
+		} else if(val > current) {
+			$("#inc").css("color", "#00FF00");
+			$("#inc").animate({"color": "#1D1D1D"}, 500);
+		}
+		$("#inc").text(val);
 	}
 
 	function getCash() {
