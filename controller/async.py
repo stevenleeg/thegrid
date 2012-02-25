@@ -1,4 +1,4 @@
-from model import Grid, User, TileChecks, TileProps
+from model import Grid, User, TileAdd, TileProps
 from utility import UpdateManager
 
 def test(handler, **args):
@@ -103,9 +103,13 @@ def place(handler, **args):
 		return { "status":405, "coord": coord, "error": "coord exists" }
 
 	try:
-		placeable = TileChecks[tile](c)
+		placeable = TileAdd[tile](c)
 	except KeyError:
 		return { "status": 406, "coord": coord, "error": "invalid tile" }
+
+	# If it's not placeable
+	if placeable is False:
+		return { "status": 412, "coord": coord, "error": "invalid placement" }
 
 	# Make sure they have enough cash for it
 	if int(handler.user['cash']) < props['price']:

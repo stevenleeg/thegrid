@@ -1,16 +1,16 @@
-def territory(coord):
+def add_territory(coord):
 	return True
 
-def headquarters(coord):
+def add_headquarters(coord):
 	return False
 
-def miner(coord):
+def add_miner(coord):
 	return True
 
-TileChecks = {
-	1: territory,
-	2: headquarters,
-	3: miner
+TileAdd = {
+	1: add_territory,
+	2: add_headquarters,
+	3: add_miner
 }
 
 TileProps = {
