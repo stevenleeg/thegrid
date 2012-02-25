@@ -1,4 +1,4 @@
-from utility import db, UpdateManager
+from utility import db
 from coord import Coord
 from user import User
 from time import time
