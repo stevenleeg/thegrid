@@ -1,4 +1,4 @@
-from utility import UpdateManager
+from utility import db, UpdateManager
 
 def add_territory(grid, coord, user):
 	return True
@@ -18,10 +18,14 @@ def add_miner(grid, coord, user):
 
 	return True
 
+def add_infector(grid, coord, user):
+	return True
+
 TileAdd = {
 	1: add_territory,
 	2: add_headquarters,
-	3: add_miner
+	3: add_miner,
+	4: add_infector
 }
 
 TileProps = {
@@ -34,6 +38,10 @@ TileProps = {
 	},
 	3: {
 		"health": 50,
+		"price": 100
+	},
+	4: {
+		"health": 25,
 		"price": 100
 	}
 }
