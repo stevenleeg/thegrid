@@ -4,6 +4,7 @@ var GameClient = (function() {
 	}
 
 	function set(data) {
+		Grid.destroy(data['coord']);
 		Grid.place(data['coord'], data['tile'], Grid.colors[data['player']]);
 		$("#" + data['coord']).data("player", data['player']);
 		$("#" + data['coord']).data("health", data['health']);
@@ -26,6 +27,10 @@ var GameClient = (function() {
 		GameView.setIncome(data['inc']);
 	}
 
+	function del(data) {
+		Grid.destoy(data['coord'])
+	}
+
 	return {
 		"test": test,
 	 	"set": set,
@@ -33,5 +38,6 @@ var GameClient = (function() {
 		"newMessage": newMessage,
 		"setCash": setCash,
 		"setInc": setInc,
+		"del": del,
 	}
 })();

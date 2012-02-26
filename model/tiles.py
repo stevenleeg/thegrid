@@ -19,6 +19,7 @@ def add_miner(grid, coord, user):
 	return True
 
 def add_infector(grid, coord, user):
+	db.rpush(grid.dbid + ":inf", str(coord))
 	return True
 
 TileAdd = {

@@ -89,7 +89,7 @@ var Grid = (function() {
   }
 
   function destroy(coord) {
-		$("#" + coord).attr("class", "").css("background-color", "");
+		$("#" + coord).attr("class", "").css("background-color", "").removeData();
   }
 
   function inRangeOf(coord, type, radius, owner) {
