@@ -2,7 +2,7 @@ from utility import db
 from coord import Coord
 from user import User
 from time import time
-import re, json, itertools
+import re, json, itertools, random
 
 class Grid:
 	def __init__(self, gid):
@@ -44,8 +44,29 @@ class Grid:
 		# Load the initial coords from the map file
 		g = obj(uid)
 		g.loadEvent("init")
+		if int(g['autogenerate']) == True:
+			g.generateTerrain()
 
 		return (True, g)
+
+	def generateTerrain(self):
+		"""
+		Pretty self explanitory. Goes through and generates mines and such
+		"""
+		size = int(self['size'])
+		add = False
+		for x in range(0, size):
+			for y in range(0, size):
+				r = random.randint(0, 30)
+				if r == 4 or add:
+					c = self.get(x, y)
+					if c.exists():
+						add = True
+						continue
+
+					c['type'] = 99
+					add = False
+					
 
 	# Client handling
 	def addUser(self, user, pid = None):
@@ -110,7 +131,9 @@ class Grid:
 		f.close()
 
 		if event == "init":
-			self['players'] = data['players']
+			for key in data:
+				if key not in ["coords", "events"]:
+					self[key] = data[key]
 
 		# Load event
 		coords = {}
