@@ -22,6 +22,9 @@ class Coord:
     vals = db.hmget(self.dbid, keys)
     return dict(zip(keys, vals))
 
+  def remove(self):
+	 db.remove(self.dbid)
+
   def exists(self):
     return db.exists(self.dbid)
 

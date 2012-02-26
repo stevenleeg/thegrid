@@ -23,17 +23,17 @@ class TestGrid(unittest.TestCase):
 	def testAround(self):
 		# Origin point
 		c = self.g.get(5,5)
-		c['test'] = "Hello"
+		c['type'] = 1
 
 		# Create surrounding points
-		self.g.get(5,6)['test'] = True # Above
-		self.g.get(5,4)['test'] = True # Below
-		self.g.get(4,5)['test'] = True # Left
-		self.g.get(6,5)['test'] = True # Right
+		self.g.get(5,6)['type'] = 1 # Above
+		self.g.get(5,4)['type'] = 1 # Below
+		self.g.get(4,5)['type'] = 1 # Left
+		self.g.get(6,5)['type'] = 1 # Right
 
 		compare = ["5_6", "5_4", "4_5", "6_5"]
 		
-		around = self.g.around(c, 6)
+		around = self.g.around(c, 1, 6)
 
 		for coord in compare:
 			self.assertIn(coord, around)

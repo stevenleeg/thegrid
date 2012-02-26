@@ -135,7 +135,7 @@ class Grid:
 
 		return rets
 
-	def around(self, point, radius):
+	def around(self, point, tile, radius, diagonals = False):
 		""" 
 		Finds all points located around the radius
 		Used for vision tiles
@@ -144,10 +144,17 @@ class Grid:
 		# Get a range of coords to try
 		x = range(point.x - radius, point.x + radius)
 		y = range(point.y - radius, point.y + radius)
-		points = itertools.product(x, y)
+		if diagonals:
+			points = []
+			for pt_x in x:
+				for pt_y in y:
+					points.append([pt_x, pt_y])
+		else:
+			points = itertools.product(x, y)
+
 		for point in points:
 			c = self.get(point[0], point[1])
-			if c.exists():
+			if c.exists() and int(c['type']) == tile:
 				pts.append(c)
 
 		return pts
