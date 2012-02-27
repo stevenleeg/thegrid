@@ -28,6 +28,8 @@ def joinGrid(handler, **args):
 	handler.user['cash'] = 500 # Starting cash value
 	handler.user['inc'] = 0
 	handler.user['active'] = True
+	handler.user['tused'] = g['init_tused']
+	handler.user['tlim'] = g['init_tlim']
 	UpdateManager.addClient(handler.user, handler)
 
 	# Announce our color to all other clients
@@ -49,6 +51,8 @@ def joinGrid(handler, **args):
 		"pid": pid,
 		"cash": 500,
 		"inc": 0,
+		"tused": handler.user['tused'],
+		"tlim": handler.user['tlim'],
 		"colors": g.getColors(),
 		"coords": g.dump()
 	}
