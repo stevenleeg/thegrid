@@ -142,7 +142,7 @@ var GameView = (function() {
 	}
 
 	function getTerritory() {
-		return [$("#tused").text(), $("#tlim").text()]
+		return [parseInt($("#tused").text()), parseInt($("#tlim").text())]
 	}
 
 	function getCash() {

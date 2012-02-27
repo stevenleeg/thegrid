@@ -22,11 +22,21 @@ def add_infector(grid, coord, user):
 	db.rpush(grid.dbid + ":inf", str(coord))
 	return True
 
+def add_house(grid, coord, user):
+	new_tlim = int(user['tlim']) + 4
+	if new_tlim > int(grid['tlim']):
+		new_tlim = int(grid['tlim'])
+	
+	user['tlim'] = new_tlim
+	UpdateManager.sendClient(user, "setTerritory", tlim = user['tlim'], tused = user['tused'])
+	return True
+
 TileAdd = {
 	1: add_territory,
 	2: add_headquarters,
 	3: add_miner,
-	4: add_infector
+	4: add_infector,
+	5: add_house,
 }
 
 TileProps = {
@@ -44,5 +54,9 @@ TileProps = {
 	4: {
 		"health": 25,
 		"price": 100
+	},
+	5: {
+		"health": 50,
+		"price": 50
 	}
 }

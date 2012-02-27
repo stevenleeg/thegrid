@@ -176,6 +176,12 @@ var PlaceCheck = {
 			return true;
 		}
 		return false;
+	},
+	5: function(coord) {
+		if(Grid.isOwned(coord, Grid.pid)) {
+			return true;
+		}
+		return false;
 	}
 };
 
@@ -194,5 +200,9 @@ var TileProps = {
 	4: {
 		"health": 25,
 		"price": 100
+	},
+	5: {
+		"health": 50,
+		"price": 50
 	}
 }
