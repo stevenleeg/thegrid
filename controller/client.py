@@ -8,6 +8,9 @@ import json
 class SocketHandler(WebSocketHandler):
 	def send(self, data):
 		return self.write_message(json.dumps(data))
+
+	def allow_draft76(self):
+		return True
 	
 	def call(self, func, **kwargs):
 		"""
