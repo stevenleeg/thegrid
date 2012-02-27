@@ -1,6 +1,9 @@
 {
 	"players": 4,
 	"autogenerate": 1,
+	"tlim": 100,
+	"init_tused": 3,
+	"init_tlim": 6,
 
 	"coords": {
 		"0_0": {

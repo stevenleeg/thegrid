@@ -72,6 +72,7 @@ var GameView = (function() {
 		Grid.load(data['coords']);
 		GameView.setCash(data['cash']);
 		GameView.setIncome(data['inc']);
+		GameView.setTerritory(parseInt(data['tused']), parseInt(data['tlim']));
 	}
 
 	function joinGameCb(data) {
@@ -87,6 +88,7 @@ var GameView = (function() {
 		Grid.load(data['coords']);
 		GameView.setCash(data['cash']);
 		GameView.setIncome(data['inc']);
+		GameView.setTerritory(parseInt(data['tused']), parseInt(data['tlim']));
 	}
 
 	/*
@@ -128,6 +130,19 @@ var GameView = (function() {
 			$("#inc").animate({"color": "#1D1D1D"}, 500);
 		}
 		$("#inc").text(val);
+	}
+
+	function setTerritory(tused, tlim) {
+		if(tused > 0) {
+			$("#tused").text(tused);
+		}
+		if(tlim > 0) {
+			$("#tlim").text(tlim);
+		}
+	}
+
+	function getTerritory() {
+		return [$("#tused").text(), $("#tlim").text()]
 	}
 
 	function getCash() {
@@ -193,6 +208,8 @@ var GameView = (function() {
 		"setCash": setCash,
 		"getCash": getCash,
 		"setIncome": setIncome,
+		"setTerritory": setTerritory,
+		"getTerritory": getTerritory,
 		"clickMenu": clickMenu,
 		"selectType": selectType,
 		"deselectType": deselectType,

@@ -31,6 +31,10 @@ var GameClient = (function() {
 		Grid.destoy(data['coord'])
 	}
 
+	function setTerritory(data) {
+		GameView.setTerritory(data['tused'], data['tlim']);
+	}
+
 	return {
 		"test": test,
 	 	"set": set,
@@ -39,5 +43,6 @@ var GameClient = (function() {
 		"setCash": setCash,
 		"setInc": setInc,
 		"del": del,
+		"setTerritory": setTerritory,
 	}
 })();
