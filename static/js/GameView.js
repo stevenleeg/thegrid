@@ -161,7 +161,7 @@ var GameView = (function() {
 			$(".menu.selected, #menu_"+open).fadeIn(50)
 		});
 		$(menu).off().click(returnMain);
-		KeyEvents.setScope("build", returnMain);
+		KeyEvents.setScope(open, returnMain);
 	}
 
 	function returnMain() {
