@@ -141,6 +141,10 @@ var GameView = (function() {
 		}
 	}
 
+	function getTerritory() {
+		return [$("#tused").text(), $("#tlim").text()]
+	}
+
 	function getCash() {
 		return parseInt($("#cash").text());
 	}
@@ -205,6 +209,7 @@ var GameView = (function() {
 		"getCash": getCash,
 		"setIncome": setIncome,
 		"setTerritory": setTerritory,
+		"getTerritory": getTerritory,
 		"clickMenu": clickMenu,
 		"selectType": selectType,
 		"deselectType": deselectType,

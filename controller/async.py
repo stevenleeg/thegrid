@@ -89,6 +89,8 @@ def rejoinGrid(handler, **args):
 		"cash": handler.user['cash'],
 		"inc": handler.user['inc'],
 		"pid": pid,
+		"tused": handler.user['tused'],
+		"tlim": handler.user['tlim'],
 		"colors": g.getColors(),
 		"coords": g.dump()
 	}
@@ -118,6 +120,16 @@ def place(handler, **args):
 	# Make sure they have enough cash for it
 	if int(handler.user['cash']) < props['price']:
 		return { "status": 412, "coord": coord, "error": "not enough cash" }
+
+	# Make sure they have enough territory
+	if tile == 1 and int(handler.user['tused']) >= int(handler.user['tlim']):
+		return { "status": 412, "coord": coord, "error": "territory limit" }
+	elif tile == 1:
+		handler.user['tused'] = int(handler.user['tused']) + 1
+		UpdateManager.sendClient(handler.user, "setTerritory", 
+			tused = handler.user['tused'],
+			tlim = handler.user['tlim']
+		)
 
 	# Subtract the cash
 	handler.user.addCash(-props['price'])

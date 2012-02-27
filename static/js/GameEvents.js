@@ -35,7 +35,7 @@ var GameEvents = (function() {
 	}
 
 	function placeTile(e) {
-		var color, coord;
+		var color, coord, t;
 		if($(e.target).hasClass("place_good") == false) {
 			return;
 		}
@@ -43,6 +43,13 @@ var GameEvents = (function() {
 		// Make sure they have enough cash for it
 		if(GameView.getCash() < TileProps[Grid.place_type]['price']) {
 			BaseUI.notify("Not enough cash", true);
+			return;
+		}
+
+		// And territory
+		t = GameView.getTerritory();
+		if(Grid.place_type == "1" && t[0] >= t[1]) {
+			BaseUI.notify("Not enough territory. Place more houses", true);
 			return;
 		}
 
