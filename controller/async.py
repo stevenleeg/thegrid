@@ -25,7 +25,7 @@ def joinGrid(handler, **args):
 
 	handler.user['pid'] = pid
 	handler.user['grid'] = gid
-	handler.user['cash'] = 500 # Starting cash value
+	handler.user['cash'] = g['init_cash'] # Starting cash value
 	handler.user['inc'] = 0
 	handler.user['active'] = True
 	handler.user['tused'] = g['init_tused']
@@ -49,7 +49,7 @@ def joinGrid(handler, **args):
 		"status":200,
 		"uid": handler.user['id'],
 		"pid": pid,
-		"cash": 500,
+		"cash": handler.user['cash'],
 		"inc": 0,
 		"tused": handler.user['tused'],
 		"tlim": handler.user['tlim'],
