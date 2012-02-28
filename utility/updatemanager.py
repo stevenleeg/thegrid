@@ -54,4 +54,12 @@ class UpdateManager(object):
 
 		for uid in users:
 			obj.clients[uid].call(function, **kwargs)
-
+	
+	@classmethod
+	def sendCoord(obj, grid, coord, exclude = None):
+		obj.sendGrid(grid, "set", exclude,
+			coord = str(coord),
+			tile = coord['type'],
+			player = coord['player'],
+			health = coord['health']
+		)

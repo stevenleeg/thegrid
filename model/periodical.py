@@ -19,12 +19,12 @@ def infector():
 			around = grid.around(c, 1, 1, True)
 			for coord in around:
 				coord['player'] = c['player']
-				UpdateManager.sendGrid(grid, "set", coord=str(coord), tile = 1, player = c['player'])
+				UpdateManager.sendCoord(grid, coord)
 
 			# And delete the infector
 			c['type'] = 1
 			c['health'] = 25
-			UpdateManager.sendGrid(grid, "set", coord=str(c), tile = 1, player = c['player'])
+			UpdateManager.sendCoord(grid, c)
 
 def damager():
 	for grid in Grid.all():
@@ -54,4 +54,4 @@ def damager():
 				UpdateManager.sendGrid(grid, "setHealth", coord=str(c), health=c['health'])
 			else:
 				db.lrem(grid.dbid + ":dam", str(c), 0)
-				UpdateManager.sendGrid(grid, "set", coord=str(c), tile = 1, player = c['player'], health=25)
+				UpdateManager.sendCoord(grid, c)

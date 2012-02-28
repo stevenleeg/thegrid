@@ -38,12 +38,7 @@ def joinGrid(handler, **args):
 	# Add their new coords 
 	updated = g.loadEvent("join_%s" % pid)
 	for coord in updated:
-		UpdateManager.sendGrid(g, "set", handler.user,
-			coord = str(coord),
-			tile = coord['type'],
-			player = pid,
-			health = coord['health']
-		)
+		UpdateManager.sendCoord(g, coord, handler.user)
 
 	return {
 		"status":200,
@@ -139,12 +134,7 @@ def place(handler, **args):
 	c['player'] = handler.user['pid']
 	c['health'] = props['health']
 
-	UpdateManager.sendGrid(g, "set", handler.user,
-		coord = str(c),
-		tile = tile,
-		player = handler.user['pid'],
-		health = props['health']
-	)
+	UpdateManager.sendCoord(g, c, handler.user)
 
 	return { "status": 200 }
 
