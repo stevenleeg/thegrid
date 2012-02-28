@@ -171,6 +171,15 @@ var Grid = (function() {
 		if(coord.length != 0) {
 			health = coord.children(".health");
 			clearTimeout(health.data("to"));
+			clearTimeout(coord.data("in-to"));
+			// Fade background
+			coord.animate({"background-color": "#F0F3F6"}, 100, function() {
+				coord.data("in-to", setTimeout(function() {
+					coord.animate({"background-color": Grid.colors[coord.data("player")] }, 100);
+				}, 1000));
+			});
+
+			// Fade in health
 			health.fadeIn(100, function() {
 				health.data("to", setTimeout(function() {
 					health.fadeOut(100);
