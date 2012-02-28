@@ -69,11 +69,27 @@ var BaseUI = (function() {
 		targ.addClass("selected");
 	}
 
-	function notify(message, error, sticky) {
+	function notify(message, error, typeid) {
 		var notification;
+        // See if we need to show it
+        if(typeid != undefined && BaseUI.notif_disp.indexOf(typeid) != -1) {
+            notification = $(".notifications .notification[typeid="+typeid+"]");
+            clearInterval(notification.data("timeout"));
+            notification.data("timeout", setTimeout(function() {
+                notification.fadeOut(250, function() {
+                    BaseUI.notif_disp.pop(BaseUI.notif_disp.indexOf(typeid), 1);
+                    notification.remove();
+                });
+            }, 2000));
+            return;
+        } else if(typeid != undefined) {
+            BaseUI.notif_disp.push(typeid);
+        } else {
+            typeid = 0;
+        }
 		// Yellow or red notification
 		if(error) {
-			notification = $("<div class='notification error'></div>");
+			notification = $("<div typeid="+typeid+" class='notification error'></div>");
 		} else {
 			notification = $("<div class='notification'></div>");
 		}
@@ -85,11 +101,6 @@ var BaseUI = (function() {
 				$(this).remove();
 			});
 		});
-
-		// If it's sticky, keep it there, otherwise kill it in a second
-		if(sticky) {
-			return;
-		}
 
 		notification.data("timeout", setTimeout(function() {
 			notification.fadeOut(250, function() {
@@ -159,7 +170,8 @@ var BaseUI = (function() {
 		"newMessage": newMessage,
 		"showChatbox": showChatbox,
 		"hideChatbox": hideChatbox,
-		"show_msg": show_msg
+		"show_msg": show_msg,
+        "notif_disp": [],
 	};
 })();
 
