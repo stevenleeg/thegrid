@@ -8,13 +8,13 @@ var Grid = (function() {
         c;
         for (coord in coords) {
             selected = $("#" + coord);
+            selected.addClass("t" + coords[coord]['type']).data("player", coords[coord]['player']).data("health", coords[coord]['health']);
             if (coords[coord]['player'] > 0) {
                 selected.css("background-color", Grid.colors[coords[coord]['player']]).addClass("t1");
                 selected.html("");
                 $("<div class='health'>&nbsp;</div>").appendTo(selected).hide();
                 Grid.setHealth(coord, coords[coord]['health']);
             }
-            selected.addClass("t" + coords[coord]['type']).data("player", coords[coord]['player']).data("health", coords[coord]['health']);
         }
     }
 
@@ -74,6 +74,20 @@ var Grid = (function() {
         return $("#" + x + "_" + y);
     }
 
+    function getType(x, y) {
+        var coord,
+        cls;
+
+        coord = getCoord(x, y);
+        cls = coord.attr("class");
+        if(cls == undefined) {
+            return 0;
+        } else if(cls == "t1") {
+            return 1;
+        }
+        return parseInt(cls.replace("t1 ", "").replace("t", "").replace("place_good",""));
+    }
+
     function placeMode(type) {
         Grid.place_type = type;
         Grid.place_mode = true;
@@ -100,14 +114,14 @@ var Grid = (function() {
     }
 
     function place(coord, type, color) {
-        var coord;
-        coord = $("#" + coord)
-        coord.addClass("t" + type).html("");
-        coord.data("player", Grid.pid).data("health", TileProps[type]['health']);
-        Grid.setHealth(TileProps[type]['health']);
-        $("<div class='health'>&nbsp;</div>").hide().appendTo(coord);
+        var c;
+        c = $("#" + coord)
+        c.addClass("t" + type).html("");
+        c.data("player", Grid.pid).data("health", TileProps[type]['health']);
+        $("<div class='health'>&nbsp;</div>").hide().appendTo(c);
+        Grid.setHealth(coord, TileProps[type]['health']);
         if (color != undefined) {
-            coord.css("background-color", color);
+            c.css("background-color", color);
         }
     }
 
@@ -159,8 +173,13 @@ var Grid = (function() {
         return $("#" + coord).hasClass("t1");
     }
 
-    function setHealth(coord, percentage) {
-        //$("#" + coord).html("<div class='health'>&nbsp;</div>");
+    function setHealth(coord, val) {
+        var percentage, 
+        c,
+        color;
+        // Determine percentage
+        c = parseCoord(coord);
+        percentage = val / TileProps[getType(c[0], c[1])]['health'] * 100;
         // Determine the color
         if (percentage >= 66) color = "green";
         if (percentage < 66 && percentage > 33) color = "yellow";
@@ -212,6 +231,7 @@ var Grid = (function() {
         "load": load,
         "get": get,
         "getInfo": getInfo,
+        "getType": getType,
         "colors": colors,
         "placeMode": placeMode,
         "normalMode": normalMode,
