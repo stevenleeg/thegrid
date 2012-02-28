@@ -7,6 +7,9 @@ var Grid = (function() {
 		 selected = $("#" + coord);
 		 if(coords[coord]['player'] > 0) {
 			selected.css("background-color", Grid.colors[coords[coord]['player']]).addClass("t1");
+			selected.html("");
+			$("<div class='health'>&nbsp;</div>").appendTo(selected).hide();
+			Grid.setHealth(coord, coords[coord]['health']);
 		 }
       selected.addClass("t" + coords[coord]['type']).data("player", coords[coord]['player']).data("health", coords[coord]['health']);
     }
@@ -30,11 +33,26 @@ var Grid = (function() {
 				$(this).css("background-color", Grid.colors[$(this).data("player")]);
 			}
 		}).click(function(e) {
+			var health;
 			if(Grid.place_mode) {
 				GameEvents.placeTile(e);
 			}
+		}).mousedown(function() {
+			health = $(this).children(".health")
+			if(health.length != 0 && !Grid.place_mode) {
+				$(this).css("background-color", "");
+				$(this).addClass("info");
+				health.fadeIn(50);
+			}
+		}).mouseup(function() {
+			health = $(this).children(".health")
+			if(health.length != 0 && !Grid.place_mode) {
+				$(this).css("background-color", Grid.colors[$(this).data("player")]);
+				$(this).removeClass("info");
+				health.fadeOut(50);
+			}
 		});
-  }
+	  }
 
   function get(x, y) {
 	  return $("#" + x + "_" + y).data("d");
@@ -81,8 +99,10 @@ var Grid = (function() {
   function place(coord, type, color) {
 	  	var coord;
 	  	coord = $("#" + coord)
-		coord.addClass("t" + type)
+		coord.addClass("t" + type).html("");
 		coord.data("player", Grid.pid).data("health", TileProps[type]['health']);
+		Grid.setHealth(TileProps[type]['health']);
+		$("<div class='health'>&nbsp;</div>").hide().appendTo("#" + coord);
 		if(color != undefined) {
 			coord.css("background-color", color);
 		}
@@ -136,6 +156,29 @@ var Grid = (function() {
 		return $("#" + coord).hasClass("t1");
 	}
 
+	function setHealth(coord, percentage) {
+		//$("#" + coord).html("<div class='health'>&nbsp;</div>");
+		// Determine the color
+		if(percentage >= 66) color = "green";
+		if(percentage < 66 && percentage > 33) color = "yellow";
+		if(percentage <= 33) color = "red";
+		$("#" + coord + " .health").css("width", percentage + "%").attr("class", "health " + color);
+	}
+
+	function pingHealth(coord) {
+		var health;
+		coord = $("#" + coord);
+		if(coord.length != 0) {
+			health = coord.children(".health");
+			clearTimeout(health.data("to"));
+			health.fadeIn(100, function() {
+				health.data("to", setTimeout(function() {
+					health.fadeOut(100);
+				}, 1000));
+			});
+		}
+	}
+
   return {
     "load": load,
     "get": get,
@@ -152,6 +195,8 @@ var Grid = (function() {
 	 "exists": exists,
 	 "setupEvents": setupEvents,
 	 "place_mode": false,
+	 "setHealth": setHealth,
+	 "pingHealth": pingHealth,
 	 "hover": null,
   };
 })();

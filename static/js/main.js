@@ -27,7 +27,6 @@ var ViewController = (function() {
 			});
 		});
 	}
-
 	return {
 		"current": current,
 		"load": load,
@@ -184,7 +183,7 @@ var AsyncClient = (function() {
 	var callbacks = {};
 
 	function connect(callback) {
-		ws = new WebSocket("ws://localhost:8080/api/socket");
+		ws = new WebSocket("ws://"+ document.domain + ":" + window.location.port + "/api/socket");
 		ws.onopen = callback; 
 		ws.onmessage = newMessage;
 		ws.onclose = closeSocket;
