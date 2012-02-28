@@ -44,6 +44,30 @@ TileAdd = {
 	6: add_damager
 }
 
+#
+# Destroy events
+#
+def dest_miner(grid, coord, user):
+	mines = grid.inRangeOf(coord, 99, 1)
+	if mines == 0:
+		return
+	
+	income = mines * 5
+	total = user.addIncome(-income)
+
+	UpdateManager.sendClient(user, "setInc", inc = total)
+
+def dest_house(grid, coord, user):
+	new_tlim = int(user['tlim']) - 4
+
+	user['tlim'] = new_tlim
+	UpdateManager.sendClient(user, "setTerritory", tlim = user['tlim'], tused = user['tused'])
+
+TileDest = {
+	3: dest_miner,
+	5: dest_house
+}
+
 TileProps = {
 	1: {
 		"health": 25,

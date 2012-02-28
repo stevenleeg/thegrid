@@ -1,4 +1,5 @@
 from utility import db
+from tiles import TileDest
 from user import User
 from time import time
 import re, json, itertools, random
@@ -103,6 +104,10 @@ class Grid:
             uids.append(users[pid])
 
         return uids
+
+    def getPlayer(self, pid):
+        uid = db.hget(self.dbid + ":usr", pid)
+        return User(uid)
 
     def getColors(self):
         return db.hgetall(self.dbid + ":clr")
@@ -243,7 +248,11 @@ class Coord:
         self.x = int(x)
         self.y = int(y)
 
+        self.gid = grid
         self.dbid = "c:%s:%s" % (grid, str(self))
+
+    def getGrid(self):
+        return Grid(self.gid)
 
     def damage(self, amt):
         if self.exists() is False:
@@ -251,6 +260,13 @@ class Coord:
         
         new = int(self['health']) - amt
         if new <= 0:
+            # Call the destroy event
+            g = self.getGrid()
+            try:
+                TileDest[int(self['type'])](g, self, g.getPlayer(self['player']))
+            except KeyError:
+                pass
+
             self['type'] = 1
             self['health'] = 25
         else:
