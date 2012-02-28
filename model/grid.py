@@ -165,15 +165,16 @@ class Grid:
 		"""
 		pts = []
 		# Get a range of coords to try
-		x = range(point.x - radius, point.x + radius)
-		y = range(point.y - radius, point.y + radius)
+		x = range(point.x - radius, point.x + radius + 1)
+		y = range(point.y - radius, point.y + radius + 1)
 		if diagonals:
+			points = itertools.product(x, y)
+		else:
 			points = []
 			for pt_x in x:
-				for pt_y in y:
-					points.append([pt_x, pt_y])
-		else:
-			points = itertools.product(x, y)
+				points.append((pt_x, point.y))
+			for pt_y in y:
+				points.append((point.x, pt_y))
 
 		for point in points:
 			c = self.get(point[0], point[1])
