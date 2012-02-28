@@ -10,6 +10,7 @@ var KeyEvents = (function() {
 		$(document).bind("keypress", "h", h);
 		$(document).bind("keypress", "a", a);
 		$(document).bind("keypress", "f", f);
+		$(document).bind("keypress", "d", d);
 
 		$(document).bind("keydown","up down left right", GameEvents.moveViewport)
 		$(document).bind("keyup","up down left right", GameEvents.stopMoveViewport)
@@ -50,6 +51,14 @@ var KeyEvents = (function() {
 			GameView.selectType(e);
 		}
 	}
+
+    function d() {
+        var e = {};
+        if(KeyEvents.scope == "attack") {
+            e.target = $(".submenu a[places=6]");
+            GameView.selectType(e);
+        }
+    }
 
 	function a() {
 		var e = {};
