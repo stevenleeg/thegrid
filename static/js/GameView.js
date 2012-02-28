@@ -59,7 +59,7 @@ var GameView = (function() {
 		if(data['status'] == 404) {
 			$.cookie("uid", null);
 			Grid.uid = undefined;
-			return ViewController.load(HomeView);
+			return location.reload();
 		}
 		if(data['status'] != 200) {
 			alert("Something went wrong while trying to join the room! " + data['status']);
