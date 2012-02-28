@@ -1,265 +1,278 @@
 var Grid = (function() {
-	var colors, pid, place_type;
+    var colors,
+    pid,
+    place_type;
 
-  function load(coords) {
-    var coord, c;
-    for(coord in coords) {
-		 selected = $("#" + coord);
-		 if(coords[coord]['player'] > 0) {
-			selected.css("background-color", Grid.colors[coords[coord]['player']]).addClass("t1");
-			selected.html("");
-			$("<div class='health'>&nbsp;</div>").appendTo(selected).hide();
-			Grid.setHealth(coord, coords[coord]['health']);
-		 }
-      selected.addClass("t" + coords[coord]['type']).data("player", coords[coord]['player']).data("health", coords[coord]['health']);
+    function load(coords) {
+        var coord,
+        c;
+        for (coord in coords) {
+            selected = $("#" + coord);
+            if (coords[coord]['player'] > 0) {
+                selected.css("background-color", Grid.colors[coords[coord]['player']]).addClass("t1");
+                selected.html("");
+                $("<div class='health'>&nbsp;</div>").appendTo(selected).hide();
+                Grid.setHealth(coord, coords[coord]['health']);
+            }
+            selected.addClass("t" + coords[coord]['type']).data("player", coords[coord]['player']).data("health", coords[coord]['health']);
+        }
     }
-  }
 
-  function setupEvents() {
-		$("#grid td").off().mouseenter(function() {
-			Grid.hover = $(this).attr("id");
-			if(Grid.place_mode) {
-				$(this).css("background-color", "");
-				if(PlaceCheck[Grid.place_type]($(this).attr("id"))) {
-						$(this).addClass("place_good");
-					} else {
-						$(this).addClass("place_bad");
-				}
-			}
-		}).mouseleave(function() {
-			Grid.hover = null;
-			if(Grid.place_mode) {
-				$(this).removeClass("place_bad").removeClass("place_good");
-				$(this).css("background-color", Grid.colors[$(this).data("player")]);
-			}
-		}).click(function(e) {
-			var health;
-			if(Grid.place_mode) {
-				GameEvents.placeTile(e);
-			}
-		}).mousedown(function() {
-			health = $(this).children(".health")
-			if(health.length != 0 && !Grid.place_mode) {
-				$(this).css("background-color", "");
-				$(this).addClass("info");
-				health.fadeIn(50);
-			}
-		}).mouseup(function() {
-			health = $(this).children(".health")
-			if(health.length != 0 && !Grid.place_mode) {
-				$(this).css("background-color", Grid.colors[$(this).data("player")]);
-				$(this).removeClass("info");
-				health.fadeOut(50);
-			}
-		});
-	  }
+    function setupEvents() {
+        $("#grid td").off().mouseenter(function() {
+            Grid.hover = $(this).attr("id");
+            if (Grid.place_mode) {
+                $(this).css("background-color", "");
+                if (PlaceCheck[Grid.place_type]($(this).attr("id"))) {
+                    $(this).addClass("place_good");
+                } else {
+                    $(this).addClass("place_bad");
+                }
+            }
+        }).mouseleave(function() {
+            Grid.hover = null;
+            if (Grid.place_mode) {
+                $(this).removeClass("place_bad").removeClass("place_good");
+                $(this).css("background-color", Grid.colors[$(this).data("player")]);
+            }
+        }).click(function(e) {
+            var health;
+            if (Grid.place_mode) {
+                GameEvents.placeTile(e);
+            }
+        }).mousedown(function() {
+            health = $(this).children(".health")
+            if (health.length != 0 && !Grid.place_mode) {
+                $(this).css("background-color", "");
+                $(this).addClass("info");
+                health.fadeIn(50);
+            }
+        }).mouseup(function() {
+            health = $(this).children(".health")
+            if (health.length != 0 && !Grid.place_mode) {
+                $(this).css("background-color", Grid.colors[$(this).data("player")]);
+                $(this).removeClass("info");
+                health.fadeOut(50);
+            }
+        });
+    }
 
-  function get(x, y) {
-	  return $("#" + x + "_" + y).data("d");
-  }
+    function get(x, y) {
+        return $("#" + x + "_" + y).data("d");
+    }
 
-  function getInfo(x,y, key) {
-	  return $("#" + x + "_" + y).data("d")[key];
-  }
+    function getInfo(x, y, key) {
+        return $("#" + x + "_" + y).data("d")[key];
+    }
 
-  function parseCoord(coord) {
-		coord = coord.split("_");
-		return [parseInt(coord[0]), parseInt(coord[1])];
-  }
+    function parseCoord(coord) {
+        coord = coord.split("_");
+        return [parseInt(coord[0]), parseInt(coord[1])];
+    }
 
-  function getCoord(x, y) {
-		return $("#" + x + "_" + y);
-  }
+    function getCoord(x, y) {
+        return $("#" + x + "_" + y);
+    }
 
-  function placeMode(type) {
-	   Grid.place_type = type;
-		Grid.place_mode = true;
-		$("#grid").addClass("place_mode");
-		if(Grid.hover != null) {
-			$("#" + Grid.hover).css("background-color", "");
-			if(PlaceCheck[Grid.place_type](Grid.hover)) {
-					$("#" + Grid.hover).addClass("place_good");
-				} else {
-					$("#" + Grid.hover).addClass("place_bad");
-			}
-		}
-	}
+    function placeMode(type) {
+        Grid.place_type = type;
+        Grid.place_mode = true;
+        $("#grid").addClass("place_mode");
+        if (Grid.hover != null) {
+            $("#" + Grid.hover).css("background-color", "");
+            if (PlaceCheck[Grid.place_type](Grid.hover)) {
+                $("#" + Grid.hover).addClass("place_good");
+            } else {
+                $("#" + Grid.hover).addClass("place_bad");
+            }
+        }
+    }
 
-  function normalMode() {
-		$("#grid").removeClass("place_mode");
-		$("#grid td.place_good, #grid td.place_bad").each(function() {
-			$(this).removeClass("place_good").removeClass("place_bad");
-			$(this).css("background-color", Grid.colors[$(this).data("player")]);
-		});
-			
-		Grid.place_type = 0;
-		Grid.place_mode = false;
-  }
+    function normalMode() {
+        $("#grid").removeClass("place_mode");
+        $("#grid td.place_good, #grid td.place_bad").each(function() {
+            $(this).removeClass("place_good").removeClass("place_bad");
+            $(this).css("background-color", Grid.colors[$(this).data("player")]);
+        });
 
-  function place(coord, type, color) {
-	  	var coord;
-	  	coord = $("#" + coord)
-		coord.addClass("t" + type).html("");
-		coord.data("player", Grid.pid).data("health", TileProps[type]['health']);
-		Grid.setHealth(TileProps[type]['health']);
-		$("<div class='health'>&nbsp;</div>").hide().appendTo(coord);
-		if(color != undefined) {
-			coord.css("background-color", color);
-		}
-  }
+        Grid.place_type = 0;
+        Grid.place_mode = false;
+    }
 
-  function destroy(coord) {
-		$("#" + coord).attr("class", "").css("background-color", "").removeData();
-  }
+    function place(coord, type, color) {
+        var coord;
+        coord = $("#" + coord)
+        coord.addClass("t" + type).html("");
+        coord.data("player", Grid.pid).data("health", TileProps[type]['health']);
+        Grid.setHealth(TileProps[type]['health']);
+        $("<div class='health'>&nbsp;</div>").hide().appendTo(coord);
+        if (color != undefined) {
+            coord.css("background-color", color);
+        }
+    }
 
-  function inRangeOf(coord, type, radius, owner) {
-	  	coord = parseCoord(coord);
-		startX = coord[0] - radius;
-		if(startX < 0) {
-			startX = 0;
-		}
-		for(var x = startX; x <= (coord[0] + radius); x++) {
-			selected = getCoord(x, coord[1])
-			if(selected.hasClass("t" + type) && x != coord[0]) {
-				if(owner && selected.data("player") == owner) {
-					return true;
-				} else if(!owner) {
-					return true;
-				}
-			}
-		}
+    function destroy(coord) {
+        $("#" + coord).attr("class", "").css("background-color", "").removeData();
+    }
 
-		startY = coord[1] - radius;
-		if(startY < 0) {
-			startY = 0;
-		}
-		for(var y = startY; y <= (coord[1] + radius); y++) {
-			selected = getCoord(coord[0], y);
-			if(selected.hasClass("t" + type) && y != coord[1]) {
-				if(owner && selected.data("player") == owner) {
-					return true;
-				} else if(!owner) {
-					return true;
-				}
-			}
-		}
-  }
+    function inRangeOf(coord, type, radius, owner) {
+        coord = parseCoord(coord);
+        startX = coord[0] - radius;
+        if (startX < 0) {
+            startX = 0;
+        }
+        for (var x = startX; x <= (coord[0] + radius); x++) {
+            selected = getCoord(x, coord[1])
+            if (selected.hasClass("t" + type) && x != coord[0]) {
+                if (owner && selected.data("player") == owner) {
+                    return true;
+                } else if (!owner) {
+                    return true;
+                }
+            }
+        }
 
-	function isOwned(coord, pid) {
-		if($("#" + coord).data("player") == pid) {
-			return true;
-		}
-		return false;
-	}
+        startY = coord[1] - radius;
+        if (startY < 0) {
+            startY = 0;
+        }
+        for (var y = startY; y <= (coord[1] + radius); y++) {
+            selected = getCoord(coord[0], y);
+            if (selected.hasClass("t" + type) && y != coord[1]) {
+                if (owner && selected.data("player") == owner) {
+                    return true;
+                } else if (!owner) {
+                    return true;
+                }
+            }
+        }
+    }
 
-	function exists(coord) {
-		return $("#" + coord).hasClass("t1");
-	}
+    function isOwned(coord, pid) {
+        if ($("#" + coord).data("player") == pid) {
+            return true;
+        }
+        return false;
+    }
 
-	function setHealth(coord, percentage) {
-		//$("#" + coord).html("<div class='health'>&nbsp;</div>");
-		// Determine the color
-		if(percentage >= 66) color = "green";
-		if(percentage < 66 && percentage > 33) color = "yellow";
-		if(percentage <= 33) color = "red";
-		$("#" + coord + " .health").css("width", percentage + "%").attr("class", "health " + color);
-	}
+    function exists(coord) {
+        return $("#" + coord).hasClass("t1");
+    }
 
-	function pingHealth(coord) {
-		var health;
-		coord = $("#" + coord);
-		if(coord.length != 0) {
-			health = coord.children(".health");
-			clearTimeout(health.data("to"));
-			clearTimeout(coord.data("in-to"));
-			// Fade background
-			coord.animate({"background-color": "#F0F3F6"}, 100, function() {
-				coord.data("in-to", setTimeout(function() {
-					coord.animate({"background-color": Grid.colors[coord.data("player")] }, 100);
-				}, 1000));
-			});
+    function setHealth(coord, percentage) {
+        //$("#" + coord).html("<div class='health'>&nbsp;</div>");
+        // Determine the color
+        if (percentage >= 66) color = "green";
+        if (percentage < 66 && percentage > 33) color = "yellow";
+        if (percentage <= 33) color = "red";
+        $("#" + coord + " .health").css("width", percentage + "%").attr("class", "health " + color);
+    }
 
-			// Fade in health
-			health.fadeIn(100, function() {
-				health.data("to", setTimeout(function() {
-					health.fadeOut(100);
-				}, 1000));
-			});
-		}
-	}
+    function pingHealth(coord) {
+        var health;
+        coord = $("#" + coord);
+        if (coord.length != 0) {
+            health = coord.children(".health");
+            clearTimeout(health.data("to"));
+            clearTimeout(coord.data("in-to"));
+            // Fade background
+            coord.animate({
+                "background-color": "#F0F3F6"
+            },
+            100,
+            function() {
+                coord.data("in-to", setTimeout(function() {
+                    coord.animate({
+                        "background-color": Grid.colors[coord.data("player")]
+                    },
+                    100);
+                },
+                1000));
+            });
 
-	function defaultCheck(coord) {
-		if(Grid.isOwned(coord, Grid.pid) && $("#" + coord).attr("class") == "t1") {
-			return true;
-		}
-		return false;
-	}
+            // Fade in health
+            health.fadeIn(100,
+            function() {
+                health.data("to", setTimeout(function() {
+                    health.fadeOut(100);
+                },
+                1000));
+            });
+        }
+    }
 
-  return {
-    "load": load,
-    "get": get,
-    "getInfo": getInfo,
-	 "colors": colors,
-	 "placeMode": placeMode,
-	 "normalMode": normalMode,
-	 "place": place,
-	 "place_type": place_type,
-	 "destroy": destroy,
-	 "parseCoord": parseCoord,
-	 "inRangeOf": inRangeOf,
-	 "isOwned": isOwned,
-	 "exists": exists,
-	 "setupEvents": setupEvents,
-	 "place_mode": false,
-	 "setHealth": setHealth,
-	 "pingHealth": pingHealth,
-	 "defaultCheck": defaultCheck,
-	 "hover": null,
-  };
+    function defaultCheck(coord) {
+        if (Grid.isOwned(coord, Grid.pid) && $("#" + coord).attr("class") == "t1") {
+            return true;
+        }
+        return false;
+    }
+
+    return {
+        "load": load,
+        "get": get,
+        "getInfo": getInfo,
+        "colors": colors,
+        "placeMode": placeMode,
+        "normalMode": normalMode,
+        "place": place,
+        "place_type": place_type,
+        "destroy": destroy,
+        "parseCoord": parseCoord,
+        "inRangeOf": inRangeOf,
+        "isOwned": isOwned,
+        "exists": exists,
+        "setupEvents": setupEvents,
+        "place_mode": false,
+        "setHealth": setHealth,
+        "pingHealth": pingHealth,
+        "defaultCheck": defaultCheck,
+        "hover": null,
+    };
 })();
 
 var PlaceCheck = {
-	1: function(coord) {
-		if(Grid.inRangeOf(coord, 1, 1, Grid.pid) && !Grid.exists(coord)) {
-			return true;
-		} else {
-			return false;
-		}
-	},
-	3: function(coord) {
-		if(Grid.inRangeOf(coord, 99, 1) && Grid.isOwned(coord, Grid.pid)) {
-			return true;
-		} 
+    1: function(coord) {
+        if (Grid.inRangeOf(coord, 1, 1, Grid.pid) && !Grid.exists(coord)) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    3: function(coord) {
+        if (Grid.inRangeOf(coord, 99, 1) && Grid.isOwned(coord, Grid.pid)) {
+            return true;
+        }
 
-		return false
-	},
-	4: Grid.defaultCheck,
-	5: Grid.defaultCheck,
-	6: Grid.defaultCheck,
+        return false
+    },
+    4: Grid.defaultCheck,
+    5: Grid.defaultCheck,
+    6: Grid.defaultCheck,
 };
 
 var TileProps = {
-	1: { 
-		"health": 25,
-		"price": 25
-	},
-	2: {
-		"health": 100,
-	},
-	3: { 
-		"health": 50,
-		"price": 100
-	},
-	4: {
-		"health": 25,
-		"price": 100
-	},
-	5: {
-		"health": 50,
-		"price": 50
-	},
-	6: {
-		"health": 50,
-		"price": 200
-	}
+    1: {
+        "health": 25,
+        "price": 25
+    },
+    2: {
+        "health": 100,
+    },
+    3: {
+        "health": 50,
+        "price": 100
+    },
+    4: {
+        "health": 25,
+        "price": 100
+    },
+    5: {
+        "health": 50,
+        "price": 50
+    },
+    6: {
+        "health": 50,
+        "price": 200
+    }
 }
