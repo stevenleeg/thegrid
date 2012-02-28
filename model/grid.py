@@ -177,7 +177,7 @@ class Grid:
 
 		for point in points:
 			c = self.get(point[0], point[1])
-			if c.exists() and int(c['type']) == tile:
+			if c.exists() and (int(c['type']) == tile or tile == 0):
 				pts.append(c)
 
 		return pts

@@ -17,13 +17,24 @@ class Coord:
 
     self.dbid = "c:%s:%s" % (grid, str(self))
   
+  def damage(self, amt):
+	 if self.exists() is False:
+		 return
+
+	 new = int(self['health']) - amt
+	 if new <= 0:
+		 self['type'] = 1
+		 self['health'] = 25
+	 else:
+		 self['health'] = new
+
   def baseInfo(self):
     keys = ["type", "player", "health"]
     vals = db.hmget(self.dbid, keys)
     return dict(zip(keys, vals))
 
   def remove(self):
-	 db.remove(self.dbid)
+	 db.delete(self.dbid)
 
   def exists(self):
     return db.exists(self.dbid)

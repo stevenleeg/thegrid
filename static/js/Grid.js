@@ -102,7 +102,7 @@ var Grid = (function() {
 		coord.addClass("t" + type).html("");
 		coord.data("player", Grid.pid).data("health", TileProps[type]['health']);
 		Grid.setHealth(TileProps[type]['health']);
-		$("<div class='health'>&nbsp;</div>").hide().appendTo("#" + coord);
+		$("<div class='health'>&nbsp;</div>").hide().appendTo(coord);
 		if(color != undefined) {
 			coord.css("background-color", color);
 		}
@@ -179,6 +179,13 @@ var Grid = (function() {
 		}
 	}
 
+	function defaultCheck(coord) {
+		if(Grid.isOwned(coord, Grid.pid) && $("#" + coord).attr("class") == "t1") {
+			return true;
+		}
+		return false;
+	}
+
   return {
     "load": load,
     "get": get,
@@ -197,6 +204,7 @@ var Grid = (function() {
 	 "place_mode": false,
 	 "setHealth": setHealth,
 	 "pingHealth": pingHealth,
+	 "defaultCheck": defaultCheck,
 	 "hover": null,
   };
 })();
@@ -216,18 +224,9 @@ var PlaceCheck = {
 
 		return false
 	},
-	4: function(coord) {
-		if(Grid.isOwned(coord, Grid.pid)) {
-			return true;
-		}
-		return false;
-	},
-	5: function(coord) {
-		if(Grid.isOwned(coord, Grid.pid)) {
-			return true;
-		}
-		return false;
-	}
+	4: Grid.defaultCheck,
+	5: Grid.defaultCheck,
+	6: Grid.defaultCheck,
 };
 
 var TileProps = {
@@ -249,5 +248,9 @@ var TileProps = {
 	5: {
 		"health": 50,
 		"price": 50
+	},
+	6: {
+		"health": 50,
+		"price": 200
 	}
 }

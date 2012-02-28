@@ -8,6 +8,7 @@ var GameClient = (function() {
 		Grid.place(data['coord'], data['tile'], Grid.colors[data['player']]);
 		$("#" + data['coord']).data("player", data['player']);
 		$("#" + data['coord']).data("health", data['health']);
+		Grid.setHealth(data['coord'], parseInt(data['health']))
 	}
 
 	function addPlayer(data) {
@@ -28,11 +29,16 @@ var GameClient = (function() {
 	}
 
 	function del(data) {
-		Grid.destoy(data['coord'])
+		Grid.destroy(data['coord'])
 	}
 
 	function setTerritory(data) {
 		GameView.setTerritory(data['tused'], data['tlim']);
+	}
+
+	function setHealth(data) {
+		Grid.setHealth(data['coord'], data['health']);
+		Grid.pingHealth(data['coord']);
 	}
 
 	return {
@@ -44,5 +50,6 @@ var GameClient = (function() {
 		"setInc": setInc,
 		"del": del,
 		"setTerritory": setTerritory,
+		"setHealth": setHealth,
 	}
 })();

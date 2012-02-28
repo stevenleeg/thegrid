@@ -22,6 +22,10 @@ def add_infector(grid, coord, user):
 	db.rpush(grid.dbid + ":inf", str(coord))
 	return True
 
+def add_damager(grid, coord, user):
+	db.lpush(grid.dbid + ":dam", str(coord))
+	return True
+
 def add_house(grid, coord, user):
 	new_tlim = int(user['tlim']) + 4
 	if new_tlim > int(grid['tlim']):
@@ -37,6 +41,7 @@ TileAdd = {
 	3: add_miner,
 	4: add_infector,
 	5: add_house,
+	6: add_damager
 }
 
 TileProps = {
@@ -58,5 +63,9 @@ TileProps = {
 	5: {
 		"health": 50,
 		"price": 50
+	},
+	6: {
+		"health": 50,
+		"price": 200
 	}
 }
