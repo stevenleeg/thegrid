@@ -1,5 +1,4 @@
 from utility import db
-from coord import Coord
 from user import User
 from time import time
 import re, json, itertools, random

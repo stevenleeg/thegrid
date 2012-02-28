@@ -1,4 +1,4 @@
-from model import Grid, Coord
+from model import Grid
 from utility import db
 import unittest
 
