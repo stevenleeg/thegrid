@@ -139,6 +139,12 @@ var GameView = (function() {
 		if(tlim > 0) {
 			$("#tlim").text(tlim);
 		}
+        // Are we over?
+        if(parseInt(tused) > parseInt(tlim)) {
+            $("#territory").css("color", "#FF0000");
+        } else {
+            $("#territory").css("color", "");
+        }
 	}
 
 	function getTerritory() {
