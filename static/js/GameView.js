@@ -38,6 +38,7 @@ var GameView = (function() {
 	function setupEvents() {
 		$(".menu").click(clickMenu);
 		$(".submenu a").on("click",selectType);
+        $(".exit").click(exit);
 
 		KeyEvents.setup();
 	}
@@ -81,6 +82,7 @@ var GameView = (function() {
 			ViewController.load(HomeView)
 		}
 		Grid.colors = data['colors'];
+        Grid.color = data['color'];
 		Grid.pid = data['pid'];
 		Grid.uid = data['uid'];
 		$.cookie("uid", Grid.uid, 1);
@@ -158,6 +160,12 @@ var GameView = (function() {
 	/*
 	 * Menu interactions
 	 */
+    function exit() {
+        AsyncClient.send("exit", {}, function() {
+            ViewController.load(HomeView);   
+        });
+    }
+
 	function clickMenu(e) {
 		var menu;
 		menu = $(e.target)

@@ -89,8 +89,7 @@ class Grid:
             break
 
         db.hset(self.dbid + ":usr", pid, user['id'])
-        if db.hget(self.dbid + ":clr", pid) is None:
-            db.hset(self.dbid + ":clr", pid, user['color'])
+        user['color'] = self.getColor(pid)
 
         return pid
 
@@ -111,6 +110,9 @@ class Grid:
 
     def getColors(self):
         return db.hgetall(self.dbid + ":clr")
+
+    def getColor(self, pid):
+        return db.hget(self.dbid + ":clr", pid)
 
     def getUsedColors(self):
         colors = []
@@ -136,8 +138,11 @@ class Grid:
 
         if event == "init":
             for key in data:
-                if key not in ["coords", "events"]:
+                if key not in ["colors", "coords", "events"]:
                     self[key] = data[key]
+
+            for pid in data['colors']:
+                db.hset(self.dbid + ":clr", pid, data['colors'][pid])
 
         # Load event
         coords = {}

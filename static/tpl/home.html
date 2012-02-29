@@ -4,16 +4,13 @@
 
 	<div class="menu room_select">
 		<h1>enter or start a game</h1>
-		<input type="text" name="room" placeholder="room name" />
+        <div class="listcontainer disabled">
+            <div id="loading_list">Loading grids...</div>
+            <table class="gridlist">
+            </table>
+        </div>
 
-		<h2>your color:</h2>
-		<div class="selector" name="color">
-			<a href="#" class="option red" value="#FF401C">&nbsp;</a>
-			<a href="#" class="option yellow" value="#FEBE07">&nbsp;</a>
-			<a href="#" class="option blue" value="#10A1FF">&nbsp;</a>
-			<a href="#" class="option green" value="#3FCD45">&nbsp;</a>
-		</div>
-
-		<input type="button" name="finish" value="enter room" />
+		<input type="button" class="disabled" name="enter" value="enter grid" />
+		<input type="button" class="red" name="create" value="create new grid" />
 	</div>
 </div>
