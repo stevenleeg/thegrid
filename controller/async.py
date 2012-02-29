@@ -47,27 +47,31 @@ def joinGrid(handler, **args):
 
     handler.user['pid'] = pid
     handler.user['grid'] = gid
-    handler.user['cash'] = g['init_cash'] # Starting cash value
-    handler.user['inc'] = 0
     handler.user['active'] = True
-    handler.user['tused'] = g['init_tused']
-    handler.user['tlim'] = g['init_tlim']
+
+    # Looks like it's a new player, go ahead and init them
+    if g.playerExists(pid) is False:
+        handler.user['cash'] = g['init_cash'] # Starting cash value
+        handler.user['inc'] = 0
+        handler.user['tused'] = g['init_tused']
+        handler.user['tlim'] = g['init_tlim']
+
+        updated = g.loadEvent("join_%s" % pid)
+        # Add their new coords 
+        for coord in updated:
+            UpdateManager.sendCoord(g, coord, handler.user)
+
     UpdateManager.addClient(handler.user, handler)
 
     # Announce our color to all other clients
     UpdateManager.sendGrid(g, "addPlayer", handler.user, pid = pid, color = handler.user['color'])
-
-    # Add their new coords 
-    updated = g.loadEvent("join_%s" % pid)
-    for coord in updated:
-        UpdateManager.sendCoord(g, coord, handler.user)
 
     return {
         "status":200,
         "uid": handler.user['id'],
         "pid": pid,
         "cash": handler.user['cash'],
-        "inc": 0,
+        "inc": handler.user['inc'],
         "tused": handler.user['tused'],
         "tlim": handler.user['tlim'],
         "colors": g.getColors(),
