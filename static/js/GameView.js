@@ -135,6 +135,8 @@ var GameView = (function() {
     function exit() {
         AsyncClient.send("exit", {}, function() {
             ViewController.load(HomeView);   
+            $.cookie("gid", null);
+            $.cookie("pid", null);
         });
     }
 
