@@ -6,6 +6,12 @@
 	"init_tlim": 6,
 	"init_cash": 500,
 
+    "colors": {
+        "1": "#FEBE07",
+        "2": "#10A1FF",
+        "3": "#FF401C",
+        "4": "#3FCD45"
+    },
 
 	"coords": {
 		"0_0": {

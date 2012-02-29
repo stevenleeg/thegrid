@@ -8,7 +8,6 @@ def joinGrid(handler, **args):
 	try:
 		#TODO: Sanity checks
 		gid = args['gid']
-		color = args['color']
 	except KeyError:
 		return {"status": 406}
 
@@ -16,7 +15,6 @@ def joinGrid(handler, **args):
 	if g.exists() is False:
 		return {"status":404, "error":"Grid not found."}
 
-	handler.user['color'] = color
 	# Add the user to the grid/UpdateManager
 	pid = g.addUser(handler.user)
 
@@ -33,7 +31,7 @@ def joinGrid(handler, **args):
 	UpdateManager.addClient(handler.user, handler)
 
 	# Announce our color to all other clients
-	UpdateManager.sendGrid(g, "addPlayer", handler.user, pid = pid, color = color)
+	UpdateManager.sendGrid(g, "addPlayer", handler.user, pid = pid, color = handler.user['color'])
 
 	# Add their new coords 
 	updated = g.loadEvent("join_%s" % pid)
@@ -49,6 +47,7 @@ def joinGrid(handler, **args):
 		"tused": handler.user['tused'],
 		"tlim": handler.user['tlim'],
 		"colors": g.getColors(),
+        "color": handler.user['color'],
 		"coords": g.dump()
 	}
 

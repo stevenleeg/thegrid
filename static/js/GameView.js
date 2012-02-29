@@ -81,6 +81,7 @@ var GameView = (function() {
 			ViewController.load(HomeView)
 		}
 		Grid.colors = data['colors'];
+        Grid.color = data['color'];
 		Grid.pid = data['pid'];
 		Grid.uid = data['uid'];
 		$.cookie("uid", Grid.uid, 1);
