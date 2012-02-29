@@ -48,10 +48,9 @@ var GameView = (function() {
 
 	function joinGameCb(data) {
 		if(data['status'] != 200) {
-			alert("Something went wrong while trying to join the room! " + data['status']);
             $.cookie("gid", null);
             $.cookie("pid", null);
-			ViewController.load(HomeView);
+            location.reload();
             return;
 		}
 		Grid.colors = data['colors'];
