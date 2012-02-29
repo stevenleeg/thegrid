@@ -235,6 +235,9 @@ var AsyncClient = (function() {
 })();
 
 $(document).ready(function() {
+    // Prevent annoying caching
+    $.ajaxSetup({ cache: false });
+
 	if($.cookie("uid") != undefined) {
 		ViewController.load(GameView, {
 			"uid": $.cookie("uid"),
