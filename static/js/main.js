@@ -238,9 +238,10 @@ $(document).ready(function() {
     // Prevent annoying caching
     $.ajaxSetup({ cache: false });
 
-	if($.cookie("uid") != undefined) {
+	if($.cookie("gid") != undefined) {
 		ViewController.load(GameView, {
-			"uid": $.cookie("uid"),
+			"gid": $.cookie("gid"),
+			"pid": $.cookie("pid"),
 			"size": $.cookie("size"),
 		});
 	} else {

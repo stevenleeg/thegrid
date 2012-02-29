@@ -108,6 +108,9 @@ class Grid:
         uid = db.hget(self.dbid + ":usr", pid)
         return User(uid)
 
+    def playerExists(self, pid):
+        return db.exists(self.dbid + ":pid:" + str(pid))
+
     def getColors(self):
         return db.hgetall(self.dbid + ":clr")
 

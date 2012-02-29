@@ -24,7 +24,6 @@ var CreateView = (function() {
 		ViewController.load(GameView, {
 			"gid": data['gid'], 
 			"size": $("input[name=size]").val(),
-			"color": color
 		});
 	}
 
