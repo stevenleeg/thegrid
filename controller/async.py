@@ -4,6 +4,18 @@ from utility import UpdateManager
 def test(handler, **args):
 	return {"hello":"world"}
 
+def getGrids(handler, **args):
+    grids = []
+    for grid in Grid.all():
+        grids.append({
+            "gid": grid['id'],
+            "name": grid['name'],
+            "size": grid['size'],
+            "players": len(grid.getUsers())
+        })
+
+    return {"status": 200, "grids": grids}
+
 def joinGrid(handler, **args):
 	try:
 		#TODO: Sanity checks

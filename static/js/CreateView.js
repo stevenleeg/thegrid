@@ -3,8 +3,6 @@ var CreateView = (function() {
 	var color;
 	
 	function onLoad(pass) {
-		$("input[name=room]").val(pass['name']);
-		color = pass['color'];
 		// Register events
 		$("a.option").click(BaseUI.optionSelect);
 		$("input[name=create]").click(createGame);
