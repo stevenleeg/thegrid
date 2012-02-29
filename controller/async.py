@@ -64,7 +64,7 @@ def joinGrid(handler, **args):
     UpdateManager.addClient(handler.user, handler)
 
     # Announce our color to all other clients
-    UpdateManager.sendGrid(g, "addPlayer", handler.user, pid = pid, color = handler.user['color'])
+    UpdateManager.sendGrid(g, "addPlayer", handler.user)
 
     return {
         "status":200,
