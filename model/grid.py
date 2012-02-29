@@ -139,7 +139,6 @@ class Grid:
         if event == "init":
             for key in data:
                 if key not in ["colors", "coords", "events"]:
-                    print 'adding ' + key
                     self[key] = data[key]
 
             for pid in data['colors']:
