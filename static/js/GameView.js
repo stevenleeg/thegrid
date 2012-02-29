@@ -1,6 +1,6 @@
 var GameView = (function() {
 	var tpl = "game.html";
-	var gid, uid, view_size, size;
+	var gid, pid, uid, view_size, size;
 	
 	/*
 	 * INITIAL LOADING FUNCTIONS/CALLBACKS
@@ -8,13 +8,9 @@ var GameView = (function() {
 	function onLoad(pass) {
 		var x, y, grid, open;
 
-		gid = pass['gid'];
-		color = pass['color'];
+		Grid.gid = pass['gid'];
+        Grid.pid = pass['pid'];
 		size = pass['size'];
-
-		if(pass['uid'] != undefined) {
-			Grid.uid = pass['uid'];
-		}
 
 		// Start the client
 		AsyncClient.connect(joinGame)
@@ -44,49 +40,26 @@ var GameView = (function() {
 	}
 
 	function joinGame() {
-		if(Grid.uid != undefined) {
-			AsyncClient.send("rejoinGrid", {
-				"uid": Grid.uid
-			}, rejoinGameCb);
-		} else {
-			AsyncClient.send("joinGrid", {
-				"gid": gid,
-				"color": color
-			}, joinGameCb);
-		}
-	}
-
-	function rejoinGameCb(data) {
-		if(data['status'] == 404) {
-			$.cookie("uid", null);
-			Grid.uid = undefined;
-			return location.reload();
-		}
-		if(data['status'] != 200) {
-			alert("Something went wrong while trying to join the room! " + data['status']);
-			$.cookie("uid", null);
-			ViewController.load(HomeView);
-		}
-		Grid.colors = data['colors'];
-		Grid.pid = data['pid'];
-		Grid.color = data['color'];
-		Grid.load(data['coords']);
-		GameView.setCash(data['cash']);
-		GameView.setIncome(data['inc']);
-		GameView.setTerritory(parseInt(data['tused']), parseInt(data['tlim']));
+        AsyncClient.send("joinGrid", {
+            "gid": Grid.gid,
+            "pid": Grid.pid
+        }, joinGameCb);
 	}
 
 	function joinGameCb(data) {
 		if(data['status'] != 200) {
 			alert("Something went wrong while trying to join the room! " + data['status']);
-			ViewController.load(HomeView)
+            $.cookie("gid", null);
+            $.cookie("pid", null);
+			ViewController.load(HomeView);
+            return;
 		}
 		Grid.colors = data['colors'];
         Grid.color = data['color'];
 		Grid.pid = data['pid'];
 		Grid.uid = data['uid'];
-		$.cookie("uid", Grid.uid, 1);
-		$.cookie("size", size, 1);
+		$.cookie("gid", Grid.gid, 1);
+		$.cookie("pid", Grid.pid, 1);
 		Grid.load(data['coords']);
 		GameView.setCash(data['cash']);
 		GameView.setIncome(data['inc']);
