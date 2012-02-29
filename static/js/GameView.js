@@ -38,6 +38,7 @@ var GameView = (function() {
 	function setupEvents() {
 		$(".menu").click(clickMenu);
 		$(".submenu a").on("click",selectType);
+        $(".exit").click(exit);
 
 		KeyEvents.setup();
 	}
@@ -159,6 +160,12 @@ var GameView = (function() {
 	/*
 	 * Menu interactions
 	 */
+    function exit() {
+        AsyncClient.send("exit", {}, function() {
+            ViewController.load(HomeView);   
+        });
+    }
+
 	function clickMenu(e) {
 		var menu;
 		menu = $(e.target)

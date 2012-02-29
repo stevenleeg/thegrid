@@ -4,6 +4,14 @@ from utility import UpdateManager
 def test(handler, **args):
 	return {"hello":"world"}
 
+def exit(handler, **args):
+    if handler.user.exists() is False:
+        return {"status": 403}
+
+    handler.on_close()
+    handler.user['grid'] = None
+    return {"status": 200}
+
 def getGrids(handler, **args):
     grids = []
     for grid in Grid.all():
