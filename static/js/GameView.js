@@ -10,10 +10,8 @@ var GameView = (function() {
 
 		Grid.gid = pass['gid'];
         Grid.pid = pass['pid'];
-		size = pass['size'];
+		Grid.size = pass['size'];
 
-		// Start the client
-		AsyncClient.connect(joinGame)
 		// Populate the grid
 		grid = $("#grid")
 		for(y = 0; y < pass['size']; y++) {
@@ -22,6 +20,9 @@ var GameView = (function() {
 				$("<td id='"+x+"_"+y+"'>&nbsp;</td>").appendTo(tr)
 			}
 		}
+        
+		// Start the client
+        AsyncClient.connect(joinGame);
 
 		setupEvents();
 		Grid.setupEvents();
@@ -59,6 +60,7 @@ var GameView = (function() {
 		Grid.uid = data['uid'];
 		$.cookie("gid", Grid.gid, 1);
 		$.cookie("pid", Grid.pid, 1);
+		$.cookie("size", Grid.size, 1);
 		Grid.load(data['coords']);
 		GameView.setCash(data['cash']);
 		GameView.setIncome(data['inc']);

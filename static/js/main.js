@@ -195,6 +195,7 @@ var AsyncClient = (function() {
 	var callbacks = {};
 
 	function connect(callback) {
+        if(ws != undefined && ws.readyState == ws.OPEN) return callback();
 		ws = new WebSocket("ws://"+ document.domain + ":" + window.location.port + "/api/socket");
 		ws.onopen = callback; 
 		ws.onmessage = newMessage;
@@ -225,9 +226,14 @@ var AsyncClient = (function() {
 	function closeSocket() {
 		
 	}
+    
+    function connected() {
+        return ws.readyState == ws.OPEN;
+    }
 
 	return {
 		"connect": connect,
+        "connected": connected,
 		"send": send,
 		"callbacks":callbacks,
 		"ws": ws
