@@ -34,7 +34,6 @@ def joinGrid(handler, **args):
     pid = None
     if "pid" in args:
         pid = args['pid']
-        print pid
 
     g = Grid(gid)
     if g.exists() is False:
@@ -46,7 +45,6 @@ def joinGrid(handler, **args):
     if pid is False:
         return { "status":406, "error": "Grid is full" }
 
-    print pid
     handler.user['pid'] = pid
     handler.user['grid'] = gid
     handler.user['cash'] = g['init_cash'] # Starting cash value
