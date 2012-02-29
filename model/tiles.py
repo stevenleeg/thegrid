@@ -35,13 +35,17 @@ def add_house(grid, coord, user):
 	UpdateManager.sendClient(user, "setTerritory", tlim = user['tlim'], tused = user['tused'])
 	return True
 
+def add_wall(grid, coord, user):
+    return True
+
 TileAdd = {
 	1: add_territory,
 	2: add_headquarters,
 	3: add_miner,
 	4: add_infector,
 	5: add_house,
-	6: add_damager
+	6: add_damager,
+	7: add_wall
 }
 
 #
@@ -91,5 +95,9 @@ TileProps = {
 	6: {
 		"health": 50,
 		"price": 200
-	}
+	},
+    7: {
+        "health": 50,
+        "price": 100
+    }
 }

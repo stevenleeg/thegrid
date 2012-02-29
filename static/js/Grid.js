@@ -269,6 +269,7 @@ var PlaceCheck = {
     4: Grid.defaultCheck,
     5: Grid.defaultCheck,
     6: Grid.defaultCheck,
+    7: Grid.defaultCheck
 };
 
 var TileProps = {
@@ -294,5 +295,9 @@ var TileProps = {
     6: {
         "health": 50,
         "price": 200
+    },
+    7: {
+        "health": 50,
+        "price": 100
     }
 }
