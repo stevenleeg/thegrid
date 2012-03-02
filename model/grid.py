@@ -175,6 +175,9 @@ class Grid:
         Finds all points located around the radius
         Used for vision tiles
         """
+        if type(tile) is int:
+            tile = [tile]
+
         pts = []
         # Get a range of coords to try
         x = range(point.x - radius, point.x + radius + 1)
@@ -190,7 +193,7 @@ class Grid:
 
         for point in points:
             c = self.get(point[0], point[1])
-            if c.exists() and (int(c['type']) == tile or tile == 0):
+            if c.exists() and (int(c['type']) in tile or tile == [0]):
                 pts.append(c)
 
         return pts
