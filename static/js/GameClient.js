@@ -6,8 +6,11 @@ var GameClient = (function() {
 	function set(data) {
 		Grid.destroy(data['coord']);
 		Grid.place(data['coord'], data['tile'], Grid.colors[data['player']]);
-		$("#" + data['coord']).data("player", data['player']);
-		$("#" + data['coord']).data("health", data['health']);
+        coord = $("#" + data['coord'])
+		coord.data("player", data['player']).data("health", data['health']);
+        if(parseInt(data['player']) == Grid.pid && parseInt(data['tile']) > 1) {
+            coord.addClass("t1");
+        }
 		Grid.setHealth(data['coord'], parseInt(data['health']))
 	}
 
