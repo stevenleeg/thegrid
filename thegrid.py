@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     loop = tornado.ioloop.IOLoop.instance()
     tornado.ioloop.PeriodicCallback(model.periodical.payDay, 2500, loop).start()
-    tornado.ioloop.PeriodicCallback(model.periodical.infector, 5000, loop).start()
+    tornado.ioloop.PeriodicCallback(model.periodical.infector, 1000, loop).start()
     tornado.ioloop.PeriodicCallback(model.periodical.damager, 2000, loop).start()
 
     loop.start()

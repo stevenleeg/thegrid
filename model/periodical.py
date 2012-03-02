@@ -2,6 +2,7 @@ from utility import db, UpdateManager
 from grid import Grid
 from user import User
 from tiles import TileDest
+from time import time
 
 def payDay():
     for grid in Grid.all():
@@ -14,16 +15,33 @@ def payDay():
 
 def infector():
     for grid in Grid.all():
-        length = db.llen(grid.dbid + ":inf")
-        for i in range(0, length):
-            c = grid.get(db.lpop(grid.dbid + ":inf"))
+        dbid = "g:%s:inf" % grid['id']
+        # Get the most recently placed infector
+        try:
+            latest = db.zrange(dbid, 0, 1)[0]
+        except IndexError:
+            continue
+
+        l_time = db.zrank(dbid, latest)
+        if (int(time()) - int(l_time)) < 3:
+            # The most recent has been sittig for under 3 seconds, 
+            # so we're done here
+            continue
+        # Looks like we can't take that shortcut. Let's loop.
+        coords = db.zrange(dbid, 0, -1)
+        for infector in coords:
+            c = grid.get(infector)
+            if int(time()) - int(db.zscore(dbid, infector)) < 3:
+                break
+
             around = grid.around(c, 1, 1, True)
             for coord in around:
                 TileDest[1](grid, coord, grid.getPlayer(coord['player']))
                 coord['player'] = c['player']
                 UpdateManager.sendCoord(grid, coord)
 
-            # And delete the infector
+            # Delete the infector
+            db.zrem(dbid, str(c))
             c['type'] = 1
             c['health'] = 25
             UpdateManager.sendCoord(grid, c)

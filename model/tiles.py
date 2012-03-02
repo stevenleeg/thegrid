@@ -1,4 +1,5 @@
 from utility import db, UpdateManager
+from time import time
 
 def add_territory(grid, coord, user):
     return True
@@ -19,7 +20,7 @@ def add_miner(grid, coord, user):
     return True
 
 def add_infector(grid, coord, user):
-    db.rpush(grid.dbid + ":inf", str(coord))
+    db.zadd(grid.dbid + ":inf", str(coord), int(time()))
     return True
 
 def add_damager(grid, coord, user):
