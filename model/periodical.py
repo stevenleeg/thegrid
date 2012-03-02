@@ -34,9 +34,14 @@ def infector():
             if int(time()) - int(db.zscore(dbid, infector)) < 3:
                 break
 
-            around = grid.around(c, 1, 1, True)
+            around = grid.around(c, [1,4], 1, True)
             for coord in around:
-                TileDest[1](grid, coord, grid.getPlayer(coord['player']))
+                if coord['type'] == "4":
+                    TileDest[4](grid, coord, grid.getPlayer(coord['player']))
+                    coords.remove(str(coord))
+                else:
+                    TileDest[1](grid, coord, grid.getPlayer(coord['player']))
+                coord['type'] = 1
                 coord['player'] = c['player']
                 UpdateManager.sendCoord(grid, coord)
 

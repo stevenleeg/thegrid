@@ -73,9 +73,13 @@ def dest_territory(grid, coord, user):
     user['tused'] = new_tused
     UpdateManager.sendClient(user, "setTerritory", tlim = user['tlim'], tused = new_tused)
 
+def dest_inf(grid, coord, user):
+    db.zrem(grid.dbid + ":inf", str(coord))
+
 TileDest = {
     1: dest_territory,
     3: dest_miner,
+    4: dest_inf,
     5: dest_house
 }
 
