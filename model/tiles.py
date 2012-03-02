@@ -39,6 +39,16 @@ def add_house(grid, coord, user):
 def add_wall(grid, coord, user):
     return True
 
+def add_defender(grid, coord, user):
+    # Rename the defending coord
+    db.rename(coord.dbid, "def:" + coord.dbid)
+    coord['type'] = 8
+    coord['health'] = 25
+    coord['player'] = user['pid']
+    db.zadd(grid.dbid + ":def", str(coord), int(time()))
+    UpdateManager.sendCoord(grid, coord)
+    return True
+
 TileAdd = {
     1: add_territory,
     2: add_headquarters,
@@ -46,7 +56,8 @@ TileAdd = {
     4: add_infector,
     5: add_house,
     6: add_damager,
-    7: add_wall
+    7: add_wall,
+    8: add_defender
 }
 
 #
@@ -76,11 +87,18 @@ def dest_territory(grid, coord, user):
 def dest_inf(grid, coord, user):
     db.zrem(grid.dbid + ":inf", str(coord))
 
+def dest_defender(grid, coord, user):
+    db.zrem(grid.dbid + ":def", str(coord))
+    db.delete(coord.dbid)
+    db.rename("def:" + coord.dbid, coord.dbid)
+    UpdateManager.sendCoord(grid, coord)
+
 TileDest = {
     1: dest_territory,
     3: dest_miner,
     4: dest_inf,
-    5: dest_house
+    5: dest_house,
+    8: dest_defender
 }
 
 TileProps = {
@@ -110,5 +128,9 @@ TileProps = {
     7: {
         "health": 50,
         "price": 100
+    },
+    8: {
+        "health": 25,
+        "price": 25
     }
 }

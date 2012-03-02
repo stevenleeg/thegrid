@@ -80,3 +80,23 @@ def damager():
             else:
                 db.lrem(grid.dbid + ":dam", str(c), 0)
                 UpdateManager.sendCoord(grid, c)
+
+def defender():
+    for grid in Grid.all():
+        dbid = "g:%s:def" % grid['id']
+        # Get the most recently placed infector
+        try:
+            latest = db.zrange(dbid, 0, 1)[0]
+        except IndexError:
+            continue
+        l_time = db.zscore(dbid, latest)
+        if int(time()) - int(l_time) < 3:
+            return
+
+        defenders = db.zrange(dbid, 0, -1)
+        for defender in defenders:
+            c = grid.get(defender)
+            if int(time()) - int(db.zscore(dbid, defender)) < 3:
+                break
+            TileDest[8](grid, c, grid.getPlayer(c['player']))
+            db.zrem(dbid, str(defender))
