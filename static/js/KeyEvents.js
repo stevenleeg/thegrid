@@ -12,7 +12,6 @@ var KeyEvents = (function() {
 		$(document).bind("keypress", "f", f);
 		$(document).bind("keypress", "d", d);
 		$(document).bind("keypress", "w", w);
-		$(document).bind("keypress", "d", w);
 
 		$(document).bind("keydown","up down left right", GameEvents.moveViewport)
 		$(document).bind("keyup","up down left right", GameEvents.stopMoveViewport)
@@ -59,7 +58,10 @@ var KeyEvents = (function() {
         if(KeyEvents.scope == "attack") {
             e.target = $(".submenu a[places=6]");
             GameView.selectType(e);
-        }
+        } else if(KeyEvents.scope == "buildings") {
+			e.target = $(".submenu a[places=8]");
+			GameView.selectType(e);
+		}
     }
 
 	function a() {
@@ -75,14 +77,6 @@ var KeyEvents = (function() {
 		if(KeyEvents.scope == "main") {
 			e.target = $(".menu[opens=buildings]");
 			GameView.clickMenu(e)
-		}
-	}
-
-	function d() {
-		var e = {};
-		if(KeyEvents.scope == "buildings") {
-			e.target = $(".submenu a[places=8]");
-			GameView.selectType(e);
 		}
 	}
 
