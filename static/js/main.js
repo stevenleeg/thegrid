@@ -98,12 +98,18 @@ var BaseUI = (function() {
 		notification.click(function() {
 			clearInterval($(this).data("timeout"));
 			$(this).fadeOut(function() {
+                if($(this).attr("typeid") != undefined) {
+                    BaseUI.notif_disp.pop(BaseUI.notif_disp.indexOf(parseInt($(this).attr("typeid"))), 1);
+                }
 				$(this).remove();
 			});
 		});
 
 		notification.data("timeout", setTimeout(function() {
 			notification.fadeOut(250, function() {
+                if($(this).attr("typeid") != undefined) {
+                    BaseUI.notif_disp.pop(BaseUI.notif_disp.indexOf(parseInt($(this).attr("typeid"))), 1);
+                }
 				$(this).remove();
 			});
 		}, 2000));
