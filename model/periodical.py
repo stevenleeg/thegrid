@@ -3,15 +3,25 @@ from grid import Grid
 from user import User
 from tiles import TileDest
 from time import time
+import math
 
 def payDay():
     for grid in Grid.all():
         for uid in grid.getUsers():
             u = User(uid)
-            if(u['active']):
-                u.addCash(int(u['inc']))
+            inc = int(u['inc'])
+            last = time() - float(u['lastInc'])
+            if not u['active']:
+                continue
             
-                UpdateManager.sendClient(u, "setCash", cash = u['cash'])
+            # Check their interval
+            if inc == 0:
+                continue
+            if last < math.log(inc) / 2:
+                continue
+            u.addCash(inc)
+            u['lastInc'] = time()
+            UpdateManager.sendClient(u, "setCash", cash = u['cash'])
 
 def infector():
     for grid in Grid.all():

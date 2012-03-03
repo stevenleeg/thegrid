@@ -1,5 +1,6 @@
 from model import Grid, User, TileAdd, TileProps
 from utility import UpdateManager
+from time import time
 
 def test(handler, **args):
     return {"hello":"world"}
@@ -53,6 +54,7 @@ def joinGrid(handler, **args):
     if g.playerExists(pid) is False:
         handler.user['cash'] = g['init_cash'] # Starting cash value
         handler.user['inc'] = 0
+        handler.user['lastInc'] = int(time())
         handler.user['tused'] = g['init_tused']
         handler.user['tlim'] = g['init_tlim']
 

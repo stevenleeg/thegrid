@@ -37,13 +37,13 @@ class User:
     def __getitem__(self, key):
         if key == "id":
             return self.uid
-        elif key in ["cash", "inc", "tused", "tlim"]:
+        elif key in ["cash", "inc", "tused", "tlim", "lastInc"]:
             return self.gridProp(key)
 
         return db.hget(self.dbid, key)
     
     def __setitem__(self, key, val):
-        if key in ["cash", "inc", "tused", "tlim"]:
+        if key in ["cash", "inc", "tused", "tlim", "lastInc"]:
             return self.gridProp(key, val)
 
         return db.hset(self.dbid, key, val)
