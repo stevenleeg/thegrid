@@ -17,6 +17,8 @@ def payDay():
             # Check their interval
             if inc == 0:
                 continue
+            if inc * 100 < int(u['cash']):
+                continue
             if last < math.log(inc) / 2:
                 continue
             u.addCash(inc)
