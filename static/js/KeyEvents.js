@@ -5,6 +5,7 @@ var KeyEvents = (function() {
 	function setup() {
 		$(document).bind("keydown", "esc", esc);
 		$(document).bind("keypress", "b", b);
+		$(document).bind("keypress", "c", c);
 		$(document).bind("keypress", "t", t);
 		$(document).bind("keypress", "m", m);
 		$(document).bind("keypress", "h", h);
@@ -12,6 +13,7 @@ var KeyEvents = (function() {
 		$(document).bind("keypress", "f", f);
 		$(document).bind("keypress", "d", d);
 		$(document).bind("keypress", "w", w);
+		$(document).bind("keypress", "s", s);
 
 		$(document).bind("keydown","up down left right", GameEvents.moveViewport)
 		$(document).bind("keyup","up down left right", GameEvents.stopMoveViewport)
@@ -37,6 +39,11 @@ var KeyEvents = (function() {
 		KeyEvents.callback();
 	}
 
+    function c() {
+		if(KeyEvents.scope == "attack") {
+			$(".submenu a[places=9]").click();
+		}
+	}
 	function h() {
 		var e = {};
 		if(KeyEvents.scope == "buildings") {
@@ -61,7 +68,9 @@ var KeyEvents = (function() {
         } else if(KeyEvents.scope == "buildings") {
 			e.target = $(".submenu a[places=8]");
 			GameView.selectType(e);
-		}
+		} else if(KeyEvents.scope == "shots") {
+            $(".submenu a[places=10]").click();
+        }
     }
 
 	function a() {
@@ -101,6 +110,14 @@ var KeyEvents = (function() {
 		if(KeyEvents.scope == "buildings") {
 			e.target = $(".submenu a[places=7]");
 			GameView.selectType(e);
+		}
+	}
+
+	function s() {
+		var e = {};
+		if(KeyEvents.scope == "main") {
+			e.target = $(".menu[opens=shots]");
+			GameView.clickMenu(e);
 		}
 	}
 
