@@ -41,6 +41,7 @@ var Grid = (function() {
         }).bind("contextmenu", function() {
             return false;  
         }).mousedown(function(e) {
+            var health;
             health = $(this).children(".health")
             if (health.length != 0 && !Grid.place_mode && e.which == 1) {
                 $(this).css("background-color", "");
@@ -54,10 +55,12 @@ var Grid = (function() {
             } 
             // Show the health bar
             else if(e.which == 1) {
-                health = $(this).children(".health")
+                var health, td;
+                health = $("#grid td.info").children(".health")
+                td = $("#grid td.info");
                 if (health.length != 0 && !Grid.place_mode) {
-                    $(this).css("background-color", Grid.colors[$(this).data("player")]);
-                    $(this).removeClass("info");
+                    td.css("background-color", Grid.colors[td.data("player")]);
+                    td.removeClass("info");
                     health.fadeOut(50);
                 }
             }
