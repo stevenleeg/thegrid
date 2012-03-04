@@ -117,6 +117,14 @@ TileDest = {
     8: dest_defender
 }
 
+def act_damage(grid, coord):
+    coord.damage(10)
+    UpdateManager.sendGrid(grid, "setHealth", coord = str(coord), health=coord['health'])
+
+ProjAct = {
+    10: act_damage
+}
+
 TileProps = {
     1: {
         "health": 25,

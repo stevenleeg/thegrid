@@ -1,7 +1,7 @@
 from utility import db, UpdateManager
 from grid import Grid
 from user import User
-from tiles import TileDest
+from tiles import TileDest, ProjAct
 from time import time
 import math
 
@@ -146,7 +146,7 @@ def projectile():
             cn['type'] = c['type']
             cn['health'] = c['health']
             cn['rot'] = rot
-            cn['player'] = c['player']
+            cn['player2'] = c['player']
             db.hset(tile, "pos", str(cn))
 
             db.delete(c.dbid)
@@ -154,6 +154,9 @@ def projectile():
                 db.rename("prev:" + c.dbid, c.dbid)
 
         else:
+            if(cn['player'] != c['player2']):
+                ProjAct[int(c['type'])](g, cn)
+            # Delete the projectile
             db.delete(c.dbid)
             db.delete(tile)
 
