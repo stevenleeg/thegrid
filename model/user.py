@@ -21,30 +21,37 @@ class User:
     def remove(self):
         return db.delete(self.dbid)
     
-    def gridProp(self, key, val = None):
-        if val != None:
-            return db.hset("g:%s:pid:%s" % (self['grid'], self['pid']), key, val)
-
-        return db.hget("g:%s:pid:%s" % (self['grid'], self['pid']), key)
-
-    def addCash(self, amt):
-        self['cash'] = int(self['cash']) + amt
-        return self['cash']
-
-    def addIncome(self, amt):
-        return db.hincrby("g:%s:pid:%s" % (self['grid'], self['pid']), "inc", amt)
+    def getPlayer(self):
+        return Player(self['grid'], self['pid'])
 
     def __getitem__(self, key):
         if key == "id":
             return self.uid
-        elif key in ["cash", "inc", "tused", "tlim", "lastInc"]:
-            return self.gridProp(key)
 
         return db.hget(self.dbid, key)
     
     def __setitem__(self, key, val):
-        if key in ["cash", "inc", "tused", "tlim", "lastInc"]:
-            return self.gridProp(key, val)
-
         return db.hset(self.dbid, key, val)
 
+class Player:
+    def __init__(self, gid, pid):
+        self.gid = gid
+        self.pid = pid
+        self.dbid = "g:%s:pid:%s" % (gid, pid)
+
+    def addCash(self, amt):
+        return db.hincrby(self.dbid, "cash", amt)
+
+    def addIncome(self, amt):
+        return db.hincrby(self.dbid, "inc", amt)
+
+    def getUser(self):
+        return User(db.hget("g:%s:usr" % self.gid, self.pid))
+
+    def __getitem__(self, key):
+        if key == "pid":
+            return self.pid
+        return db.hget(self.dbid, key)
+
+    def __setitem__(self, key, val):
+        return db.hset(self.dbid, key, val)

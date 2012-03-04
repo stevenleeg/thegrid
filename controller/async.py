@@ -49,14 +49,15 @@ def joinGrid(handler, **args):
     handler.user['pid'] = pid
     handler.user['grid'] = gid
     handler.user['active'] = True
+    player = handler.user.getPlayer()
 
     # Looks like it's a new player, go ahead and init them
     if g.playerExists(pid) is False:
-        handler.user['cash'] = g['init_cash'] # Starting cash value
-        handler.user['inc'] = 0
-        handler.user['lastInc'] = int(time())
-        handler.user['tused'] = g['init_tused']
-        handler.user['tlim'] = g['init_tlim']
+        player['cash'] = g['init_cash'] # Starting cash value
+        player['inc'] = 0
+        player['lastInc'] = int(time())
+        player['tused'] = g['init_tused']
+        player['tlim'] = g['init_tlim']
 
         updated = g.loadEvent("join_%s" % pid)
         # Add their new coords 
@@ -72,12 +73,12 @@ def joinGrid(handler, **args):
         "status":200,
         "uid": handler.user['id'],
         "pid": pid,
-        "cash": handler.user['cash'],
-        "inc": handler.user['inc'],
-        "tused": handler.user['tused'],
-        "tlim": handler.user['tlim'],
+        "cash": player['cash'],
+        "inc": player['inc'],
+        "tused": player['tused'],
+        "tlim": player['tlim'],
         "colors": g.getColors(),
-        "color": handler.user['color'],
+        "color": player['color'],
         "coords": g.dump()
     }
 
@@ -91,11 +92,12 @@ def place(handler, **args):
 
     g = Grid(handler.user['grid'])
     c = g.get(coord)
+    player = handler.user.getPlayer()
     if c.exists() and c['type'] != "1" and tile not in [8, 10]:
         return { "status":405, "coord": coord, "error": "coord exists" }
 
     try:
-        placeable = TileAdd[tile](g, c, handler.user)
+        placeable = TileAdd[tile](g, c, player)
     except KeyError:
         return { "status": 406, "coord": coord, "error": "invalid tile" }
 
@@ -104,22 +106,22 @@ def place(handler, **args):
         return { "status": 412, "coord": coord, "error": "invalid placement" }
 
     # Make sure they have enough cash for it
-    if int(handler.user['cash']) < props['price']:
+    if int(player['cash']) < props['price']:
         return { "status": 412, "coord": coord, "error": "not enough cash" }
 
     # Make sure they have enough territory
-    if tile == 1 and int(handler.user['tused']) >= int(handler.user['tlim']):
+    if tile == 1 and int(player['tused']) >= int(player['tlim']):
         return { "status": 412, "coord": coord, "error": "territory limit" }
     elif tile == 1:
-        handler.user['tused'] = int(handler.user['tused']) + 1
+        player['tused'] = int(player['tused']) + 1
         UpdateManager.sendClient(handler.user, "setTerritory", 
-            tused = handler.user['tused'],
-            tlim = handler.user['tlim']
+            tused = player['tused'],
+            tlim = player['tlim']
         )
 
     # Subtract the cash
-    handler.user.addCash(-props['price'])
-    UpdateManager.sendClient(handler.user, "setCash", cash = handler.user['cash'])
+    player.addCash(-props['price'])
+    UpdateManager.sendClient(handler.user, "setCash", cash = player['cash'])
 
     c['type'] = tile
     c['player'] = handler.user['pid']

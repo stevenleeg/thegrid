@@ -7,8 +7,7 @@ import math
 
 def payDay():
     for grid in Grid.all():
-        for uid in grid.getUsers():
-            u = User(uid)
+        for u in grid.getPlayers():
             inc = int(u['inc'])
             last = time() - float(u['lastInc'])
             if not u['active']:
