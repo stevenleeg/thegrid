@@ -42,7 +42,20 @@ var Grid = (function() {
                 $(this).css("background-color", Grid.colors[$(this).data("player")]);
             }
         }).bind("contextmenu", function() {
-            return false;  
+            var coord, rotate;
+            coord = parseCoord($(this).attr("id"));
+            if(TileProps[getType(coord[0], coord[1])]['rotate'] == true) {
+                if($(this).data("rotate") == undefined) rotate = 1;
+                else rotate = $(this).data("rotate") + 1;
+                $(this).animate({rotate: rotate * 90}, 100, function() {
+                    if(rotate == 4) {
+                        $(this).rotate(0);
+                        rotate = 0;
+                        $(this).data("rotate", rotate);
+                    }
+                });
+                $(this).data("rotate", rotate);
+            }
         }).mousedown(function(e) {
             var health;
             health = $(this).children(".health")
@@ -314,7 +327,7 @@ var TileProps = {
     },
     5: {
         "health": 50,
-        "price": 50
+        "price": 50,
     },
     6: {
         "health": 50,
