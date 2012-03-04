@@ -35,5 +35,6 @@ if __name__ == "__main__":
     tornado.ioloop.PeriodicCallback(model.periodical.damager, 2000, loop).start()
     tornado.ioloop.PeriodicCallback(model.periodical.defender, 1000, loop).start()
     tornado.ioloop.PeriodicCallback(model.periodical.projectile, 250, loop).start()
+    tornado.ioloop.PeriodicCallback(model.periodical.userCheck, 2500, loop).start()
 
     loop.start()

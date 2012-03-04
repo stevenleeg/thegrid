@@ -5,6 +5,14 @@ from tiles import TileDest, ProjAct
 from time import time
 import math
 
+def userCheck():
+    for grid in Grid.all():
+        for uid in grid.getUsers():
+            if uid not in UpdateManager.clients:
+                user = User(uid)
+                UpdateManager.delClient(user)
+                grid.delUser(user)
+
 def payDay():
     for grid in Grid.all():
         for u in grid.getPlayers():
