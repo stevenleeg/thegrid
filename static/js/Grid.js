@@ -133,6 +133,7 @@ var Grid = (function() {
     function place(coord, type, color) {
         var c;
         c = $("#" + coord)
+        c.removeClass("place_good");
         c.addClass("t" + type).html("");
         c.data("player", Grid.pid).data("health", TileProps[type]['health']);
         $("<div class='health'>&nbsp;</div>").hide().appendTo(c);
