@@ -48,6 +48,8 @@ def infector():
 
             around = grid.around(c, [1,4], 1, True)
             for coord in around:
+                if coord['player'] == c['player']:
+                    continue
                 if coord['type'] == "4":
                     TileDest[4](grid, coord, grid.getPlayer(coord['player']))
                     coords.remove(str(coord))
