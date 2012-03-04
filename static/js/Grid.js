@@ -25,17 +25,20 @@ var Grid = (function() {
         $("#grid td").off().mouseenter(function() {
             Grid.hover = $(this).attr("id");
             if (Grid.place_mode) {
+                $(this).data("class", $(this).attr("class"));
                 $(this).css("background-color", "");
                 if (PlaceCheck[Grid.place_type]($(this).attr("id"))) {
                     $(this).addClass("place_good");
                 } else {
                     $(this).addClass("place_bad");
                 }
+                $(this).addClass("t" + Grid.place_type);
             }
         }).mouseleave(function() {
             Grid.hover = null;
             if (Grid.place_mode) {
-                $(this).removeClass("place_bad").removeClass("place_good");
+                //$(this).removeClass("place_bad").removeClass("place_good");
+                $(this).removeClass().addClass($(this).data("class")).removeData("class");
                 $(this).css("background-color", Grid.colors[$(this).data("player")]);
             }
         }).bind("contextmenu", function() {
@@ -99,23 +102,27 @@ var Grid = (function() {
     }
 
     function placeMode(type) {
+        var on;
         Grid.place_type = type;
         Grid.place_mode = true;
         $("#grid").addClass("place_mode");
+        on = $("#" + Grid.hover);
+        on.data("class", on.attr("class"));
         if (Grid.hover != null) {
-            $("#" + Grid.hover).css("background-color", "");
+            on.css("background-color", "");
             if (PlaceCheck[Grid.place_type](Grid.hover)) {
-                $("#" + Grid.hover).addClass("place_good");
+                on.addClass("place_good");
             } else {
-                $("#" + Grid.hover).addClass("place_bad");
+                on.addClass("place_bad");
             }
+            on.addClass("t" + Grid.place_type);
         }
     }
 
     function normalMode() {
         $("#grid").removeClass("place_mode");
         $("#grid td.place_good, #grid td.place_bad").each(function() {
-            $(this).removeClass("place_good").removeClass("place_bad");
+            $(this).removeClass().addClass($(this).data("class"));
             $(this).css("background-color", Grid.colors[$(this).data("player")]);
         });
 
