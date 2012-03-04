@@ -124,6 +124,8 @@ def act_damage(grid, coord, player):
     UpdateManager.sendGrid(grid, "setHealth", coord = str(coord), health=coord['health'])
 
 def act_infect(grid, coord, player):
+    if(int(coord['type']) != 1):
+        return
     # Reduce tused
     inf = grid.getPlayer(coord['player'])
     inf.addTerritory(-1, 0)
