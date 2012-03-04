@@ -19,6 +19,9 @@ var Grid = (function() {
     }
 
     function setupEvents() {
+        $("#grid").bind("contextmenu", function() {
+            return false;
+        });
         $("#grid td").off().mouseenter(function() {
             Grid.hover = $(this).attr("id");
             if (Grid.place_mode) {
@@ -35,24 +38,28 @@ var Grid = (function() {
                 $(this).removeClass("place_bad").removeClass("place_good");
                 $(this).css("background-color", Grid.colors[$(this).data("player")]);
             }
-        }).click(function(e) {
-            var health;
-            if (Grid.place_mode) {
-                GameEvents.placeTile(e);
-            }
-        }).mousedown(function() {
+        }).bind("contextmenu", function() {
+            return false;  
+        }).mousedown(function(e) {
             health = $(this).children(".health")
-            if (health.length != 0 && !Grid.place_mode) {
+            if (health.length != 0 && !Grid.place_mode && e.which == 1) {
                 $(this).css("background-color", "");
                 $(this).addClass("info");
                 health.fadeIn(50);
             }
-        }).mouseup(function() {
-            health = $(this).children(".health")
-            if (health.length != 0 && !Grid.place_mode) {
-                $(this).css("background-color", Grid.colors[$(this).data("player")]);
-                $(this).removeClass("info");
-                health.fadeOut(50);
+        }).mouseup(function(e) {
+            // Place a tile?
+            if(Grid.place_mode && e.which == 1) {
+                GameEvents.placeTile(e)
+            } 
+            // Show the health bar
+            else if(e.which == 1) {
+                health = $(this).children(".health")
+                if (health.length != 0 && !Grid.place_mode) {
+                    $(this).css("background-color", Grid.colors[$(this).data("player")]);
+                    $(this).removeClass("info");
+                    health.fadeOut(50);
+                }
             }
         });
     }
