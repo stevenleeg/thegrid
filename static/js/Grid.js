@@ -315,6 +315,7 @@ var PlaceCheck = {
     },
     9: Grid.defaultCheck,
     10: Grid.shotCheck,
+    11: Grid.shotCheck
 };
 
 var TileProps = {
@@ -355,6 +356,10 @@ var TileProps = {
         "rotate": true
     },
     10: {
+        "health": 5,
+        "price": 25
+    },
+    11: {
         "health": 5,
         "price": 25
     }

@@ -52,14 +52,15 @@ def add_defender(grid, coord, player):
 def add_cannon(grid, coord, player):
     return True
 
-def add_damage(grid, coord, player):
+def add_projectile(grid, coord, player):
     rot = coord['rot']
     db.rename(coord.dbid, "prev:" + coord.dbid)
     coord['rot'] = rot
     prid = db.incr(grid.dbid + ":prid")
     db.hmset("p:" + str(prid), {
         "pos": str(coord),
-        "grid": grid['id']
+        "grid": grid['id'],
+        "player": player['pid']
     })
     return True
 
@@ -73,7 +74,8 @@ TileAdd = {
     7: add_wall,
     8: add_defender,
     9: add_cannon,
-    10: add_damage
+    10: add_projectile,
+    11: add_projectile
 }
 
 #
@@ -117,12 +119,28 @@ TileDest = {
     8: dest_defender
 }
 
-def act_damage(grid, coord):
+def act_damage(grid, coord, player):
     coord.damage(10)
     UpdateManager.sendGrid(grid, "setHealth", coord = str(coord), health=coord['health'])
 
+def act_infect(grid, coord, player):
+    # Reduce tused
+    inf = grid.getPlayer(coord['player'])
+    inf.addTerritory(-1, 0)
+    player.addTerritory(1, 0)
+
+    # Infect the tile
+    coord['type'] = 1
+    coord['health'] = 25
+    coord['player'] = player['pid']
+
+    UpdateManager.sendClient(inf.getUser(), "setTerritory", tused = inf['tused'], tlim = inf['tlim'])
+    UpdateManager.sendClient(player.getUser(), "setTerritory", tused = player['tused'], tlim = player['tlim'])
+    UpdateManager.sendCoord(grid, coord)
+
 ProjAct = {
-    10: act_damage
+    10: act_damage,
+    11: act_infect
 }
 
 TileProps = {
@@ -165,5 +183,9 @@ TileProps = {
     10: {
         "health": 5,
         "price": 25,
+    },
+    11: {
+        "health": 5,
+        "price": 25
     }
 }

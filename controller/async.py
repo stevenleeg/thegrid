@@ -93,7 +93,7 @@ def place(handler, **args):
     g = Grid(handler.user['grid'])
     c = g.get(coord)
     player = handler.user.getPlayer()
-    if c.exists() and c['type'] != "1" and tile not in [8, 10]:
+    if c.exists() and c['type'] != "1" and tile not in [8, 10, 11]:
         return { "status":405, "coord": coord, "error": "coord exists" }
 
     try:

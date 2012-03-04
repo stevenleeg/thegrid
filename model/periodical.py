@@ -154,7 +154,7 @@ def projectile():
 
         else:
             if(cn['player'] != c['player2']):
-                ProjAct[int(c['type'])](g, cn)
+                ProjAct[int(c['type'])](g, cn, g.getPlayer(t['player']))
             # Delete the projectile
             db.delete(c.dbid)
             db.delete(tile)

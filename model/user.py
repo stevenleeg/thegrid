@@ -45,6 +45,16 @@ class Player:
     def addIncome(self, amt):
         return db.hincrby(self.dbid, "inc", amt)
 
+    def addTerritory(self, atused, atlim):
+        try:
+            tused = int(self['tused'])
+            tlim = int(self['tlim'])
+        except TypeError:
+            return
+        
+        self['tused'] = tused + atused
+        self['tlim'] = tlim + atlim
+
     def getUser(self):
         return User(db.hget("g:%s:usr" % self.gid, self.pid))
 
