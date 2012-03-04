@@ -124,6 +124,8 @@ def place(handler, **args):
     c['type'] = tile
     c['player'] = handler.user['pid']
     c['health'] = props['health']
+    if c['rot'] is None:
+        c['rot'] = 0
 
     UpdateManager.sendCoord(g, c, handler.user)
 

@@ -53,6 +53,14 @@ def add_cannon(grid, coord, user):
     return True
 
 def add_damage(grid, coord, user):
+    rot = coord['rot']
+    db.rename(coord.dbid, "prev:" + coord.dbid)
+    coord['rot'] = rot
+    prid = db.incr(grid.dbid + ":prid")
+    db.hmset("p:" + str(prid), {
+        "pos": str(coord),
+        "grid": grid['id']
+    })
     return True
 
 TileAdd = {
