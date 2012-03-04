@@ -1,6 +1,6 @@
 from utility import db
 from tiles import TileDest
-from user import User
+from user import User, Player
 from time import time
 import re, json, itertools, random
 
@@ -104,9 +104,14 @@ class Grid:
 
         return uids
 
+    def getPlayers(self):
+        players = []
+        for pid in db.hkeys(self.dbid + ":usr"):
+            players.append(Player(self.uid, pid))
+        return players
+
     def getPlayer(self, pid):
-        uid = db.hget(self.dbid + ":usr", pid)
-        return User(uid)
+        return Player(self.uid, pid)
 
     def playerExists(self, pid):
         return db.exists(self.dbid + ":pid:" + str(pid))
