@@ -154,7 +154,7 @@ var Grid = (function() {
     }
 
     function destroy(coord) {
-        $("#" + coord).attr("class", "").css("background-color", "").removeData();
+        $("#" + coord).removeClass().css("background-color", "").removeData().html("");
     }
 
     function inRangeOf(coord, type, radius, owner) {
