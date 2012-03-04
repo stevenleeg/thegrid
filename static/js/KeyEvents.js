@@ -57,7 +57,9 @@ var KeyEvents = (function() {
 		if(KeyEvents.scope == "attack") {
 			e.target = $(".submenu a[places=4]");
 			GameView.selectType(e);
-		}
+		} else if(KeyEvents.scope == "shots") {
+            $(".submenu a[places=11]").click();
+        }
 	}
 
     function d() {
