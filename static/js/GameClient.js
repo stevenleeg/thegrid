@@ -11,7 +11,15 @@ var GameClient = (function() {
         if(parseInt(data['player']) == Grid.pid && parseInt(data['tile']) > 1) {
             coord.addClass("t1");
         }
-		Grid.setHealth(data['coord'], parseInt(data['health']))
+		Grid.setHealth(data['coord'], parseInt(data['health']));
+        
+        if(data['rot'] != null) {
+            var rot;
+            rot = parseInt(data['rot']);
+            if(coord.rotate() == "360deg") coord.rotate(0);
+            if(rot == 0) rot = 4;
+            coord.animate({rotate: rot * 90}, 250);
+        }
 	}
 
 	function addPlayer(data) {

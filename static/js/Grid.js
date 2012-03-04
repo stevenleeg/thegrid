@@ -4,8 +4,7 @@ var Grid = (function() {
     place_type;
 
     function load(coords) {
-        var coord,
-        c;
+        var coord, c, rotate;
         for (coord in coords) {
             selected = $("#" + coord);
             selected.addClass("t" + coords[coord]['type']).data("player", coords[coord]['player']).data("health", coords[coord]['health']);
@@ -14,6 +13,10 @@ var Grid = (function() {
                 selected.html("");
                 $("<div class='health'>&nbsp;</div>").appendTo(selected).hide();
                 Grid.setHealth(coord, coords[coord]['health']);
+            }
+            if(coords[coord]['rot'] != null) {
+                rotate = parseInt(coords[coord]['rot']);
+                selected.rotate(rotate * 90);
             }
         }
     }
@@ -44,20 +47,11 @@ var Grid = (function() {
                 $(this).removeClass().addClass($(this).data("class")).removeData("class");
                 $(this).css("background-color", Grid.colors[$(this).data("player")]);
             }
-        }).bind("contextmenu", function() {
-            var coord, rotate;
+        }).bind("contextmenu", function(e) {
+            var coord;
             coord = parseCoord($(this).attr("id"));
             if(TileProps[getType(coord[0], coord[1])]['rotate'] == true) {
-                if($(this).data("rotate") == undefined) rotate = 1;
-                else rotate = $(this).data("rotate") + 1;
-                $(this).animate({rotate: rotate * 90}, 100, function() {
-                    if(rotate == 4) {
-                        $(this).rotate(0);
-                        rotate = 0;
-                        $(this).data("rotate", rotate);
-                    }
-                });
-                $(this).data("rotate", rotate);
+                GameEvents.rotate(e);
             }
         }).mousedown(function(e) {
             var health;
