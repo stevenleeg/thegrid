@@ -1,3 +1,4 @@
+from __init__ import db
 import redis
 import json
 
@@ -68,3 +69,11 @@ class UpdateManager(object):
             health = coord['health'],
             rot = coord['rot']
         )
+
+    @classmethod
+    def sendNogrids(obj, func, **kwargs):
+        for uid in db.smembers("nogrid"):
+            if uid not in obj.clients:
+                db.srem("nogrid", uid)
+            else:
+                obj.clients[uid].call(func, **kwargs)

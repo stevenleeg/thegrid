@@ -91,6 +91,9 @@ class Grid:
         db.hset(self.dbid + ":usr", pid, user['id'])
         user['color'] = self.getColor(pid)
 
+        # remove them from the nogrid list
+        db.srem("nogrid", user['id'])
+
         return pid
 
     def delUser(self, user):

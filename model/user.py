@@ -12,6 +12,7 @@ class User:
         uid = str(uuid4())[0:7]
         u = obj(uid)
         u['create'] = int(time.time())
+        db.sadd("nogrid", uid)
         
         return u
 

@@ -27,8 +27,11 @@ var HomeView = (function() {
         if(grids.length == 0) {
             $("#loading_list").text("No grids found.").show();
         }
+        setupList();
+    }
 
-        $(".gridlist tr").click(function(e) {
+    function setupList() {
+        $(".gridlist tr").off().click(function(e) {
             $(".gridlist tr.selected").removeClass("selected");
             $(this).addClass("selected");
             $("input[name=enter]").removeClass("disabled");
@@ -38,5 +41,6 @@ var HomeView = (function() {
     return {
         "tpl": tpl,
         "onLoad": onLoad,
+        "setupList": setupList
     }
 })();

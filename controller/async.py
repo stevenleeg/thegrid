@@ -45,7 +45,7 @@ def joinGrid(handler, **args):
 
     if pid is False:
         return { "status":406, "error": "Grid is full" }
-
+    
     handler.user['pid'] = pid
     handler.user['grid'] = gid
     handler.user['active'] = True
@@ -63,8 +63,6 @@ def joinGrid(handler, **args):
         # Add their new coords 
         for coord in updated:
             UpdateManager.sendCoord(g, coord, handler.user)
-
-    UpdateManager.addClient(handler.user, handler)
 
     # Announce our color to all other clients
     UpdateManager.sendGrid(g, "addPlayer", handler.user)

@@ -23,6 +23,7 @@ class SocketHandler(WebSocketHandler):
     
     def open(self):
         self.user = User.create()
+        UpdateManager.addClient(self.user, self)
 
     def on_message(self, message):
         try:

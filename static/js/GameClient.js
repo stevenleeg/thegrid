@@ -58,6 +58,12 @@ var GameClient = (function() {
 		Grid.pingHealth(data['coord']);
 	}
 
+    function newGrid(data) {
+        $("#loading_list").hide();
+        $("<tr><td>"+ data['name'] +"</td><td>"+ data['players'] +" players</td></tr>").appendTo(".gridlist").data("gid", data['gid']).data("size", data['size']);
+        HomeView.setupList();
+    }
+
 	return {
 		"test": test,
 	 	"set": set,
@@ -68,5 +74,6 @@ var GameClient = (function() {
 		"del": del,
 		"setTerritory": setTerritory,
 		"setHealth": setHealth,
+        "newGrid": newGrid
 	}
 })();
