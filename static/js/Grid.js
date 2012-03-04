@@ -23,9 +23,11 @@ var Grid = (function() {
             return false;
         });
         $("#grid td").off().mouseenter(function() {
+            var rotate;
             Grid.hover = $(this).attr("id");
             if (Grid.place_mode) {
                 $(this).data("class", $(this).attr("class"));
+                rotate = $(this).rotate();
                 $(this).css("background-color", "");
                 if (PlaceCheck[Grid.place_type]($(this).attr("id"))) {
                     $(this).addClass("place_good");
@@ -33,6 +35,7 @@ var Grid = (function() {
                     $(this).addClass("place_bad");
                 }
                 $(this).addClass("t" + Grid.place_type);
+                $(this).rotate(rotate);
             }
         }).mouseleave(function() {
             Grid.hover = null;
@@ -258,6 +261,14 @@ var Grid = (function() {
         return false;
     }
 
+    function shotCheck(coord) {
+        var parse = parseCoord(coord);
+        if(Grid.isOwned(coord, Grid.pid) && getType(parse[0], parse[1]) == 9) {
+            return true;
+        }
+        return false;
+    }
+
     return {
         "load": load,
         "get": get,
@@ -278,6 +289,7 @@ var Grid = (function() {
         "setHealth": setHealth,
         "pingHealth": pingHealth,
         "defaultCheck": defaultCheck,
+        "shotCheck": shotCheck,
         "hover": null,
     };
 })();
@@ -307,7 +319,8 @@ var PlaceCheck = {
         }
         return false;
     },
-    9: Grid.defaultCheck
+    9: Grid.defaultCheck,
+    10: Grid.shotCheck,
 };
 
 var TileProps = {
@@ -346,5 +359,9 @@ var TileProps = {
         "health": 50,
         "price": 250,
         "rotate": true
+    },
+    10: {
+        "health": 5,
+        "price": 25
     }
 }

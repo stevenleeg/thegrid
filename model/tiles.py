@@ -52,6 +52,9 @@ def add_defender(grid, coord, user):
 def add_cannon(grid, coord, user):
     return True
 
+def add_damage(grid, coord, user):
+    return True
+
 TileAdd = {
     1: add_territory,
     2: add_headquarters,
@@ -61,7 +64,8 @@ TileAdd = {
     6: add_damager,
     7: add_wall,
     8: add_defender,
-    9: add_cannon
+    9: add_cannon,
+    10: add_damage
 }
 
 #
@@ -141,5 +145,9 @@ TileProps = {
         "health": 50,
         "price": 250,
         "rotate": True
+    },
+    10: {
+        "health": 5,
+        "price": 25,
     }
 }
