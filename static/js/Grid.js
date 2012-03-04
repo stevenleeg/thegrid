@@ -4,8 +4,7 @@ var Grid = (function() {
     place_type;
 
     function load(coords) {
-        var coord,
-        c;
+        var coord, c, rotate;
         for (coord in coords) {
             selected = $("#" + coord);
             selected.addClass("t" + coords[coord]['type']).data("player", coords[coord]['player']).data("health", coords[coord]['health']);
@@ -15,6 +14,10 @@ var Grid = (function() {
                 $("<div class='health'>&nbsp;</div>").appendTo(selected).hide();
                 Grid.setHealth(coord, coords[coord]['health']);
             }
+            if(coords[coord]['rot'] != null) {
+                rotate = parseInt(coords[coord]['rot']);
+                selected.rotate(rotate * 90);
+            }
         }
     }
 
@@ -23,9 +26,11 @@ var Grid = (function() {
             return false;
         });
         $("#grid td").off().mouseenter(function() {
+            var rotate;
             Grid.hover = $(this).attr("id");
             if (Grid.place_mode) {
                 $(this).data("class", $(this).attr("class"));
+                rotate = $(this).rotate();
                 $(this).css("background-color", "");
                 if (PlaceCheck[Grid.place_type]($(this).attr("id"))) {
                     $(this).addClass("place_good");
@@ -33,6 +38,7 @@ var Grid = (function() {
                     $(this).addClass("place_bad");
                 }
                 $(this).addClass("t" + Grid.place_type);
+                $(this).rotate(rotate);
             }
         }).mouseleave(function() {
             Grid.hover = null;
@@ -41,20 +47,11 @@ var Grid = (function() {
                 $(this).removeClass().addClass($(this).data("class")).removeData("class");
                 $(this).css("background-color", Grid.colors[$(this).data("player")]);
             }
-        }).bind("contextmenu", function() {
-            var coord, rotate;
+        }).bind("contextmenu", function(e) {
+            var coord;
             coord = parseCoord($(this).attr("id"));
             if(TileProps[getType(coord[0], coord[1])]['rotate'] == true) {
-                if($(this).data("rotate") == undefined) rotate = 1;
-                else rotate = $(this).data("rotate") + 1;
-                $(this).animate({rotate: rotate * 90}, 100, function() {
-                    if(rotate == 4) {
-                        $(this).rotate(0);
-                        rotate = 0;
-                        $(this).data("rotate", rotate);
-                    }
-                });
-                $(this).data("rotate", rotate);
+                GameEvents.rotate(e);
             }
         }).mousedown(function(e) {
             var health;
@@ -157,7 +154,7 @@ var Grid = (function() {
     }
 
     function destroy(coord) {
-        $("#" + coord).attr("class", "").css("background-color", "").removeData();
+        $("#" + coord).removeClass().css("background-color", "").removeData().html("");
     }
 
     function inRangeOf(coord, type, radius, owner) {
@@ -258,6 +255,14 @@ var Grid = (function() {
         return false;
     }
 
+    function shotCheck(coord) {
+        var parse = parseCoord(coord);
+        if(Grid.isOwned(coord, Grid.pid) && getType(parse[0], parse[1]) == 9) {
+            return true;
+        }
+        return false;
+    }
+
     return {
         "load": load,
         "get": get,
@@ -278,6 +283,7 @@ var Grid = (function() {
         "setHealth": setHealth,
         "pingHealth": pingHealth,
         "defaultCheck": defaultCheck,
+        "shotCheck": shotCheck,
         "hover": null,
     };
 })();
@@ -306,7 +312,9 @@ var PlaceCheck = {
             return true;
         }
         return false;
-    }
+    },
+    9: Grid.defaultCheck,
+    10: Grid.shotCheck,
 };
 
 var TileProps = {
@@ -339,6 +347,15 @@ var TileProps = {
     },
     8: {
         "health": 25,
+        "price": 25
+    },
+    9: {
+        "health": 50,
+        "price": 250,
+        "rotate": true
+    },
+    10: {
+        "health": 5,
         "price": 25
     }
 }

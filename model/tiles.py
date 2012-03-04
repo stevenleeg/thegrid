@@ -49,6 +49,20 @@ def add_defender(grid, coord, user):
     UpdateManager.sendCoord(grid, coord)
     return True
 
+def add_cannon(grid, coord, user):
+    return True
+
+def add_damage(grid, coord, user):
+    rot = coord['rot']
+    db.rename(coord.dbid, "prev:" + coord.dbid)
+    coord['rot'] = rot
+    prid = db.incr(grid.dbid + ":prid")
+    db.hmset("p:" + str(prid), {
+        "pos": str(coord),
+        "grid": grid['id']
+    })
+    return True
+
 TileAdd = {
     1: add_territory,
     2: add_headquarters,
@@ -57,7 +71,9 @@ TileAdd = {
     5: add_house,
     6: add_damager,
     7: add_wall,
-    8: add_defender
+    8: add_defender,
+    9: add_cannon,
+    10: add_damage
 }
 
 #
@@ -101,6 +117,14 @@ TileDest = {
     8: dest_defender
 }
 
+def act_damage(grid, coord):
+    coord.damage(10)
+    UpdateManager.sendGrid(grid, "setHealth", coord = str(coord), health=coord['health'])
+
+ProjAct = {
+    10: act_damage
+}
+
 TileProps = {
     1: {
         "health": 25,
@@ -132,5 +156,14 @@ TileProps = {
     8: {
         "health": 25,
         "price": 25
+    },
+    9: {
+        "health": 50,
+        "price": 250,
+        "rotate": True
+    },
+    10: {
+        "health": 5,
+        "price": 25,
     }
 }

@@ -1,7 +1,7 @@
 from utility import db, UpdateManager
 from grid import Grid
 from user import User
-from tiles import TileDest
+from tiles import TileDest, ProjAct
 from time import time
 import math
 
@@ -114,3 +114,52 @@ def defender():
                 break
             TileDest[8](grid, c, grid.getPlayer(c['player']))
             db.zrem(dbid, str(defender))
+
+def projectile():
+    tiles = db.keys("p:*")
+    for tile in tiles:
+        t = db.hgetall(tile)
+        g = Grid(t['grid'])
+        c = g.get(t['pos'])
+        rot = int(c['rot'])
+
+        # Directions. cn = coord_next
+        if rot == 0:
+            cn = g.get(c.x + 1, c.y)
+        elif rot == 1:
+            cn = g.get(c.x, c.y + 1)
+        elif rot == 2:
+            cn = g.get(c.x - 1, c.y)
+        elif rot == 3:
+            cn = g.get(c.x, c.y + 1)
+
+        # Looks like someone blows at aiming
+        if cn.x < 0 or cn.y < 0 or cn.x >= int(g['size']) or cn.y >= int(g['size']):
+            db.delete(c.dbid)
+            db.delete(tile)
+            UpdateManager.sendCoord(g, c)
+            UpdateManager.sendCoord(g, cn)
+            continue
+
+        # It's false! Let's move
+        if cn.exists() is False:
+            cn['type'] = c['type']
+            cn['health'] = c['health']
+            cn['rot'] = rot
+            cn['player2'] = c['player']
+            db.hset(tile, "pos", str(cn))
+
+            db.delete(c.dbid)
+            if db.exists("prev:" + c.dbid):
+                db.rename("prev:" + c.dbid, c.dbid)
+
+        else:
+            if(cn['player'] != c['player2']):
+                ProjAct[int(c['type'])](g, cn)
+            # Delete the projectile
+            db.delete(c.dbid)
+            db.delete(tile)
+
+        UpdateManager.sendCoord(g, c)
+        UpdateManager.sendCoord(g, cn)
+
