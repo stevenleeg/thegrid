@@ -306,7 +306,8 @@ var PlaceCheck = {
             return true;
         }
         return false;
-    }
+    },
+    9: Grid.defaultCheck
 };
 
 var TileProps = {
@@ -340,5 +341,10 @@ var TileProps = {
     8: {
         "health": 25,
         "price": 25
+    },
+    9: {
+        "health": 50,
+        "price": 250,
+        "rotate": true
     }
 }

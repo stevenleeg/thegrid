@@ -49,6 +49,9 @@ def add_defender(grid, coord, user):
     UpdateManager.sendCoord(grid, coord)
     return True
 
+def add_cannon(grid, coord, user):
+    return True
+
 TileAdd = {
     1: add_territory,
     2: add_headquarters,
@@ -57,7 +60,8 @@ TileAdd = {
     5: add_house,
     6: add_damager,
     7: add_wall,
-    8: add_defender
+    8: add_defender,
+    9: add_cannon
 }
 
 #
@@ -132,5 +136,10 @@ TileProps = {
     8: {
         "health": 25,
         "price": 25
+    },
+    9: {
+        "health": 50,
+        "price": 250,
+        "rotate": True
     }
 }
