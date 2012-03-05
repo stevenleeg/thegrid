@@ -18,7 +18,7 @@ def payDay():
         for u in grid.getPlayers():
             inc = int(u['inc'])
             last = time() - float(u['lastInc'])
-            if not u['active']:
+            if not u.getUser()['active']:
                 continue
             
             # Check their interval
@@ -30,7 +30,7 @@ def payDay():
                 continue
             u.addCash(inc)
             u['lastInc'] = time()
-            UpdateManager.sendClient(u, "setCash", cash = u['cash'])
+            UpdateManager.sendClient(u.getUser(), "setCash", cash = u['cash'])
 
 def infector():
     for grid in Grid.all():
@@ -149,7 +149,9 @@ def projectile():
             continue
 
         # It's false! Let's move
-        if cn.exists() is False:
+        if cn.exists() is False or (cn['type'] == "1" and c['type'] != "11"):
+            if cn.exists():
+                db.rename(cn.dbid, "prev:" + cn.dbid)
             cn['type'] = c['type']
             cn['health'] = c['health']
             cn['rot'] = rot
@@ -166,6 +168,8 @@ def projectile():
             # Delete the projectile
             db.delete(c.dbid)
             db.delete(tile)
+            if db.exists("prev:" + c.dbid):
+                db.rename("prev:" + c.dbid, c.dbid)
 
         UpdateManager.sendCoord(g, c)
         UpdateManager.sendCoord(g, cn)
