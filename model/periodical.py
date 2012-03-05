@@ -149,13 +149,19 @@ def projectile():
             continue
 
         # It's false! Let's move
-        if cn.exists() is False or (cn['type'] == "1" and c['type'] != "11"):
+        if \
+        cn.exists() is False or \
+        (cn['type'] == "1" and c['type'] != "11") or \
+        (c['type'] == "11" and (cn['player'] == c['player'] or cn['player'] == c['player2'])):
+
             if cn.exists():
                 db.rename(cn.dbid, "prev:" + cn.dbid)
             cn['type'] = c['type']
             cn['health'] = c['health']
             cn['rot'] = rot
-            cn['player2'] = c['player']
+            if c['player'] is None:
+                cn['player2'] = c['player2']
+            else: cn['player2'] = c['player']
             db.hset(tile, "pos", str(cn))
 
             db.delete(c.dbid)
