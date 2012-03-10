@@ -4,7 +4,7 @@ var Grid = (function() {
     place_type;
 
     function load(coords) {
-        var coord, c, rotate;
+        var coord, c;
         for (coord in coords) {
             selected = $("#" + coord);
             selected.addClass("t" + coords[coord]['type']).data("player", coords[coord]['player']).data("health", coords[coord]['health']);
@@ -14,10 +14,6 @@ var Grid = (function() {
                 $("<div class='health'>&nbsp;</div>").appendTo(selected).hide();
                 Grid.setHealth(coord, coords[coord]['health']);
             }
-            if(coords[coord]['rot'] != null) {
-                rotate = parseInt(coords[coord]['rot']);
-                selected.rotate(rotate * 90);
-            }
         }
     }
 
@@ -26,11 +22,9 @@ var Grid = (function() {
             return false;
         });
         $("#grid td").off().mouseenter(function() {
-            var rotate;
             Grid.hover = $(this).attr("id");
             if (Grid.place_mode) {
                 $(this).data("class", $(this).attr("class"));
-                rotate = $(this).rotate();
                 $(this).css("background-color", "");
                 if (PlaceCheck[Grid.place_type]($(this).attr("id"))) {
                     $(this).addClass("place_good");
@@ -38,7 +32,6 @@ var Grid = (function() {
                     $(this).addClass("place_bad");
                 }
                 $(this).addClass("t" + Grid.place_type);
-                $(this).rotate(rotate);
             }
         }).mouseleave(function() {
             Grid.hover = null;
