@@ -251,14 +251,6 @@ var Grid = (function() {
         return false;
     }
 
-    function shotCheck(coord) {
-        var parse = parseCoord(coord);
-        if(Grid.isOwned(coord, Grid.pid) && getType(parse[0], parse[1]) == 9) {
-            return true;
-        }
-        return false;
-    }
-
     return {
         "load": load,
         "get": get,
@@ -279,7 +271,6 @@ var Grid = (function() {
         "setHealth": setHealth,
         "pingHealth": pingHealth,
         "defaultCheck": defaultCheck,
-        "shotCheck": shotCheck,
         "hover": null,
     };
 })();
@@ -309,9 +300,6 @@ var PlaceCheck = {
         }
         return false;
     },
-    9: Grid.defaultCheck,
-    10: Grid.shotCheck,
-    11: Grid.shotCheck
 };
 
 var TileProps = {
@@ -346,17 +334,4 @@ var TileProps = {
         "health": 25,
         "price": 25
     },
-    9: {
-        "health": 50,
-        "price": 250,
-        "rotate": true
-    },
-    10: {
-        "health": 5,
-        "price": 25
-    },
-    11: {
-        "health": 5,
-        "price": 25
-    }
 }
