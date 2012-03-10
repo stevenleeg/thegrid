@@ -67,27 +67,6 @@ var GameEvents = (function() {
 		GameView.returnMain();
 	}
 
-    function rotate(e) {
-        var rotate;
-
-        if($(e.target).data("rotate") == undefined) rotate = 1;
-        else rotate = $(e.target).data("rotate") + 1;
-
-        $(e.target).animate({rotate: rotate * 90}, 100, function() {
-            if(rotate == 4) {
-                $(e.target).rotate(0);
-                rotate = 0;
-                $(e.target).data("rotate", rotate);
-            }
-            AsyncClient.send("rotate", {
-                "coord": $(e.target).attr("id"),
-                "rot": rotate
-            });
-        });
-
-        $(e.target).data("rotate", rotate);
-    }
-
 	function placeTileCb(data) {
 		if(data['status'] != 200) {
 			Grid.destroy(data['coord']);
@@ -98,6 +77,5 @@ var GameEvents = (function() {
 		"placeTile": placeTile,
 		"moveViewport": moveViewport,
 		"stopMoveViewport": stopMoveViewport,
-        "rotate": rotate
 	};
 })();

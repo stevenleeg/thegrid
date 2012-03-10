@@ -48,11 +48,7 @@ var Grid = (function() {
                 $(this).css("background-color", Grid.colors[$(this).data("player")]);
             }
         }).bind("contextmenu", function(e) {
-            var coord;
-            coord = parseCoord($(this).attr("id"));
-            if(TileProps[getType(coord[0], coord[1])]['rotate'] == true) {
-                GameEvents.rotate(e);
-            }
+            return false;
         }).mousedown(function(e) {
             var health;
             health = $(this).children(".health")
