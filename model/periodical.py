@@ -1,7 +1,7 @@
 from utility import db, UpdateManager
 from grid import Grid
 from user import User
-from tiles import TileDest, ProjAct
+from tiles import TileDest
 from time import time
 import math
 
