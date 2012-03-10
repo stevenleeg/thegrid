@@ -124,36 +124,10 @@ def place(handler, **args):
     c['type'] = tile
     c['player'] = handler.user['pid']
     c['health'] = props['health']
-    if c['rot'] is None:
-        c['rot'] = 0
 
     UpdateManager.sendCoord(g, c, handler.user)
 
     return { "status": 200 }
-
-def rotate(handler, **args):
-    """
-    Rotates a tile and sends the rotation to all other players
-    TODO: Validate rotation 
-    """
-    try:
-        coord = args['coord']
-        rot = int(args['rot'])
-    except KeyError, ValueError:
-        return { "status": 406 }
-
-    g = Grid(handler.user['grid'])
-    c = g.get(coord)
-    if c.exists() is False:
-        return { "status": 404 }
-
-    # Make sure it's a valid angle
-    if rot not in [0, 1, 2, 3]:
-        return { "status": 406 }
-
-    c['rot'] = rot
-    UpdateManager.sendCoord(g, c, handler.user)
-    return {"status": 200}
 
 def sendMessage(handler, **args):
     UpdateManager.sendGrid(Grid(handler.user['grid']), "newMessage", handler.user,

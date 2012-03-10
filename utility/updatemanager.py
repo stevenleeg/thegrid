@@ -67,7 +67,6 @@ class UpdateManager(object):
             tile = coord['type'],
             player = coord['player'],
             health = coord['health'],
-            rot = coord['rot']
         )
 
     @classmethod

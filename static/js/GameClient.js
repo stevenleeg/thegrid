@@ -17,16 +17,6 @@ var GameClient = (function() {
             coord.addClass("t1");
         }
 		Grid.setHealth(data['coord'], parseInt(data['health']));
-        
-        if(data['rot'] != null) {
-            var rot;
-            rot = parseInt(data['rot']);
-            if(coord.rotate() == "360deg") coord.rotate(0);
-            if(rot == 0 && coord.rotate() == "270deg") rot = 4;
-
-            if(exists) coord.animate({rotate: rot * 90}, 250);
-            else coord.rotate(rot * 90);
-        }
 	}
 
 	function addPlayer(data) {
