@@ -1,0 +1,62 @@
+{
+	"players": 4,
+	"autogenerate": 1,
+	"tlim": 1024,
+	"init_tused": 3,
+	"init_tlim": 6,
+	"init_cash": 500,
+
+    "colors": {
+        "1": "#FEBE07",
+        "2": "#10A1FF",
+        "3": "#FF401C",
+        "4": "#3FCD45"
+    },
+
+	"coords": {
+		"0_0": {
+			"type": 99
+		},
+		"63_0": {
+			"type": 99
+		},
+
+		"1_1": {
+			"type": 2,
+			"health": 100,
+			"player": 1
+		},
+		"1_0": {
+			"type": 1,
+			"health": 25,
+			"player": 1
+		},
+		"0_1": {
+			"type": 1,
+			"health": 25,
+			"player": 1
+		},
+
+		"62_0": {
+			"type": 1,
+			"health": 25,
+			"player": 2
+		},
+		"63_1": {
+			"type": 1,
+			"health": 25,
+			"player": 2
+		},
+		"62_1": {
+			"type": 2,
+			"health": 100,
+			"player": 2
+		}
+	},
+
+	"events": {
+		"init": ["0_0", "63_0"],
+		"join_1": ["1_1", "1_0", "0_1"],
+		"join_2": ["62_0", "63_1", "62_1"]
+	}
+}

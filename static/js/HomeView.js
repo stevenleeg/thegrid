@@ -1,50 +1,46 @@
 var HomeView = (function() {
-	var tpl = "home.html"
-	var load_timeout;
-	// Private
-	function roomEnterCb(data) {
-		BaseUI.done();
-		if(data['status'] == 200) {
-			alert("Yeah it exists!");
-		} else {
-			ViewController.load(CreateView, {"name": $("input[name=room]").val()})
-		}
-	}
-	
-	// Public
-	function onLoad(pass) {
-		$("input[name=enter]").bind("click", roomEnter);
-		$("a.option").bind("click", BaseUI.optionSelect);
-	}
-	// Called after clicking "enter" on the room select form
-	function roomEnter(e) {
-		var errors = false;
-		// Make sure they have everything set
-		if($("input[name=room]").val() == "") {
-			$("input[name=room]").effect("highlight", { color: "#FF0000" });
-			errors = true;
-		}
-		if($("input[name=color]").val() == "") {
-			$(".colors").effect("highlight", { color: "#FF0000" });
-			errors = true;
-		}
+    var tpl = "home.html";
 
-		if(errors == true) {
-			return
-		}
+    function onLoad() {
+        AsyncClient.connect(function() {
+            AsyncClient.send("getGrids", {}, getGridsCb);           
+        });
+        $("input[name=create]").click(function() {
+            ViewController.load(CreateView);
+        });
+        $("input[name=enter]").click(function() {
+            var selected = $(".gridlist tr.selected");
+            if(selected.length == 0) {
+                return;
+            }
+            ViewController.load(GameView, {"gid": selected.data("gid"), "size": parseInt(selected.data("size"))});
+        });
+    }
 
-		BaseUI.loading();
-		SyncServer.get(
-			"game/exists", 
-			{ name: $("input[name=room]").val() },
-			roomEnterCb
-		);
-	}
+    function getGridsCb(data) {
+        var grids = data['grids'];
+        $("#loading_list").hide();
+        for(grid in grids) {
+            $("<tr><td>"+ grids[grid]['name'] +"</td><td>"+ grids[grid]['players'] +" players</td></tr>").appendTo(".gridlist").data("gid", grids[grid]['gid']).data("size", grids[grid]['size']);
+        }
 
-	// Release public methods/vars
-	return {
-		"tpl": tpl,
-		"onLoad": onLoad,
-		"roomEnter":roomEnter,
-	};
+        if(grids.length == 0) {
+            $("#loading_list").text("No grids found.").show();
+        }
+        setupList();
+    }
+
+    function setupList() {
+        $(".gridlist tr").off().click(function(e) {
+            $(".gridlist tr.selected").removeClass("selected");
+            $(this).addClass("selected");
+            $("input[name=enter]").removeClass("disabled");
+        });
+    }
+
+    return {
+        "tpl": tpl,
+        "onLoad": onLoad,
+        "setupList": setupList
+    }
 })();
