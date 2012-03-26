@@ -7,10 +7,12 @@ Thegrid is a multiplayer RTS game. Your goal is to defeat any other colonies on 
 I'm kind of randomly deciding to release this right now, so there will definitely be more information to come...
 
 ## Features
-    * Realtime multiplayer gameplay
-    * Customizable maps
-    * Defeat others using infectors or destroyers
-    * A developer who loves working on this, so feel free to suggest additions
+It's kind of hard to sum up a game with a feature list, but I'll try anyways:
+
+ * Realtime multiplayer gameplay
+ * Customizable maps
+ * Defeat others using infectors or destroyers
+ * A developer who loves working on this, so feel free to suggest additions
 
 ## Running a server
 I've yet to deploy this to an actual production environment so I can't help there, but if you're looking to start a development server to play around with I made it pretty easy.
