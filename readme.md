@@ -7,10 +7,12 @@ Thegrid is a multiplayer RTS game. Your goal is to defeat any other colonies on 
 I'm kind of randomly deciding to release this right now, so there will definitely be more information to come...
 
 ## Features
-    * Realtime multiplayer gameplay
-    * Customizable maps
-    * Defeat others using infectors or destroyers
-    * A developer who loves working on this, so feel free to suggest additions
+It's kind of hard to sum up a game with a feature list, but I'll try anyways:
+
+ * Realtime multiplayer gameplay
+ * Customizable maps
+ * Defeat others using infectors or destroyers
+ * A developer who loves working on this, so feel free to suggest additions
 
 ## Running a server
 I've yet to deploy this to an actual production environment so I can't help there, but if you're looking to start a development server to play around with I made it pretty easy.
@@ -40,6 +42,6 @@ Now that the VM is up and running, let's start the grid server:
 And there you go! Navigate to `http://localhost:8080` and you'll have a perfectly functional copy of thegrid waiting for you to play and hack on!
 
 ## About the project
-I've always been interested in a new technologies and I originally created this project for a fun way to mess around with [http://tornadoweb.org](tornado) and websockets. After showing this to a few friends, all of them seemed to like the concepts of the game so I continued to develop it. I currently don't have the money to turn this into anything big, so I figured it'd be best to share my learning with the world and invite anyone who's interested to learn with me and help develop. 
+I've always been interested in a new technologies and I originally created this project for a fun way to mess around with [tornado](http://tornadoweb.org) and websockets. After showing this to a few friends, all of them seemed to like the concepts of the game so I continued to develop it. I currently don't have the money to turn this into anything big, so I figured it'd be best to share my learning with the world and invite anyone who's interested to learn with me and help develop. 
 
 If you know some python, javascript, HTML, css, or have any sort of design expertise please feel free to join in by forking the repo. I'd love to have others work on this project with me. If not, you can help just as much by playing and enjoying the game and spreading the word!
