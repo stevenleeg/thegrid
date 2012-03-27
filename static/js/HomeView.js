@@ -13,7 +13,7 @@ var HomeView = (function() {
             if(selected.length == 0) {
                 return;
             }
-            ViewController.load(GameView, {"gid": selected.data("gid"), "size": parseInt(selected.data("size"))});
+            ViewController.load(RoomView, {"gid": selected.data("gid"), "size": parseInt(selected.data("size"))});
         });
     }
 
