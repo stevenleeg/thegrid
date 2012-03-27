@@ -6,23 +6,6 @@ class UpdateManager(object):
     clients = {}
 
     @classmethod
-    def listen(obj):
-        """
-        Listener for redis' pubsub
-        """
-        r = redis.Redis()
-        ps = r.pubsub()
-        ps.subscribe("messages")
-        
-        for message in ps.listen():
-            if message['data'] == "clients":
-                print "clients"
-                print obj.clients
-            if message['data'] == "income":
-                from model.periodical import payDay
-                payDay()
-    
-    @classmethod
     def addClient(obj, user, callback):
         """
         Adds a client to the clients list

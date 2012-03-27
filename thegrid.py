@@ -24,11 +24,6 @@ app = tornado.web.Application([
 if __name__ == "__main__":
     app.listen(8080)
 
-    # Thread for listener process
-    listener = threading.Thread(target = utility.UpdateManager.listen)
-    listener.daemon = True
-    listener.start()
-
     loop = tornado.ioloop.IOLoop.instance()
     tornado.ioloop.PeriodicCallback(model.periodical.payDay, 500, loop).start()
     tornado.ioloop.PeriodicCallback(model.periodical.infector, 1000, loop).start()
