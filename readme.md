@@ -13,6 +13,7 @@ It's kind of hard to sum up a game with a feature list, but I'll try anyways:
  * Customizable maps
  * Defeat others using infectors or destroyers
  * A developer who loves working on this, so feel free to suggest additions
+ * Released under the [GNU GPL License](http://www.gnu.org/copyleft/gpl.html). Hooray open source!
 
 ## Running a server
 I've yet to deploy this to an actual production environment so I can't help there, but if you're looking to start a development server to play around with I made it pretty easy.
