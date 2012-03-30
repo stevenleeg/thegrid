@@ -1,3 +1,5 @@
+var GameData = {};
+
 var ViewController = (function() {
 	var current;
 

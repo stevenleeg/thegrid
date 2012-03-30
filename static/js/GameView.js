@@ -8,15 +8,11 @@ var GameView = (function() {
 	function onLoad(pass) {
 		var x, y, grid, open;
 
-		Grid.gid = pass['gid'];
-        Grid.pid = pass['pid'];
-		Grid.size = pass['size'];
-
 		// Populate the grid
 		grid = $("#grid")
-		for(y = 0; y < pass['size']; y++) {
+		for(y = 0; y < GameData['size']; y++) {
 			tr = $("<tr id='"+y+"'></tr>").appendTo(grid)
-			for(x = 0; x < pass['size']; x++) {
+			for(x = 0; x < GameData['size']; x++) {
 				$("<td id='"+x+"_"+y+"'>&nbsp;</td>").appendTo(tr)
 			}
 		}
@@ -42,8 +38,8 @@ var GameView = (function() {
 
 	function joinGame() {
         AsyncClient.send("joinGrid", {
-            "gid": Grid.gid,
-            "pid": Grid.pid
+            "gid": GameData['gid'],
+            "pid": GameData['pid']
         }, joinGameCb);
 	}
 
@@ -54,13 +50,13 @@ var GameView = (function() {
             location.reload();
             return;
 		}
-		Grid.colors = data['colors'];
-        Grid.color = data['color'];
-		Grid.pid = data['pid'];
-		Grid.uid = data['uid'];
-		$.cookie("gid", Grid.gid, 1);
-		$.cookie("pid", Grid.pid, 1);
-		$.cookie("size", Grid.size, 1);
+		GameData['colors'] = data['colors'];
+        GameData['color'] = data['color'];
+		GameData['pid'] = data['pid'];
+		GameData['uid'] = data['uid'];
+		$.cookie("gid", GameData['gid'], 1);
+		$.cookie("pid", GameData['pid'], 1);
+		$.cookie("size", GameData['size'], 1);
 		Grid.load(data['coords']);
 		GameView.setCash(data['cash']);
 		GameView.setIncome(data['inc']);

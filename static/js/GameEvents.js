@@ -53,7 +53,7 @@ var GameEvents = (function() {
 			return;
 		}
 
-		color = Grid.colors[Grid.pid];
+		color = GameData['colors'][GameData['pid']];
 		coord = $(e.target).attr("id");
 		Grid.place(coord, Grid.place_type, color);
 

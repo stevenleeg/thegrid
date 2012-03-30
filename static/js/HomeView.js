@@ -13,7 +13,11 @@ var HomeView = (function() {
             if(selected.length == 0) {
                 return;
             }
-            ViewController.load(RoomView, {"gid": selected.data("gid"), "size": parseInt(selected.data("size"))});
+            GameData['gid'] = selected.data("gid");
+            GameData['size'] = parseInt(selected.data("size"));
+            //if(selected.data("active") == 1) ViewController.load(GameView);
+            //else ViewController.load(RoomView);
+            ViewController.load(GameView);
         });
     }
 
