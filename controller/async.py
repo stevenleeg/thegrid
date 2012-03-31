@@ -53,6 +53,9 @@ def joinRoom(handler, **args):
     for player in g.getPlayers():
         active.append(int(player['pid']))
 
+    # Notify everyone else
+    UpdateManager.sendGrid(g, "addPlayer", handler.user, pid = pid)
+
     return {
         "status":200,
         "pid": pid,
@@ -100,7 +103,7 @@ def joinGrid(handler, **args):
             UpdateManager.sendCoord(g, coord, handler.user)
 
     # Announce our color to all other clients
-    UpdateManager.sendGrid(g, "addPlayer", handler.user)
+    UpdateManager.sendGrid(g, "addPlayer", handler.user, pid = pid)
 
     return {
         "status":200,

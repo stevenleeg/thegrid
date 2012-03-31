@@ -20,7 +20,12 @@ var GameClient = (function() {
 	}
 
 	function addPlayer(data) {
-		BaseUI.notify("A new player has joined");
+        GameData['players_active'].push(data['pid']);
+        if(GameData['active'] == true) BaseUI.notify("A new player has joined");
+        else {
+            $("#p" + data['pid']).css("background", GameData['colors'][data['pid']]);
+            if(GameData['players_active'].length > 1) $("input[name=start]").removeClass("disabled");
+        }
 	}
 
 	function newMessage(data) {

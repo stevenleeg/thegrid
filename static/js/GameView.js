@@ -65,6 +65,7 @@ var GameView = (function() {
             GameData['has_init'] = true;
         }
 
+        GameData['active'] = true;
         // Create the grid and set some initials on the UI
 		Grid.load(data['coords']);
 		GameView.setCash(data['cash']);

@@ -10,12 +10,13 @@ var RoomView = (function() {
         GameData['pid'] = data['pid'];
         GameData['colors'] = data['colors'];
         GameData['color'] = GameData['colors'][GameData['pid']];
-        GameData['active'] = data['active'];
+        GameData['players_active'] = data['active'];
+        GameData['active'] = false;
         GameData['has_init'] = true;
 
         // Update the UI
         $("#roomname").text(GameData['name']);
-        $.each(GameData['active'], function(i, pid) {
+        $.each(GameData['players_active'], function(i, pid) {
             $("#p" + pid).css("background", GameData['colors'][pid]);
         });
 
