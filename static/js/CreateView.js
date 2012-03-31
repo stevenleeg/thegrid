@@ -23,6 +23,7 @@ var CreateView = (function() {
 
         GameData['gid'] = data['gid'];
         GameData['size'] = parseInt($("input[name=size]").val());
+        GameData['name'] = $("input[name=room]").val();
 		ViewController.load(RoomView);
 	}
 

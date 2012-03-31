@@ -14,6 +14,7 @@ var RoomView = (function() {
         GameData['has_init'] = true;
 
         // Update the UI
+        $("#roomname").text(GameData['name']);
         $.each(GameData['active'], function(i, pid) {
             $("#p" + pid).css("background", GameData['colors'][pid]);
         });
