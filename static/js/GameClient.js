@@ -28,6 +28,16 @@ var GameClient = (function() {
         }
 	}
 
+	function delPlayer(data) {
+        var index = GameData['players_active'].indexOf(data['pid']);
+        GameData['players_active'].splice(index, 1);
+        if(GameData['active'] == true) BaseUI.notify("A player has disconnected");
+        else {
+            $("#p" + data['pid']).css("background", "");
+            if(GameData['players_active'].length <= 1) $("input[name=start]").addClass("disabled");
+        }
+	}
+
 	function newMessage(data) {
 		BaseUI.newMessage(Grid.colors[data['pid']], data['text']);
 	}
@@ -63,6 +73,7 @@ var GameClient = (function() {
 		"test": test,
 	 	"set": set,
 	 	"addPlayer": addPlayer,
+        "delPlayer": delPlayer,
 		"newMessage": newMessage,
 		"setCash": setCash,
 		"setInc": setInc,

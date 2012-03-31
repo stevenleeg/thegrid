@@ -37,13 +37,17 @@ class SocketHandler(WebSocketHandler):
         self.send(ret)
     
     def on_close(self):
-        # Notify UpdateManger
-        UpdateManager.delClient(self.user)
         # Remove them from their grid
         if self.user['grid'] != None:
             g = Grid(self.user['grid'])
+            # Notify their grid
+            UpdateManager.sendGrid(g, "delPlayer", self.user, pid = self.user['pid'])
+            # And remove them from it
             g.delUser(self.user)
 
             self.user['active'] = False
         else:
-           self. user.remove()
+           self.user.remove()
+
+        # Notify UpdateManger
+        UpdateManager.delClient(self.user)
