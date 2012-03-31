@@ -15,9 +15,8 @@ var HomeView = (function() {
             }
             GameData['gid'] = selected.data("gid");
             GameData['size'] = parseInt(selected.data("size"));
-            //if(selected.data("active") == 1) ViewController.load(GameView);
-            //else ViewController.load(RoomView);
-            ViewController.load(GameView);
+            if(selected.data("active") == 1) ViewController.load(GameView);
+            else ViewController.load(RoomView);
         });
     }
 

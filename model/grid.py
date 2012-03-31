@@ -17,10 +17,13 @@ class Grid:
         return obj(uid)
 
     @classmethod
-    def all(obj):
+    def all(obj, inactive = False):
         grids = []
         for gid in db.hvals("nameid"):
-            grids.append(obj(gid))
+            g = obj(gid)
+            if inactive is False and int(g['active']) == False:
+                continue
+            grids.append(g)
 
         return grids
 
@@ -38,6 +41,7 @@ class Grid:
             "name": name,
             "size": size,
             "map": mapname,
+            "active": 0,
             "started": int(time()),
         })
 
@@ -70,6 +74,11 @@ class Grid:
 
     # Client handling
     def addUser(self, user, pid = None):
+        # Make sure we're not adding a player twice
+        if user['grid'] == self['id']:
+            return user['pid']
+
+        # And if they already have a pid
         if pid != None:
             if db.hexists(self.dbid + ":usr", pid):
                 return False

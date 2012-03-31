@@ -15,7 +15,7 @@ def exit(handler, **args):
 
 def getGrids(handler, **args):
     grids = []
-    for grid in Grid.all():
+    for grid in Grid.all(inactive = True):
         grids.append({
             "gid": grid['id'],
             "name": grid['name'],
@@ -24,6 +24,41 @@ def getGrids(handler, **args):
         })
 
     return {"status": 200, "grids": grids}
+
+def joinRoom(handler, **args):
+    try:
+        g = Grid(args['gid'])
+    except KeyError:
+        return {"status": 404, "error": "no gid"}
+
+    pid = None
+    if "pid" in args:
+        pid = args['pid']
+
+    if g.exists() is False:
+        return {"status":404, "error":"Grid not found."}
+
+    # Add the user to the grid and UpdateManager
+    pid = g.addUser(handler.user, pid)
+
+    if pid is False:
+        return { "status":406, "error": "Grid is full" }
+
+    handler.user['pid'] = pid
+    handler.user['grid'] = g['id']
+    handler.user['active'] = True
+
+    # Get a list of active players
+    active = []
+    for player in g.getPlayers():
+        active.append(int(player['pid']))
+
+    return {
+        "status":200,
+        "pid": pid,
+        "active": active,
+        "colors": g.getColors(),
+    }
 
 def joinGrid(handler, **args):
     try:

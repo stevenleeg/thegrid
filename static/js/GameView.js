@@ -39,7 +39,8 @@ var GameView = (function() {
 	function joinGame() {
         AsyncClient.send("joinGrid", {
             "gid": GameData['gid'],
-            "pid": GameData['pid']
+            "pid": GameData['pid'],
+            "get_init": (GameData['has_init'] != true) ? true : false
         }, joinGameCb);
 	}
 
@@ -50,13 +51,21 @@ var GameView = (function() {
             location.reload();
             return;
 		}
-		GameData['colors'] = data['colors'];
-        GameData['color'] = data['color'];
-		GameData['pid'] = data['pid'];
-		GameData['uid'] = data['uid'];
-		$.cookie("gid", GameData['gid'], 1);
-		$.cookie("pid", GameData['pid'], 1);
-		$.cookie("size", GameData['size'], 1);
+        // If we're coming from the loading screen we don't need to do this
+        if(GameData['has_init'] != true) {
+            // Set game data
+            GameData['pid'] = data['pid'];
+            GameData['colors'] = data['colors'];
+            GameData['color'] = GameData['colors'][GameData['pid']];
+
+            // Make it so we can get back here
+            $.cookie("gid", GameData['gid'], 1);
+            $.cookie("pid", GameData['pid'], 1);
+            $.cookie("size", GameData['size'], 1);
+            GameData['has_init'] = true;
+        }
+
+        // Create the grid and set some initials on the UI
 		Grid.load(data['coords']);
 		GameView.setCash(data['cash']);
 		GameView.setIncome(data['inc']);
