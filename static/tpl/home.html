@@ -10,6 +10,7 @@
     <a href="#" id="menu_join" fade="room_select">join a grid</a>
     <a href="#" id="menu_create" fade="create">create a grid</a>
     <a href="#" id="menu_instruct" fade="instructions">instructions</a>
+    <a href="#" id="menu_lobby" fade="waiting"></a>
 </div>
 
 <div id="room_select" class="home_menu room_select fade">
@@ -34,4 +35,16 @@
         <a href="#" class="option" value="64">64</a>
     </div>
     <input type="button" name="create" value="create" />
+</div>
+
+<div class="home_menu room fade" id="waiting">
+    <h1 id="roomname">loading...</h1>
+    <div class="slot" id="p1">player 1</div>
+    <div class="slot" id="p2">player 2</div>
+    <div class="slot" id="p3">player 3</div>
+    <div class="slot" id="p4">player 4</div>
+
+    <div class="status">waiting for more players</div>
+
+    <input type="button" class="disabled" name="start" value="start game" />
 </div>

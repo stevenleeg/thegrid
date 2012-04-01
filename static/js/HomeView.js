@@ -15,7 +15,7 @@ var HomeView = (function() {
             GameData['size'] = parseInt(selected.data("size"));
             GameData['name'] = selected.data("name");
             if(selected.data("active") == 1) ViewController.load(GameView);
-            else ViewController.load(RoomView);
+            else enterRoom();
         });
         $(".side_menu a").on("click", function() {
             if($(".fade.open").attr("id") == $(this).attr("fade")) return;
@@ -29,6 +29,7 @@ var HomeView = (function() {
         });
 		$("a.option").click(BaseUI.optionSelect);
 		$("input[name=create]").click(createGame);
+        $("input[name=start]").on("click", startGame);
         $(window).resize(windowResize);
 
         generateGrid();
@@ -169,8 +170,45 @@ var HomeView = (function() {
         GameData['gid'] = data['gid'];
         GameData['size'] = parseInt($("input[name=size]").val());
         GameData['name'] = $("input[name=room]").val();
-		ViewController.load(RoomView);
+		enterRoom();
 	}
+
+    /*
+     * Waiting room stuff
+     */
+    function enterRoom() {
+        AsyncClient.send("joinRoom", {gid: GameData['gid'], pid: GameData['pid']}, joinRoomCb);
+        $("#menu_lobby").text(GameData['name'] + " lobby").addClass("selected").fadeIn(250);
+        $(".side_menu a.selected").removeClass("selected");
+    }
+
+    function startGame() {
+        if(GameData['players_active'].length <= 1) return;
+
+        AsyncClient.send("startGame");
+    }
+
+    function joinRoomCb(data) {
+        // Load the game data
+        GameData['pid'] = data['pid'];
+        GameData['colors'] = data['colors'];
+        GameData['color'] = GameData['colors'][GameData['pid']];
+        GameData['players_active'] = data['active'];
+        GameData['active'] = false;
+        GameData['has_init'] = true;
+
+        // Update the UI
+        $("#roomname").text(GameData['name']);
+        $.each(GameData['players_active'], function(i, pid) {
+            $("#p" + pid).css("background", GameData['colors'][pid]);
+        });
+
+        if(GameData['active'].length > 1) {
+            $("input[name=start]").removeClass("disabled");
+        }
+        $(".open").removeClass("open");
+        $("#waiting").fadeIn(250).addClass("open");
+    }
 
     function cleanup() {
         stopBgAnimation();
