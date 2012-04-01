@@ -6,9 +6,6 @@ var HomeView = (function() {
         AsyncClient.connect(function() {
             AsyncClient.send("getGrids", {}, getGridsCb);           
         });
-        $("#create").click(function() {
-            ViewController.load(CreateView);
-        });
         $("#enter").click(function() {
             var selected = $(".gridlist tr.selected");
             if(selected.length == 0) {
@@ -30,6 +27,8 @@ var HomeView = (function() {
             $("#" + $(this).attr("fade")).fadeIn(250);
             HomeView.current = $(this).attr("fade");
         });
+		$("a.option").click(BaseUI.optionSelect);
+		$("input[name=create]").click(createGame);
         $(window).resize(windowResize);
 
         generateGrid();
@@ -79,6 +78,26 @@ var HomeView = (function() {
             $("#enter").removeClass("disabled");
         });
     }
+
+	function createGame() {
+		SyncClient.post("grid/create", {
+			"name": $("input[name=room]").val(),
+			"size": $("input[name=size]").val(),
+		}, createGameCb);
+	}
+
+	function createGameCb(data) {
+		if(data['status'] != 200) {
+			alert("Error! " + data['status']);
+			return;
+		}
+
+        GameData['gid'] = data['gid'];
+        GameData['size'] = parseInt($("input[name=size]").val());
+        GameData['name'] = $("input[name=room]").val();
+		ViewController.load(RoomView);
+	}
+
 
     return {
         "tpl": tpl,

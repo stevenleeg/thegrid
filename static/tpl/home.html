@@ -8,7 +8,7 @@
 
 <div class="side_menu">
     <a href="#" id="menu_join" fade="room_select">join a grid</a>
-    <a href="#" id="menu_create">create a grid</a>
+    <a href="#" id="menu_create" fade="create">create a grid</a>
     <a href="#" id="menu_instruct" fade="instructions">instructions</a>
 </div>
 
@@ -21,4 +21,17 @@
     </div>
 
     <input type="button" class="disabled" id="enter" value="enter grid" />
+</div>
+
+<div class="home_menu room_create fade" id="create">
+    <h1>create room</h1>
+    <input type="text" name="room" placeholder="room name" />
+
+    <h1>map size</h1>
+    <div class="selector" name="size">
+        <a href="#" class="option" value="16">16</a>
+        <a href="#" class="option" value="32">32</a>
+        <a href="#" class="option" value="64">64</a>
+    </div>
+    <input type="button" name="create" value="create" />
 </div>

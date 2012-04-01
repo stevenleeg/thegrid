@@ -134,6 +134,9 @@ div.home_menu {
 	padding:10px;
     display:none;
     z-index:3;
+	background: @bg;
+    color: @dark;
+    border: 1px solid @darkish;
 
 	h1 {
 		font-size:18px;
@@ -151,9 +154,10 @@ div.home_menu {
 		display:inline-block;
 		margin:3px auto 10px auto;
 		padding:5px;
-		width:370px;
+		width:340px;
 		font-size:18px;
 		border:0px;
+        border-bottom:1px dashed @darkish;
 		background:@light;
 		outline:none;
 	}
@@ -228,7 +232,6 @@ div.room {
 }
 
 div.room_select {
-	background: @bg;
     border:1px solid @darkish;
 	color: @dark;
 
@@ -289,10 +292,6 @@ div.room_select {
 }
 
 div.room_create {
-	background: @blue;
-	color:@light;
-	padding:10px;
-
 	input[type=button] {
 		background: @gray;
 		color:@dark;
