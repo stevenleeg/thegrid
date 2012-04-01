@@ -20,10 +20,19 @@ def getGrids(handler, **args):
             "gid": grid['id'],
             "name": grid['name'],
             "size": grid['size'],
+            "active": int(grid['active']),
             "players": len(grid.getUsers())
         })
 
     return {"status": 200, "grids": grids}
+
+def startGame(handler, **args):
+    g = Grid(handler.user['grid'])
+
+    g['active'] = 1
+    UpdateManager.sendGrid(g, "startGame")
+
+    return {"status": 200}
 
 def joinRoom(handler, **args):
     try:

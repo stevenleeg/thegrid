@@ -28,6 +28,7 @@ var HomeView = (function() {
             $("<tr><td>"+ grids[grid]['name'] +"</td><td>"+ grids[grid]['players'] +" players</td></tr>")
                 .appendTo(".gridlist")
                 .data("gid", grids[grid]['gid'])
+                .data("active", grids[grid]['active'])
                 .data("name", grids[grid]['name'])
                 .data("size", grids[grid]['size']);
         }

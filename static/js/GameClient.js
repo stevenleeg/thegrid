@@ -3,17 +3,21 @@ var GameClient = (function() {
 		alert(data['hello']);
 	}
 
+    function startGame(data) {
+        ViewController.load(GameView);
+    }
+
 	function set(data) {
         var exists = true;
         if($("#" + data['coord']).attr("class") == undefined) exists = false;
 
 		Grid.destroy(data['coord']);
-		Grid.place(data['coord'], data['tile'], Grid.colors[data['player']]);
+		Grid.place(data['coord'], data['tile'], GameData['colors'][data['player']]);
 
         coord = $("#" + data['coord'])
 		coord.data("player", data['player']).data("health", data['health']);
 
-        if(parseInt(data['player']) == Grid.pid && parseInt(data['tile']) > 1) {
+        if(parseInt(data['player']) == GameData['pid'] && parseInt(data['tile']) > 1) {
             coord.addClass("t1");
         }
 		Grid.setHealth(data['coord'], parseInt(data['health']));
@@ -39,7 +43,7 @@ var GameClient = (function() {
 	}
 
 	function newMessage(data) {
-		BaseUI.newMessage(Grid.colors[data['pid']], data['text']);
+		BaseUI.newMessage(GameData['colors'][data['pid']], data['text']);
 	}
 
 	function setCash(data) {
@@ -72,6 +76,7 @@ var GameClient = (function() {
 	return {
 		"test": test,
 	 	"set": set,
+        "startGame": startGame,
 	 	"addPlayer": addPlayer,
         "delPlayer": delPlayer,
 		"newMessage": newMessage,

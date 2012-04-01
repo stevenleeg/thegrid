@@ -3,6 +3,13 @@ var RoomView = (function() {
 
     function onLoad() {
         AsyncClient.send("joinRoom", {gid: GameData['gid'], pid: GameData['pid']}, joinRoomCb);
+        $("input[name=start]").on("click", startGame);
+    }
+
+    function startGame() {
+        if(GameData['players_active'].length <= 1) return;
+
+        AsyncClient.send("startGame");
     }
 
     function joinRoomCb(data) {

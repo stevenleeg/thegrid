@@ -75,8 +75,12 @@ class Grid:
     # Client handling
     def addUser(self, user, pid = None):
         # Make sure we're not adding a player twice
-        if user['grid'] == self['id']:
-            return user['pid']
+        # This might be a bad way of doing this...
+        try:
+            if int(user['grid']) == int(self['id']):
+                return user['pid']
+        except (TypeError, ValueError):
+            pass
 
         # And if they already have a pid
         if pid != None:

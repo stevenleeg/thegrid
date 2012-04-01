@@ -214,6 +214,11 @@ var AsyncClient = (function() {
 		// Generate a random callback identifier
 		cid = parseInt(Math.random() * 100);
 
+        if(data == undefined) {
+            data = {};
+            callback = function() {};
+        }
+
 		data['f'] = func;
 		data['cid'] = cid;
 		ws.send(JSON.stringify(data));
