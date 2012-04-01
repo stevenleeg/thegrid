@@ -18,13 +18,13 @@ var HomeView = (function() {
             else ViewController.load(RoomView);
         });
         $(".side_menu a").on("click", function() {
-            if(HomeView.current == $(this).attr("fade")) return;
+            if($(".fade.open").attr("id") == $(this).attr("fade")) return;
 
             $(".side_menu a.selected").removeClass("selected");
             $(this).addClass("selected");
 
-            $(".fade").fadeOut(250);
-            $("#" + $(this).attr("fade")).fadeIn(250);
+            $(".fade").fadeOut(250).removeClass("open");
+            $("#" + $(this).attr("fade")).fadeIn(250).addClass("open");
             HomeView.current = $(this).attr("fade");
         });
 		$("a.option").click(BaseUI.optionSelect);
