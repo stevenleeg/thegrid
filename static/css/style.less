@@ -107,19 +107,33 @@ div.side_menu {
     a:hover {
         color: @blue;
     }
+
+    a.selected {
+        font-weight:400;
+    }
 } 
 
 div.welcome_text {
-    width:400px;
-    position:fixed;
-    right:15px;
-    top:25px;
     background:@bg;
-    padding:15px;
+    padding:10px;
+    position:fixed;
+    width:350px;
+    top:38%;
+    left:50%;
+    margin-left:-175px;
+    display:none;
+    border:1px solid @dark;
 }
 
-div.menu {
+div.home_menu {
+    position:fixed;
+    width:350px;
+    top:30%;
+    left:50%;
+    margin-left:-175px;
 	padding:10px;
+    display:none;
+    z-index:3;
 
 	h1 {
 		font-size:18px;
@@ -214,7 +228,8 @@ div.room {
 }
 
 div.room_select {
-	background: @yellow;
+	background: @bg;
+    border:1px solid @darkish;
 	color: @dark;
 
     div.listcontainer {
@@ -223,6 +238,7 @@ div.room_select {
         height:100px;
         margin:10px 0px 10px 0px;
         overflow-y:auto;
+        border:1px solid @gray;
 
         #loading_list {
             color: @dark;

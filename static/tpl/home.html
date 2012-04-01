@@ -1,5 +1,5 @@
 <div class="title">the<span class="titlegrid">grid</span></div>
-<!-- <div class="welcome_text">welcome to thegrid. collect as many resources as you can and build up your colony. your goal is to defeat any other colonies on the map.</div> -->
+<div class="welcome_text fade" id="instructions">welcome to thegrid. collect as many resources as you can and build up your colony. your goal is to defeat any other colonies on the map.</div>
 <div class="home_screen">&nbsp;</div>
 
 <div class="grid_container">
@@ -7,19 +7,18 @@
 </div>
 
 <div class="side_menu">
-    <a href="#">join a grid</a>
-    <a href="#">create a grid</a>
-    <a href="#">instructions</a>
+    <a href="#" id="menu_join" fade="room_select">join a grid</a>
+    <a href="#" id="menu_create">create a grid</a>
+    <a href="#" id="menu_instruct" fade="instructions">instructions</a>
 </div>
-	<!-- <div class="menu room_select">
-		<h1>enter or start a game</h1>
-        <div class="listcontainer disabled">
-            <div id="loading_list">Loading grids...</div>
-            <table class="gridlist">
-            </table>
-        </div>
 
-		<input type="button" class="disabled" name="enter" value="enter grid" />
-		<input type="button" class="red" name="create" value="create new grid" />
-	</div>
-     -->
+<div id="room_select" class="home_menu room_select fade">
+    <h1>enter or start a game</h1>
+    <div class="listcontainer disabled">
+        <div id="loading_list">Loading grids...</div>
+        <table class="gridlist">
+        </table>
+    </div>
+
+    <input type="button" class="disabled" id="enter" value="enter grid" />
+</div>

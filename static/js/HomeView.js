@@ -3,9 +3,9 @@ var HomeView = (function() {
 
     function onLoad() {
         var xTiles, yTiles, grid;
-        //AsyncClient.connect(function() {
-        //    AsyncClient.send("getGrids", {}, getGridsCb);           
-        //});
+        AsyncClient.connect(function() {
+            AsyncClient.send("getGrids", {}, getGridsCb);           
+        });
         $("#create").click(function() {
             ViewController.load(CreateView);
         });
@@ -19,6 +19,16 @@ var HomeView = (function() {
             GameData['name'] = selected.data("name");
             if(selected.data("active") == 1) ViewController.load(GameView);
             else ViewController.load(RoomView);
+        });
+        $(".side_menu a").on("click", function() {
+            if(HomeView.current == $(this).attr("fade")) return;
+
+            $(".side_menu a.selected").removeClass("selected");
+            $(this).addClass("selected");
+
+            $(".fade").fadeOut(250);
+            $("#" + $(this).attr("fade")).fadeIn(250);
+            HomeView.current = $(this).attr("fade");
         });
         $(window).resize(windowResize);
 
@@ -66,7 +76,7 @@ var HomeView = (function() {
         $(".gridlist tr").off().click(function(e) {
             $(".gridlist tr.selected").removeClass("selected");
             $(this).addClass("selected");
-            $("input[name=enter]").removeClass("disabled");
+            $("#enter").removeClass("disabled");
         });
     }
 
