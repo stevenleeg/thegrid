@@ -1,7 +1,6 @@
 var GameData = {};
 
 var ViewController = (function() {
-	var current;
 
 	function load(controller, pass) {
 		// Be ready to display a loading box
@@ -14,23 +13,24 @@ var ViewController = (function() {
 			$("#content").fadeOut(250, function() {
 				// Delete the old and set up the new 
 				$("#content").remove();
-
-				current = controller;
-				current.onLoad(pass);
+                
+                if(ViewController.current == undefined) ViewController.current = {};
+                if(ViewController.current.hasOwnProperty("cleanup")) ViewController.current.cleanup();
+				ViewController.current = controller;
+				ViewController.current.onLoad(pass);
 
 				// Fade in the new content and change its id to normal content
 				$("#content2").fadeIn(250, function() {
 					$("#content2").attr("id", "content")
 					BaseUI.done()
-					if(current.hasOwnProperty("postFade")) {
-						current.postFade(pass);
+					if(ViewController.current.hasOwnProperty("postFade")) {
+						ViewController.current.postFade(pass);
 					}
 				});
 			});
 		});
 	}
 	return {
-		"current": current,
 		"load": load,
 	};
 })();

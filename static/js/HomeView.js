@@ -172,10 +172,14 @@ var HomeView = (function() {
 		ViewController.load(RoomView);
 	}
 
+    function cleanup() {
+        stopBgAnimation();
+    }
 
     return {
         "tpl": tpl,
         "onLoad": onLoad,
+        "cleanup": cleanup,
         "startBgAnimation": startBgAnimation,
         "stopBgAnimation": stopBgAnimation,
         "sendBgWave": sendBgWave,
