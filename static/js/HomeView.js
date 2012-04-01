@@ -37,41 +37,47 @@ var HomeView = (function() {
     // Background animation stuff
     // Compass starts at 0 and goes clockwise
     function startBgAnimation() {
-        var classes = ["blue", "green", "red", "yellow"];
+        HomeView.anim = setInterval(proceedBgAnimation, 50);
         HomeView.dots = [];
-        var elems = $("#home_grid td").get().sort(function(){ 
+        sendBgWave();
+    }
+    function sendBgWave() {
+        var classes = ["blue", "green", "red", "yellow"];
+        var elems = $("#home_grid tr:first-child td").get().sort(function(){ 
           return Math.round(Math.random())-0.5
-        }).slice(0,8)
+        }).slice(0,1)
         $(elems).each(function() {
             var coord = Grid.parseCoord($(this).attr("id"));
             var cls = classes[Math.floor(Math.random() * classes.length)]; 
-            HomeView.dots.push({"x": coord[0], "y": coord[1], "dir": 1, "class": cls});
+            $("#" + coord[0] + "_" + coord[1]).addClass(cls);
+            HomeView.dots.push({"x": coord[0], "y": coord[1], "class": cls});
         });
-        HomeView.anim = setInterval(proceedBgAnimation, 100);
+        HomeView.wave = setTimeout(sendBgWave, Math.floor(Math.random() * (500 - 200 + 1)) + 200); 
     }
 
     function proceedBgAnimation() {
         $.each(HomeView.dots, function(i, dot) {
             var coord, dir, next;
+            if(dot == undefined) return;
             coord = $("#" + dot['x'] + "_" + dot['y']);
-            dir = checkDir(dot['x'], dot['y'], dot['dir']);
-            while(dir != true || (Math.random() * 100 > 80)) {
-                dot['dir'] = Math.floor(Math.random()*4);
-                if(dot['dir'] > 3) dot['dir'] = 0;
-                dir = checkDir(dot['x'], dot['y'], dot['dir']);
+            dir = checkDir(dot['x'], dot['y'], 2);
+            if(dir != true) {
+                HomeView.dots.splice(i, 1);
+                coord.removeClass(dot['class']);
+                return;
             }
-            next = getMovedCoords(dot['x'], dot['y'], dot['dir']);
+            next = getMovedCoords(dot['x'], dot['y'], 2);
             coord.removeClass(dot['class']);
             coord = $("#" + next[0] + "_" + next[1]);
             coord.addClass(dot['class']);
             HomeView.dots[i]['x'] = next[0];
             HomeView.dots[i]['y'] = next[1];
-            HomeView.dots[i]['dir'] = dot['dir'];
         });
     }
 
     function stopBgAnimation() {
         clearInterval(HomeView.anim);
+        clearTimeout(HomeView.wave);
     }
 
     function checkDir(x, y, d) {
@@ -172,6 +178,7 @@ var HomeView = (function() {
         "onLoad": onLoad,
         "startBgAnimation": startBgAnimation,
         "stopBgAnimation": stopBgAnimation,
+        "sendBgWave": sendBgWave,
         "setupList": setupList,
     }
 })();
