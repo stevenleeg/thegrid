@@ -29,7 +29,7 @@ var HomeView = (function() {
         // Populate the homegrid based on the window size
         HomeView.x_tiles = parseInt($(window).width() / 32) + 2;
         HomeView.y_tiles = parseInt($(window).height() / 32) + 2;
-        grid = $("#home_grid");
+        grid = $("#home_grid").html("");
         $(".grid_container").css("width", $(window).width()).css("height", $(window).height())
 		for(var y = 0; y < HomeView.y_tiles; y++) {
 			tr = $("<tr id='"+y+"'></tr>").appendTo(grid)
