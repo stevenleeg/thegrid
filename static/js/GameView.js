@@ -57,6 +57,7 @@ var GameView = (function() {
             GameData['pid'] = data['pid'];
             GameData['colors'] = data['colors'];
             GameData['color'] = GameData['colors'][GameData['pid']];
+            GameData['players_active'] = data['active'];
 
             // Make it so we can get back here
             $.cookie("gid", GameData['gid'], 1);

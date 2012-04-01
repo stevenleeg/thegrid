@@ -114,8 +114,14 @@ def joinGrid(handler, **args):
     # Announce our color to all other clients
     UpdateManager.sendGrid(g, "addPlayer", handler.user, pid = pid)
 
+    # Get a list of active players
+    active = []
+    for player in g.getPlayers():
+        active.append(int(player['pid']))
+
     return {
         "status":200,
+        "active": active,
         "uid": handler.user['id'],
         "pid": pid,
         "cash": player['cash'],

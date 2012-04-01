@@ -156,7 +156,7 @@ var BaseUI = (function() {
 		msgbox = $(".chatbox input");
 		$(".chatbox").removeClass("show");
 		if(msgbox.val().length > 0) {
-			newMessage(Grid.colors[Grid.pid], msgbox.val());
+			newMessage(GameData['colors'][GameData['pid']], msgbox.val());
 			AsyncClient.send("sendMessage", {
 				"text": msgbox.val()
 			}, sendMessageCb);
