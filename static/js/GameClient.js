@@ -69,7 +69,12 @@ var GameClient = (function() {
 
     function newGrid(data) {
         $("#loading_list").hide();
-        $("<tr><td>"+ data['name'] +"</td><td>"+ data['players'] +" players</td></tr>").appendTo(".gridlist").data("gid", data['gid']).data("size", data['size']);
+        $("<tr><td>"+ data['name'] +"</td><td>"+ data['players'] +" players</td></tr>")
+            .appendTo(".gridlist")
+            .data("gid", data['gid'])
+            .data("active", data['active'])
+            .data("name", data['name'])
+            .data("size", data['size']);
         HomeView.setupList();
     }
 

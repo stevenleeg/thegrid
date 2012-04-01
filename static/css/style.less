@@ -56,18 +56,94 @@ div.loading {
 	display:none;
 }
 
-div.central {
-	width:400px;
-	margin:10px auto 0px auto;
+/* Lots of HomeView specific stuff here */
+div.title {
+    position:fixed;
+    top:15px;
+    left:15px;
+    z-index:3;
+    font-weight:bold;
+    font-size:48px;
+
+    .titlegrid {
+        color: @blue;
+    }
 }
 
-div.central.title {
-	font-size:36px;
-	font-weight:bold;
+table.home_grid {
+    z-index:1;
+    opacity:.95;
 }
 
-div.menu {
+div.grid_container {
+    overflow-x:hidden;
+    overflow-y:hidden;
+}
+
+div.home_screen {
+    position:fixed;
+    z-index:2;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    background:@dark;
+    opacity:.02;
+}
+
+div.side_menu {
+    width:150px;
+    position:fixed;
+    top:35%;
+    right:50%;
+    margin-right:20%;
+    z-index:3;
+    a {
+        display:block;
+        margin-bottom:15px;
+        color:@dark;
+        font-size:24px;
+    }
+
+    a:hover {
+        color: @blue;
+    }
+
+    a.selected {
+        font-weight:400;
+    }
+    
+    #menu_lobby {
+        color: @green;
+        display:none;
+    }
+} 
+
+div.welcome_text {
+    background:@bg;
+    z-index:3;
+    padding:10px;
+    position:fixed;
+    width:350px;
+    top:38%;
+    left:50%;
+    margin-left:-175px;
+    display:none;
+    border:1px solid @dark;
+}
+
+div.home_menu {
+    position:fixed;
+    width:350px;
+    top:30%;
+    left:50%;
+    margin-left:-175px;
 	padding:10px;
+    display:none;
+    z-index:3;
+	background: @bg;
+    color: @dark;
+    border: 1px solid @darkish;
 
 	h1 {
 		font-size:18px;
@@ -85,9 +161,10 @@ div.menu {
 		display:inline-block;
 		margin:3px auto 10px auto;
 		padding:5px;
-		width:370px;
+		width:340px;
 		font-size:18px;
 		border:0px;
+        border-bottom:1px dashed @darkish;
 		background:@light;
 		outline:none;
 	}
@@ -130,9 +207,6 @@ div.menu {
 }
 
 div.room {
-    background: @green;
-    color: @light;
-
     h1 {
         font-size:24px;
     }
@@ -157,12 +231,11 @@ div.room {
         padding: 15px 5px 15px 5px;
         width:60%;
         margin: 0px auto 15px auto;
-        border:3px dashed @light;
     }
 }
 
 div.room_select {
-	background: @yellow;
+    border:1px solid @darkish;
 	color: @dark;
 
     div.listcontainer {
@@ -171,6 +244,7 @@ div.room_select {
         height:100px;
         margin:10px 0px 10px 0px;
         overflow-y:auto;
+        border:1px solid @gray;
 
         #loading_list {
             color: @dark;
@@ -221,10 +295,6 @@ div.room_select {
 }
 
 div.room_create {
-	background: @blue;
-	color:@light;
-	padding:10px;
-
 	input[type=button] {
 		background: @gray;
 		color:@dark;

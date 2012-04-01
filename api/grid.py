@@ -46,6 +46,7 @@ class Create(tornado.web.RequestHandler):
         UpdateManager.sendNogrids("newGrid", 
             gid = g['id'],
             size = size,
+            active = g['active'],
             name = g['name'], 
             players = 1,
         )
