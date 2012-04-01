@@ -21,10 +21,10 @@ var CreateView = (function() {
 			return;
 		}
 
-		ViewController.load(GameView, {
-			"gid": data['gid'], 
-			"size": $("input[name=size]").val(),
-		});
+        GameData['gid'] = data['gid'];
+        GameData['size'] = parseInt($("input[name=size]").val());
+        GameData['name'] = $("input[name=room]").val();
+		ViewController.load(RoomView);
 	}
 
 	return {

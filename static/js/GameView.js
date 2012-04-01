@@ -8,15 +8,11 @@ var GameView = (function() {
 	function onLoad(pass) {
 		var x, y, grid, open;
 
-		Grid.gid = pass['gid'];
-        Grid.pid = pass['pid'];
-		Grid.size = pass['size'];
-
 		// Populate the grid
 		grid = $("#grid")
-		for(y = 0; y < pass['size']; y++) {
+		for(y = 0; y < GameData['size']; y++) {
 			tr = $("<tr id='"+y+"'></tr>").appendTo(grid)
-			for(x = 0; x < pass['size']; x++) {
+			for(x = 0; x < GameData['size']; x++) {
 				$("<td id='"+x+"_"+y+"'>&nbsp;</td>").appendTo(tr)
 			}
 		}
@@ -42,8 +38,9 @@ var GameView = (function() {
 
 	function joinGame() {
         AsyncClient.send("joinGrid", {
-            "gid": Grid.gid,
-            "pid": Grid.pid
+            "gid": GameData['gid'],
+            "pid": GameData['pid'],
+            "get_init": (GameData['has_init'] != true) ? true : false
         }, joinGameCb);
 	}
 
@@ -54,13 +51,22 @@ var GameView = (function() {
             location.reload();
             return;
 		}
-		Grid.colors = data['colors'];
-        Grid.color = data['color'];
-		Grid.pid = data['pid'];
-		Grid.uid = data['uid'];
-		$.cookie("gid", Grid.gid, 1);
-		$.cookie("pid", Grid.pid, 1);
-		$.cookie("size", Grid.size, 1);
+        // If we're coming from the loading screen we don't need to do this
+        if(GameData['has_init'] != true) {
+            // Set game data
+            GameData['pid'] = data['pid'];
+            GameData['colors'] = data['colors'];
+            GameData['color'] = GameData['colors'][GameData['pid']];
+
+            // Make it so we can get back here
+            $.cookie("gid", GameData['gid'], 1);
+            $.cookie("pid", GameData['pid'], 1);
+            $.cookie("size", GameData['size'], 1);
+            GameData['has_init'] = true;
+        }
+
+        GameData['active'] = true;
+        // Create the grid and set some initials on the UI
 		Grid.load(data['coords']);
 		GameView.setCash(data['cash']);
 		GameView.setIncome(data['inc']);

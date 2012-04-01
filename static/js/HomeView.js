@@ -13,7 +13,11 @@ var HomeView = (function() {
             if(selected.length == 0) {
                 return;
             }
-            ViewController.load(GameView, {"gid": selected.data("gid"), "size": parseInt(selected.data("size"))});
+            GameData['gid'] = selected.data("gid");
+            GameData['size'] = parseInt(selected.data("size"));
+            GameData['name'] = selected.data("name");
+            if(selected.data("active") == 1) ViewController.load(GameView);
+            else ViewController.load(RoomView);
         });
     }
 
@@ -21,7 +25,12 @@ var HomeView = (function() {
         var grids = data['grids'];
         $("#loading_list").hide();
         for(grid in grids) {
-            $("<tr><td>"+ grids[grid]['name'] +"</td><td>"+ grids[grid]['players'] +" players</td></tr>").appendTo(".gridlist").data("gid", grids[grid]['gid']).data("size", grids[grid]['size']);
+            $("<tr><td>"+ grids[grid]['name'] +"</td><td>"+ grids[grid]['players'] +" players</td></tr>")
+                .appendTo(".gridlist")
+                .data("gid", grids[grid]['gid'])
+                .data("active", grids[grid]['active'])
+                .data("name", grids[grid]['name'])
+                .data("size", grids[grid]['size']);
         }
 
         if(grids.length == 0) {

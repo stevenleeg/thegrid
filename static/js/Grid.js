@@ -9,7 +9,7 @@ var Grid = (function() {
             selected = $("#" + coord);
             selected.addClass("t" + coords[coord]['type']).data("player", coords[coord]['player']).data("health", coords[coord]['health']);
             if (coords[coord]['player'] > 0) {
-                selected.css("background-color", Grid.colors[coords[coord]['player']]).addClass("t1");
+                selected.css("background-color", GameData['colors'][coords[coord]['player']]).addClass("t1");
                 selected.html("");
                 $("<div class='health'>&nbsp;</div>").appendTo(selected).hide();
                 Grid.setHealth(coord, coords[coord]['health']);
@@ -38,7 +38,7 @@ var Grid = (function() {
             if (Grid.place_mode) {
                 //$(this).removeClass("place_bad").removeClass("place_good");
                 $(this).removeClass().addClass($(this).data("class")).removeData("class");
-                $(this).css("background-color", Grid.colors[$(this).data("player")]);
+                $(this).css("background-color", GameData['colors'][$(this).data("player")]);
             }
         }).bind("contextmenu", function(e) {
             return false;
@@ -61,7 +61,7 @@ var Grid = (function() {
                 health = $("#grid td.info").children(".health")
                 td = $("#grid td.info");
                 if (health.length != 0 && !Grid.place_mode) {
-                    td.css("background-color", Grid.colors[td.data("player")]);
+                    td.css("background-color", GameData['colors'][td.data("player")]);
                     td.removeClass("info");
                     health.fadeOut(50);
                 }
@@ -122,7 +122,7 @@ var Grid = (function() {
         $("#grid").removeClass("place_mode");
         $("#grid td.place_good, #grid td.place_bad").each(function() {
             $(this).removeClass().addClass($(this).data("class"));
-            $(this).css("background-color", Grid.colors[$(this).data("player")]);
+            $(this).css("background-color", GameData['colors'][$(this).data("player")]);
         });
 
         Grid.place_type = 0;
@@ -134,7 +134,7 @@ var Grid = (function() {
         c = $("#" + coord)
         c.removeClass("place_good");
         c.addClass("t" + type).html("");
-        c.data("player", Grid.pid).data("health", TileProps[type]['health']);
+        c.data("player", GameData['pid']).data("health", TileProps[type]['health']);
         $("<div class='health'>&nbsp;</div>").hide().appendTo(c);
         Grid.setHealth(coord, TileProps[type]['health']);
         if (color != undefined) {
@@ -219,7 +219,7 @@ var Grid = (function() {
             function() {
                 coord.data("in-to", setTimeout(function() {
                     coord.animate({
-                        "background-color": Grid.colors[coord.data("player")]
+                        "background-color": GameData['colors'][coord.data("player")]
                     },
                     100);
                 },
@@ -238,7 +238,7 @@ var Grid = (function() {
     }
 
     function defaultCheck(coord) {
-        if (Grid.isOwned(coord, Grid.pid) && $("#" + coord).attr("class") == "t1") {
+        if (Grid.isOwned(coord, GameData['pid']) && $("#" + coord).attr("class") == "t1") {
             return true;
         }
         return false;
@@ -270,14 +270,14 @@ var Grid = (function() {
 
 var PlaceCheck = {
     1: function(coord) {
-        if (Grid.inRangeOf(coord, 1, 1, Grid.pid) && !Grid.exists(coord)) {
+        if (Grid.inRangeOf(coord, 1, 1, GameData['pid']) && !Grid.exists(coord)) {
             return true;
         } else {
             return false;
         }
     },
     3: function(coord) {
-        if (Grid.inRangeOf(coord, 99, 1) && Grid.isOwned(coord, Grid.pid)) {
+        if (Grid.inRangeOf(coord, 99, 1) && Grid.isOwned(coord, GameData['pid'])) {
             return true;
         }
 
@@ -288,7 +288,7 @@ var PlaceCheck = {
     6: Grid.defaultCheck,
     7: Grid.defaultCheck,
     8: function(coord) {
-        if(Grid.isOwned(coord, Grid.pid)) {
+        if(Grid.isOwned(coord, GameData['pid'])) {
             return true;
         }
         return false;
