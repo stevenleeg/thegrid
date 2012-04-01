@@ -127,7 +127,7 @@
 		color:@dark;
 	}
 
-    a.exit {
+    a.open_menu {
         display:inline-block;
         float:right;
 		padding:0px 10px 0px 10px;
@@ -136,9 +136,39 @@
         }
     }
 
-	a.stat:hover, a.exit:hover {
+	a.stat:hover, a.open_menu:hover {
 		background:@light;
 	}
+}
+
+.main_menu {
+    position:fixed;
+    width:300px;
+    top:150px;
+    left:50%;
+    margin-left:-150px;
+    text-align:center;
+    background:@yellow;
+    z-index:4;
+    padding: 10px 0px 10px 0px;
+    display:none;
+    box-shadow: 0px 0px 55px @dark;
+
+    a {
+        display:block;
+        margin: 10px auto 0px auto;
+        font-size:18px;
+        padding:10px;
+        width:75%;
+    }
+
+    a:hover {
+        font-weight:400;
+    }
+
+    a:last-child {
+        margin-bottom:10px;
+    }
 }
 
 .notifications {

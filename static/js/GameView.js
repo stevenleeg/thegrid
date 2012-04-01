@@ -31,7 +31,11 @@ var GameView = (function() {
 	function setupEvents() {
 		$(".menu").click(clickMenu);
 		$(".submenu a").on("click",selectType);
-        $(".exit").click(exit);
+        $(".open_menu").click(openMainMenu);
+
+        // Menu events
+        $("#main_close, .screen, #main_exit").off().on("click", closeMainMenu);
+        $("#main_exit").on("click", exit);
 
 		KeyEvents.setup();
 	}
@@ -141,6 +145,14 @@ var GameView = (function() {
 	/*
 	 * Menu interactions
 	 */
+    function openMainMenu() {
+        $(".screen, .main_menu").fadeIn(150);
+    }
+
+    function closeMainMenu() {
+        $(".screen, .main_menu").fadeOut(150);
+    }
+
     function exit() {
         AsyncClient.send("exit", {}, function() {
             ViewController.load(HomeView);   
