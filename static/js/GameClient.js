@@ -3,28 +3,47 @@ var GameClient = (function() {
 		alert(data['hello']);
 	}
 
+    function startGame(data) {
+        ViewController.load(GameView);
+    }
+
 	function set(data) {
         var exists = true;
         if($("#" + data['coord']).attr("class") == undefined) exists = false;
 
 		Grid.destroy(data['coord']);
-		Grid.place(data['coord'], data['tile'], Grid.colors[data['player']]);
+		Grid.place(data['coord'], data['tile'], GameData['colors'][data['player']]);
 
         coord = $("#" + data['coord'])
 		coord.data("player", data['player']).data("health", data['health']);
 
-        if(parseInt(data['player']) == Grid.pid && parseInt(data['tile']) > 1) {
+        if(parseInt(data['player']) == GameData['pid'] && parseInt(data['tile']) > 1) {
             coord.addClass("t1");
         }
 		Grid.setHealth(data['coord'], parseInt(data['health']));
 	}
 
 	function addPlayer(data) {
-		BaseUI.notify("A new player has joined");
+        GameData['players_active'].push(data['pid']);
+        if(GameData['active'] == true) BaseUI.notify("A new player has joined");
+        else {
+            $("#p" + data['pid']).css("background", GameData['colors'][data['pid']]);
+            if(GameData['players_active'].length > 1) $("input[name=start]").removeClass("disabled");
+        }
+	}
+
+	function delPlayer(data) {
+        var index = GameData['players_active'].indexOf(data['pid']);
+        GameData['players_active'].splice(index, 1);
+        if(GameData['active'] == true) BaseUI.notify("A player has disconnected");
+        else {
+            $("#p" + data['pid']).css("background", "");
+            if(GameData['players_active'].length <= 1) $("input[name=start]").addClass("disabled");
+        }
 	}
 
 	function newMessage(data) {
-		BaseUI.newMessage(Grid.colors[data['pid']], data['text']);
+		BaseUI.newMessage(GameData['colors'][data['pid']], data['text']);
 	}
 
 	function setCash(data) {
@@ -57,7 +76,9 @@ var GameClient = (function() {
 	return {
 		"test": test,
 	 	"set": set,
+        "startGame": startGame,
 	 	"addPlayer": addPlayer,
+        "delPlayer": delPlayer,
 		"newMessage": newMessage,
 		"setCash": setCash,
 		"setInc": setInc,

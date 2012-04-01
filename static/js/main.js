@@ -1,3 +1,5 @@
+var GameData = {};
+
 var ViewController = (function() {
 	var current;
 
@@ -212,6 +214,11 @@ var AsyncClient = (function() {
 		// Generate a random callback identifier
 		cid = parseInt(Math.random() * 100);
 
+        if(data == undefined) {
+            data = {};
+            callback = function() {};
+        }
+
 		data['f'] = func;
 		data['cid'] = cid;
 		ws.send(JSON.stringify(data));
@@ -251,11 +258,10 @@ $(document).ready(function() {
     $.ajaxSetup({ cache: false });
 
 	if($.cookie("gid") != undefined) {
-		ViewController.load(GameView, {
-			"gid": $.cookie("gid"),
-			"pid": $.cookie("pid"),
-			"size": $.cookie("size"),
-		});
+        GameData['pid'] = $.cookie("pid");
+        GameData['gid'] = $.cookie("gid");
+        GameData['size'] = $.cookie("size");
+		ViewController.load(GameView);
 	} else {
 		ViewController.load(HomeView);
 	}

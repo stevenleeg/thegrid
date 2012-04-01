@@ -16,7 +16,12 @@ def userCheck():
 def payDay():
     for grid in Grid.all():
         for u in grid.getPlayers():
-            inc = int(u['inc'])
+            # Just in case this runs in the split second between
+            # a game starting and a user being initiated
+            try:
+                inc = int(u['inc'])
+            except TypeError:
+                continue
             last = time() - float(u['lastInc'])
             if not u.getUser()['active']:
                 continue
