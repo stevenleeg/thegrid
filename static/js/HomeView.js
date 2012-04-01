@@ -52,7 +52,7 @@ var HomeView = (function() {
             $("#" + coord[0] + "_" + coord[1]).addClass(cls);
             HomeView.dots.push({"x": coord[0], "y": coord[1], "class": cls});
         });
-        HomeView.wave = setTimeout(sendBgWave, Math.floor(Math.random() * (500 - 200 + 1)) + 200); 
+        HomeView.wave = setTimeout(sendBgWave, Math.floor(Math.random() * (800 - 300 + 1)) + 300); 
     }
 
     function proceedBgAnimation() {
