@@ -56,14 +56,66 @@ div.loading {
 	display:none;
 }
 
-div.central {
-	width:400px;
-	margin:10px auto 0px auto;
+/* Lots of HomeView specific stuff here */
+div.title {
+    position:fixed;
+    top:15px;
+    left:15px;
+    z-index:3;
+    font-weight:bold;
+    font-size:48px;
+
+    .titlegrid {
+        color: @blue;
+    }
 }
 
-div.central.title {
-	font-size:36px;
-	font-weight:bold;
+table.home_grid {
+    z-index:1;
+}
+
+div.grid_container {
+    overflow-x:hidden;
+    overflow-y:hidden;
+}
+
+div.home_screen {
+    position:fixed;
+    z-index:2;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    opacity:.02;
+    background:@dark;
+}
+
+div.side_menu {
+    width:150px;
+    position:fixed;
+    top:35%;
+    right:50%;
+    margin-right:20%;
+    z-index:3;
+    a {
+        display:block;
+        margin-bottom:15px;
+        color:@dark;
+        font-size:24px;
+    }
+
+    a:hover {
+        color: @blue;
+    }
+} 
+
+div.welcome_text {
+    width:400px;
+    position:fixed;
+    right:15px;
+    top:25px;
+    background:@bg;
+    padding:15px;
 }
 
 div.menu {

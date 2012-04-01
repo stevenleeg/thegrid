@@ -2,13 +2,14 @@ var HomeView = (function() {
     var tpl = "home.html";
 
     function onLoad() {
-        AsyncClient.connect(function() {
-            AsyncClient.send("getGrids", {}, getGridsCb);           
-        });
-        $("input[name=create]").click(function() {
+        var xTiles, yTiles, grid;
+        //AsyncClient.connect(function() {
+        //    AsyncClient.send("getGrids", {}, getGridsCb);           
+        //});
+        $("#create").click(function() {
             ViewController.load(CreateView);
         });
-        $("input[name=enter]").click(function() {
+        $("#enter").click(function() {
             var selected = $(".gridlist tr.selected");
             if(selected.length == 0) {
                 return;
@@ -19,6 +20,28 @@ var HomeView = (function() {
             if(selected.data("active") == 1) ViewController.load(GameView);
             else ViewController.load(RoomView);
         });
+        $(window).resize(windowResize);
+
+        generateGrid();
+    }
+
+    function generateGrid() {
+        // Populate the homegrid based on the window size
+        HomeView.x_tiles = parseInt($(window).width() / 32) + 2;
+        HomeView.y_tiles = parseInt($(window).height() / 32) + 2;
+        grid = $("#home_grid");
+        $(".grid_container").css("width", $(window).width()).css("height", $(window).height())
+		for(var y = 0; y < HomeView.y_tiles; y++) {
+			tr = $("<tr id='"+y+"'></tr>").appendTo(grid)
+			for(var x = 0; x < HomeView.x_tiles; x++) {
+				$("<td id='"+x+"_"+y+"'>&nbsp;</td>").appendTo(tr)
+			}
+        }
+    }
+
+    function windowResize() {
+        clearTimeout(HomeView.resize_to);
+        HomeView.resize_to = setTimeout(generateGrid, 250);
     }
 
     function getGridsCb(data) {
