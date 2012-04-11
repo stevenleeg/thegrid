@@ -2,6 +2,7 @@ from utility import db
 from tiles import TileDest
 from user import User, Player
 from time import time
+import config
 import re, json, itertools, random
 
 class Grid:
@@ -156,7 +157,7 @@ class Grid:
         return True
 
     def loadEvent(self, event):
-        f = open("static/maps/%s_%s.json" % (self['size'], self['map']), "r")
+        f = open(config.path + "static/maps/%s_%s.json" % (self['size'], self['map']), "r")
         data = json.loads(f.read())
         f.close()
 
