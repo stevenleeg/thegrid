@@ -12,11 +12,10 @@ var Grid = (function() {
                 .data("health", coords[coord]['health']);
 
             if (coords[coord]['player'] > 0) {
-                selected.dom.css("background-color", GameData['colors'][coords[coord]['player']])
-                    .addClass("t1")
-                    .html("");
+                selected.dom.css("color", GameData['colors'][coords[coord]['player']])
+                    .addClass("t1");
                     $("<div class='health'>&nbsp;</div>").appendTo(selected.dom).hide();
-                    Grid.setHealth(selected, coords[coord]['health']);
+                    //Grid.setHealth(selected, coords[coord]['health']);
             }
         }
     }

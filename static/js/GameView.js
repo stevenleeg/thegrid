@@ -11,9 +11,9 @@ var GameView = (function() {
 		// Populate the grid
 		grid = $("#grid")
 		for(y = 0; y < GameData['size']; y++) {
-			tr = $("<tr id='"+y+"'></tr>").appendTo(grid)
+			tr = $("<div class='row' id='"+y+"'></div>").appendTo(grid)
 			for(x = 0; x < GameData['size']; x++) {
-				$("<td id='"+x+"_"+y+"'>&nbsp;</td>").appendTo(tr)
+				$("<div class='col' id='"+x+"_"+y+"'>&#x2B22;</div>").appendTo(tr)
 			}
 		}
         
@@ -36,8 +36,6 @@ var GameView = (function() {
         // Menu events
         $("#main_close, .screen, #main_exit").off().on("click", closeMainMenu);
         $("#main_exit").on("click", exit);
-
-		KeyEvents.setup();
 	}
 
 	function joinGame() {
