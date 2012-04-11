@@ -48,10 +48,10 @@ var HomeView = (function() {
           return Math.round(Math.random())-0.5
         }).slice(0,1)
         $(elems).each(function() {
-            var coord = Grid.parseCoord($(this).attr("id"));
+            var coord = new Coord($(this).attr("id"));
             var cls = classes[Math.floor(Math.random() * classes.length)]; 
-            $("#" + coord[0] + "_" + coord[1]).addClass(cls);
-            HomeView.dots.push({"x": coord[0], "y": coord[1], "class": cls});
+            $("#" + coord.x + "_" + coord.y).addClass(cls);
+            HomeView.dots.push({"x": coord.x, "y": coord.y, "class": cls});
         });
         HomeView.wave = setTimeout(sendBgWave, Math.floor(Math.random() * (800 - 300 + 1)) + 300); 
     }
@@ -190,7 +190,7 @@ var HomeView = (function() {
 
     function joinRoomCb(data) {
         // Load the game data
-        GameData['pid'] = data['pid'];
+        GameData['pid'] = parseInt(data['pid']);
         GameData['colors'] = data['colors'];
         GameData['color'] = GameData['colors'][GameData['pid']];
         GameData['players_active'] = data['active'];
