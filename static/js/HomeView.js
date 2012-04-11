@@ -190,7 +190,7 @@ var HomeView = (function() {
 
     function joinRoomCb(data) {
         // Load the game data
-        GameData['pid'] = data['pid'];
+        GameData['pid'] = parseInt(data['pid']);
         GameData['colors'] = data['colors'];
         GameData['color'] = GameData['colors'][GameData['pid']];
         GameData['players_active'] = data['active'];

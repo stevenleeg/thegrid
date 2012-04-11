@@ -58,7 +58,7 @@ var GameView = (function() {
         // If we're coming from the loading screen we don't need to do this
         if(GameData['has_init'] != true) {
             // Set game data
-            GameData['pid'] = data['pid'];
+            GameData['pid'] = parseInt(data['pid']);
             GameData['colors'] = data['colors'];
             GameData['color'] = GameData['colors'][GameData['pid']];
             GameData['players_active'] = data['active'];
