@@ -47,7 +47,7 @@ var Coord = function(x, y) {
         }
         for (var x = startX; x <= (this.x + radius); x++) {
             selected = new Coord(x, this.y)
-            if (selected.getType() == type && x != this.x) {
+            if (selected.dom.hasClass("t" + type) && x != this.x) {
                 if (owner && selected.getData("player") == owner) {
                     return true;
                 } else if (!owner) {
@@ -62,7 +62,7 @@ var Coord = function(x, y) {
         }
         for (var y = startY; y <= (this.y + radius); y++) {
             selected = new Coord(this.x, y);
-            if (selected.getType() == type && y != this.y) {
+            if (selected.dom.hasClass("t" + type) && y != this.y) {
                 if (owner && selected.getData("player") == owner) {
                     return true;
                 } else if (!owner) {
@@ -80,5 +80,11 @@ var Coord = function(x, y) {
             return true;
         }
         return false
+    }
+
+    // Does this coord exist?
+    // TODO: Make this work with naturals
+    this.exists = function() {
+        return this.dom.hasClass('t1');
     }
 }

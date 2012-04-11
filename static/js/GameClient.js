@@ -8,19 +8,21 @@ var GameClient = (function() {
     }
 
 	function set(data) {
+        var c;
         var exists = true;
         if($("#" + data['coord']).attr("class") == undefined) exists = false;
+        c = new Coord(data['coord']);
 
-		Grid.destroy(data['coord']);
-		Grid.place(data['coord'], data['tile'], GameData['colors'][data['player']]);
+        c.destroy();
+		Grid.place(c, data['tile'], GameData['colors'][data['player']]);
 
-        coord = $("#" + data['coord'])
-		coord.data("player", data['player']).data("health", data['health']);
+		c.dom.data("player", data['player'])
+            .data("health", data['health']);
 
         if(parseInt(data['player']) == GameData['pid'] && parseInt(data['tile']) > 1) {
-            coord.addClass("t1");
+            c.dom.addClass("t1");
         }
-		Grid.setHealth(data['coord'], parseInt(data['health']));
+		Grid.setHealth(c, parseInt(data['health']));
 	}
 
 	function addPlayer(data) {
@@ -63,8 +65,9 @@ var GameClient = (function() {
 	}
 
 	function setHealth(data) {
-		Grid.setHealth(data['coord'], data['health']);
-		Grid.pingHealth(data['coord']);
+        var coord = new Coord(data['coord']);
+		Grid.setHealth(coord, data['health']);
+		Grid.pingHealth(coord);
 	}
 
     function newGrid(data) {

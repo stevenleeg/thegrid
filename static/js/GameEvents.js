@@ -54,11 +54,11 @@ var GameEvents = (function() {
 		}
 
 		color = GameData['colors'][GameData['pid']];
-		coord = $(e.target).attr("id");
+		coord = new Coord($(e.target).attr("id"));
 		Grid.place(coord, Grid.place_type, color);
 
 		AsyncClient.send("place", {
-			"coord": coord,
+			"coord": coord.str,
 			"tile": Grid.place_type,
 			"color": color
 		}, placeTileCb);
