@@ -8,7 +8,7 @@ def add_headquarters(grid, coord, player):
     return False
 
 def add_miner(grid, coord, player):
-    mines = grid.inRangeOf(coord, 99, 1)
+    mines = grid.inRangeOf(coord, 99)
     if mines == 0:
         return False
     
@@ -64,7 +64,7 @@ TileAdd = {
 # Destroy events
 #
 def dest_miner(grid, coord, player):
-    mines = grid.inRangeOf(coord, 99, 1)
+    mines = grid.inRangeOf(coord, 99)
     if mines == 0:
         return
     

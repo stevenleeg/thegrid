@@ -220,7 +220,7 @@ class Grid:
 
         return pts
 
-    def inRangeOf(self, coord, tile, radius):
+    def inRangeOfOld(self, coord, tile, radius):
         minX = coord.x - radius
         minY = coord.y - radius
         if minX < 0:
@@ -241,6 +241,35 @@ class Grid:
             c = self.get(coord.x, y)
             if c.exists() and int(c['type']) == tile and c != coord:
                 in_range += 1
+
+        return in_range
+
+    def inRangeOf(self, coord, tile):
+        minX = coord.x - 1
+        minY = coord.y - 1
+        if(minX < 0): minX = 0
+        if(minY < 0): minY = 0
+
+        skip = []
+        skip.append(coord)
+        if(coord.y % 2 == 1):
+            skip.append(self.get(coord.x - 1, coord.y + 1))
+            skip.append(self.get(coord.x - 1, coord.y - 1))
+        else:
+            skip.append(self.get(coord.x + 1, coord.y + 1))
+            skip.append(self.get(coord.x + 1, coord.y - 1))
+
+        x_range = range(minX, coord.x + 2)
+        y_range = range(minY, coord.y + 2)
+
+        in_range = 0
+        for x in x_range:
+            for y in y_range:
+                c = self.get(x, y)
+
+                if c in skip: continue
+                if(c.exists() and int(c['type']) == tile):
+                    in_range += 1
 
         return in_range
 
