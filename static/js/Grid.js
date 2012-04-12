@@ -7,16 +7,9 @@ var Grid = (function() {
         var coord, selected;
         for (coord in coords) {
             selected = new Coord(coord);
-            selected.dom.addClass("t" + coords[coord]['type'])
-                .data("player", coords[coord]['player'])
-                .data("health", coords[coord]['health']);
-
-            if (coords[coord]['player'] > 0) {
-                selected.dom.css("color", GameData['colors'][coords[coord]['player']])
-                    .addClass("t1");
-                    $("<div class='health'>&nbsp;</div>").appendTo(selected.dom).hide();
-                    //Grid.setHealth(selected, coords[coord]['health']);
-            }
+            selected.setType(coords[coord]['type']);
+            selected.setOwner(coords[coord]['player']);
+            selected.setHealth(coords[coord]['health']);
         }
     }
 

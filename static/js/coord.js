@@ -10,6 +10,7 @@ var Coord = function(x, y) {
     }
     this.str = this.x + "_" + this.y;
     this.dom = $("#" + this.str);
+    this.ovr = $("#o" + this.str);
 
     // Returns value from grid's data
     this.getData = function(key) {
@@ -18,15 +19,34 @@ var Coord = function(x, y) {
 
     // Returns tile type
     this.getType = function() {
-        var cls = this.dom.attr("class");
-        if(cls == undefined) {
-            return 0;
-        } else if(cls == "t1") {
+        var cls = this.ovr.attr("class");
+        if(cls == undefined && this.dom.attr("class") == "t1") {
             return 1;
+        } else if(cls == undefined) {
+            return 0;
         }
-        return parseInt(cls.replace("t1 ", "")
-                .replace("t", "")
+        return parseInt(cls.replace("t", "")
                 .replace("place_good",""));
+    }
+
+    // Sets the tile type
+    this.setType = function(type) {
+        if(type == 1) {
+            this.dom.attr("class", "col t1");
+        }
+        this.ovr.attr("class", "ocol t" + type);
+    }
+
+    // Sets the owner of the tile and its color
+    this.setOwner = function(owner) {
+        if(GameData['colors'][owner] == undefined) return;
+
+        this.dom.css("color", GameData['colors'][owner]);
+        this.dom.data("player", owner);
+    }
+
+    this.setHealth = function(health) {
+        this.dom.data("health", health);
     }
 
     // Destroys the coord without leaving a trace.
