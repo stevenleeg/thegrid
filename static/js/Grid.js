@@ -214,14 +214,14 @@ var Grid = (function() {
 
 var PlaceCheck = {
     1: function(coord) {
-        if (coord.inRangeOf(1, 1, GameData['pid']) && !coord.exists()) {
+        if (coord.inRangeOf(1, GameData['pid']) && !coord.exists()) {
             return true;
         } else {
             return false;
         }
     },
     3: function(coord) {
-        if (coord.inRangeOf(99, 1) && coord.isOwnedBy(GameData['pid'])) {
+        if (coord.inRangeOf(99) && coord.isOwnedBy(GameData['pid'])) {
             return true;
         }
 

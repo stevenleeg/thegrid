@@ -57,36 +57,32 @@ var Coord = function(x, y) {
             .html("");
     }
 
-    // Scans for coords with a given type/owner
-    this.inRangeOf = function(type, radius, owner) {
-        var startX, startY, selected;
+    this.inRangeOf = function(type, owner) {
+        var x, y, startX, startY, selected, skip;
+        // Generate the scanning start points
+        startX = this.x - 1;
+        startY = this.y - 1;
+        if(startX < 0) startX = 0;
+        if(startY < 0) startY = 0;
 
-        startX = this.x - radius;
-        if (startX < 0) {
-            startX = 0;
-        }
-        for (var x = startX; x <= (this.x + radius); x++) {
-            selected = new Coord(x, this.y)
-            if (selected.dom.hasClass("t" + type) && x != this.x) {
-                if (owner && selected.getData("player") == owner) {
-                    return true;
-                } else if (!owner) {
-                    return true;
-                }
-            }
+        skip = [this.x + "_" + this.y];
+        if(this.y % 2 == 1) {
+            skip.push((this.x - 1) + "_" + (this.y + 1));
+            skip.push((this.x - 1) + "_" + (this.y - 1));
+        } else {
+            skip.push((this.x + 1) + "_" + (this.y + 1));
+            skip.push((this.x + 1) + "_" + (this.y - 1));
         }
 
-        startY = this.y - radius;
-        if (startY < 0) {
-            startY = 0;
-        }
-        for (var y = startY; y <= (this.y + radius); y++) {
-            selected = new Coord(this.x, y);
-            if (selected.dom.hasClass("t" + type) && y != this.y) {
-                if (owner && selected.getData("player") == owner) {
-                    return true;
-                } else if (!owner) {
-                    return true;
+        // Start scanning
+        for(x = startX; x <= (this.x + 1); x++) {
+            for(y = startY; y <= (this.y + 1); y++) {
+                selected = new Coord(x, y);
+                if(skip.indexOf(selected.str) != -1) continue;
+
+                if(selected.dom.hasClass("t" + type) || selected.ovr.hasClass("t" + type)) {
+                    if(owner && selected.isOwnedBy(owner)) return true;
+                    if(!owner) return true;
                 }
             }
         }
