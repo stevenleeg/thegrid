@@ -13,67 +13,6 @@ var Grid = (function() {
         }
     }
 
-    function setupEventsOld() {
-        $("#grid").bind("contextmenu", function() {
-            return false;
-        });
-        $("#grid td").off().mouseenter(function() {
-            var coord = new Coord($(this).attr("id"));
-            Grid.hover = coord;
-            
-            // If we're placing
-            if (Grid.place_mode) {
-                coord.dom.css("background-color", "")
-                    .data("class", coord.dom.attr("class"));
-
-                if (PlaceCheck[Grid.place_type](coord)) {
-                    coord.dom.addClass("place_good");
-                } else {
-                    coord.dom.addClass("place_bad");
-                }
-                coord.dom.addClass("t" + Grid.place_type);
-            }
-        }).mouseleave(function() {
-            var coord = new Coord($(this).attr("id"));
-            Grid.hover = null;
-
-            // If we're placing
-            if (Grid.place_mode) {
-                coord.dom.removeClass()
-                    .addClass($(this).data("class"))
-                    .removeData("class")
-                    .css("background-color", GameData['colors'][coord.getData("player")]);
-            }
-        }).bind("contextmenu", function(e) {
-            return false;
-        }).mousedown(function(e) {
-            var health, coord;
-            coord = new Coord($(this).attr("id"));
-            health = coord.dom.children(".health")
-            if (health.length != 0 && !Grid.place_mode && e.which == 1) {
-                coord.dom.css("background-color", "")
-                    .addClass("info");
-                health.fadeIn(50);
-            }
-        }).mouseup(function(e) {
-            // Place a tile?
-            if(Grid.place_mode && e.which == 1) {
-                GameEvents.placeTile(e)
-            } 
-            // Show the health bar
-            else if(e.which == 1) {
-                var health, td;
-                health = $("#grid td.info").children(".health")
-                td = $("#grid td.info");
-                if (health.length != 0 && !Grid.place_mode) {
-                    td.css("background-color", GameData['colors'][td.data("player")]);
-                    td.removeClass("info");
-                    health.fadeOut(50);
-                }
-            }
-        });
-    }
-
     function setupEvents() {
         $("#overlay .ocol").mouseenter(function() {
             var coord = new Coord($(this).attr("id").replace("o",""));
