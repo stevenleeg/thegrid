@@ -2,9 +2,9 @@ thegrid
 =========
 Thegrid is a multiplayer RTS game. Your goal is to defeat any other colonies on your grid by placing special tiles and collecting resources.
 
-![Thegrid in action](http://i.imgur.com/OXE1m.png)
+![Thegrid in action](http://i.imgur.com/lVJiw.png)
 
-I'm kind of randomly deciding to release this right now, so there will definitely be more information to come...
+**Now with 100% more hexagons!**
 
 ## Features
 It's kind of hard to sum up a game with a feature list, but I'll try anyways:
@@ -16,7 +16,7 @@ It's kind of hard to sum up a game with a feature list, but I'll try anyways:
  * Released under the [GNU GPL License](http://www.gnu.org/copyleft/gpl.html). Hooray open source!
 
 ## Running a server
-I've yet to deploy this to an actual production environment so I can't help there, but if you're looking to start a development server to play around with I made it pretty easy.
+Eventually I'll get a guide for getting a production server up (it's kind of complex and requires nginx, haproxy, and supervisord), but for now here's how you can setup an easy development server:
 
 Firstly, get [vagrant](http://vagrantup.com/):
 
