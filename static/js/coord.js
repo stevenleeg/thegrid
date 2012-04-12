@@ -57,9 +57,9 @@ var Coord = function(x, y) {
     // Destroys the coord without leaving a trace.
     this.destroy = function() {
         this.dom.removeClass()
-            .css("background-color", "")
+            .css("color", "")
             .removeData()
-            .html("").addClass("ocol");
+            .addClass("col");
     }
 
     this.inRangeOf = function(type, owner) {
