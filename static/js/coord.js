@@ -51,6 +51,14 @@ var Coord = function(x, y) {
     }
 
     this.setHealth = function(health) {
+        var perc, cls;
+        if(TileProps[this.getType()] != undefined) {
+            perc = parseInt((health / TileProps[this.getType()]['health']) * 100);
+        }
+        cls = "green";
+        if(perc <= 50) cls = "yellow";
+        if(perc <= 25) cls = "red";
+        this.ovr.children(".health").css("width", perc + "%").attr("class", "health " + cls);
         this.dom.data("health", health);
     }
 

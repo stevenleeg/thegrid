@@ -16,7 +16,7 @@ var GameView = (function() {
 			otr = $("<div class='orow' id='o"+y+"'></div>").appendTo(overlay);
 			for(x = 0; x < GameData['size']; x++) {
 				$("<div class='col' id='"+x+"_"+y+"'>&#x2B22;</div>").appendTo(tr);
-				$("<div class='ocol' id='o"+x+"_"+y+"'>&nbsp;</div>").appendTo(otr);
+				$("<div class='ocol' id='o"+x+"_"+y+"'><div class='health'>&nbsp;</div></div>").appendTo(otr);
 			}
 		}
 
