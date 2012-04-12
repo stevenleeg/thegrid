@@ -34,9 +34,9 @@ var GameEvents = (function() {
 		delete scrolling[e.which];
 	}
 
-	function placeTile(e) {
-		var color, coord, t;
-		if($(e.target).hasClass("place_good") == false) {
+	function placeTile(coord) {
+		var color, t;
+		if(coord.dom.hasClass("place_good") == false) {
 			return;
 		}
 
@@ -54,7 +54,6 @@ var GameEvents = (function() {
 		}
 
 		color = GameData['colors'][GameData['pid']];
-		coord = new Coord($(e.target).attr("id"));
 		Grid.place(coord, Grid.place_type, color);
 
 		AsyncClient.send("place", {

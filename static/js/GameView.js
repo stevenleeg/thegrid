@@ -6,22 +6,26 @@ var GameView = (function() {
 	 * INITIAL LOADING FUNCTIONS/CALLBACKS
 	 */
 	function onLoad(pass) {
-		var x, y, grid, open;
+		var x, y, grid, overlay;
 
 		// Populate the grid
-		grid = $("#grid")
+		grid = $("#grid");
+        overlay = $("#overlay");
 		for(y = 0; y < GameData['size']; y++) {
-			tr = $("<tr id='"+y+"'></tr>").appendTo(grid)
+			tr = $("<div class='row' id='"+y+"'></div>").appendTo(grid);
+			otr = $("<div class='orow' id='o"+y+"'></div>").appendTo(overlay);
 			for(x = 0; x < GameData['size']; x++) {
-				$("<td id='"+x+"_"+y+"'>&nbsp;</td>").appendTo(tr)
+				$("<div class='col' id='"+x+"_"+y+"'>&#x2B22;</div>").appendTo(tr);
+				$("<div class='ocol' id='o"+x+"_"+y+"'><div class='health'>&nbsp;</div></div>").appendTo(otr);
 			}
 		}
-        
+
 		// Start the client
         AsyncClient.connect(joinGame);
 
 		setupEvents();
 		Grid.setupEvents();
+        KeyEvents.setup();
 	}
 
 	function postFade(pass) {
@@ -36,8 +40,6 @@ var GameView = (function() {
         // Menu events
         $("#main_close, .screen, #main_exit").off().on("click", closeMainMenu);
         $("#main_exit").on("click", exit);
-
-		KeyEvents.setup();
 	}
 
 	function joinGame() {
