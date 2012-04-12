@@ -76,28 +76,46 @@ var Grid = (function() {
 
     function setupEvents() {
         $("#overlay .ocol").mouseenter(function() {
-            var c = new Coord($(this).attr("id").replace("o",""));
-            c.dom.addClass("hl");
+            var coord = new Coord($(this).attr("id").replace("o",""));
+            Grid.hover = coord;
+
+            // See if we're placing a tile
+            if(Grid.place_mode) {
+                if (PlaceCheck[Grid.place_type](coord)) {
+                    coord.dom.addClass("place_good");
+                } else {
+                    coord.dom.addClass("place_bad");
+                }
+            }
         }).mouseleave(function() {
-            var c = new Coord($(this).attr("id").replace("o",""));
-            c.dom.removeClass("hl");
+            var coord = new Coord($(this).attr("id").replace("o",""));
+            Grid.hover = null;
+
+            if(Grid.place_mode) {
+                coord.dom.removeClass("place_good place_bad");
+            }
+        }).mouseup(function(e) {
+            if(Grid.place_mode && e.which == 1) {
+                var coord = new Coord($(this).attr("id").replace("o",""));
+                console.log("placing");
+                GameEvents.placeTile(coord);
+            }
         });
     }
 
     function placeMode(type) {
-        var on = Grid.hover.dom;
+        var on = Grid.hover;
         Grid.place_type = type;
         Grid.place_mode = true;
         $("#grid").addClass("place_mode");
         if (Grid.hover != null) {
-            on.css("background-color", "")
+            on.dom.css("background-color", "")
                 .data("class", on.attr("class"));
             if (PlaceCheck[Grid.place_type](Grid.hover)) {
-                on.addClass("place_good");
+                on.dom.addClass("place_good");
             } else {
-                on.addClass("place_bad");
+                on.dom.addClass("place_bad");
             }
-            on.addClass("t" + Grid.place_type);
         }
     }
 
