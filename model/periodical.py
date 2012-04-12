@@ -58,7 +58,7 @@ def infector():
             if int(time()) - int(db.zscore(dbid, infector)) < 3:
                 break
 
-            around = grid.around(c, [1,4], 1, True)
+            around = grid.around(c, [1,4])
             for coord in around:
                 if coord['player'] == c['player']:
                     continue
@@ -86,7 +86,7 @@ def damager():
 
         for i in range(0, length):
             c = grid.get(db.lindex(grid.dbid + ":dam", i))
-            around = grid.around(c, 0, 1)
+            around = grid.around(c, 0)
             for coord in around:
                 # Make sure we can damage it
                 if (int(coord['type']) not in takes_damage) or (c['player'] == coord['player']):

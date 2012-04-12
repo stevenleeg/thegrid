@@ -192,57 +192,40 @@ class Grid:
 
         return rets
 
-    def around(self, point, tile, radius, diagonals = False):
+    def around(self, coord, tile):
         """ 
         Finds all points located around the radius
-        Used for vision tiles
         """
         if type(tile) is int:
             tile = [tile]
 
-        pts = []
-        # Get a range of coords to try
-        x = range(point.x - radius, point.x + radius + 1)
-        y = range(point.y - radius, point.y + radius + 1)
-        if diagonals:
-            points = itertools.product(x, y)
-        else:
-            points = []
-            for pt_x in x:
-                points.append((pt_x, point.y))
-            for pt_y in y:
-                points.append((point.x, pt_y))
+        minX = coord.x - 1
+        minY = coord.y - 1
+        if(minX < 0): minX = 0
+        if(minY < 0): minY = 0
 
-        for point in points:
-            c = self.get(point[0], point[1])
-            if c.exists() and (int(c['type']) in tile or tile == [0]):
-                pts.append(c)
+        skip = []
+        skip.append(coord)
+        if(coord.y % 2 == 1):
+            skip.append(self.get(coord.x - 1, coord.y + 1))
+            skip.append(self.get(coord.x - 1, coord.y - 1))
+        else:
+            skip.append(self.get(coord.x + 1, coord.y + 1))
+            skip.append(self.get(coord.x + 1, coord.y - 1))
+
+        x_range = range(minX, coord.x + 2)
+        y_range = range(minY, coord.y + 2)
+
+        pts = []
+        for x in x_range:
+            for y in y_range:
+                c = self.get(x, y)
+
+                if c in skip: continue
+                if(c.exists() and (int(c['type']) in tile or tile == [0])):
+                    pts.append(c)
 
         return pts
-
-    def inRangeOfOld(self, coord, tile, radius):
-        minX = coord.x - radius
-        minY = coord.y - radius
-        if minX < 0:
-            minX = 0
-        if minY < 0:
-            minY = 0
-
-        x_range = range(minX, coord.x + radius + 1)
-        y_range = range(minY, coord.y + radius + 1)
-        in_range = 0
-
-        for x in x_range:
-            c = self.get(x, coord.y)
-            if c.exists() and int(c['type']) == tile and c != coord:
-                in_range += 1
-
-        for y in y_range:
-            c = self.get(coord.x, y)
-            if c.exists() and int(c['type']) == tile and c != coord:
-                in_range += 1
-
-        return in_range
 
     def inRangeOf(self, coord, tile):
         minX = coord.x - 1
