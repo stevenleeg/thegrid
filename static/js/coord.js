@@ -20,12 +20,15 @@ var Coord = function(x, y) {
     // Returns tile type
     this.getType = function() {
         var cls = this.ovr.attr("class");
-        if(cls == undefined && this.dom.attr("class") == "t1") {
+        if(cls == "ocol t1") {
             return 1;
-        } else if(cls == undefined) {
+        } else if(cls == "ocol") {
             return 0;
         }
-        return parseInt(cls.replace("t", "")
+        return parseInt(cls
+                .replace("ocol ", "")
+                .replace("t1 ","")
+                .replace("t", "")
                 .replace("place_good",""));
     }
 
@@ -56,7 +59,7 @@ var Coord = function(x, y) {
         this.dom.removeClass()
             .css("background-color", "")
             .removeData()
-            .html("");
+            .html("").addClass("ocol");
     }
 
     this.inRangeOf = function(type, owner) {

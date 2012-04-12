@@ -74,16 +74,9 @@ var Grid = (function() {
 
     function place(coord, type, color) {
         coord.dom.removeClass("place_good")
-            .addClass("t" + type)
-            .html("")
-            .data("player", GameData['pid'])
-            .data("health", TileProps[type]['health']);
-
-        $("<div class='health'>&nbsp;</div>").hide().appendTo(coord);
-        Grid.setHealth(coord, TileProps[type]['health']);
-        if (color != undefined) {
-            coord.dom.css("background-color", color);
-        }
+        coord.setType(type);
+        coord.setOwner(GameData['pid']);
+        coord.setHealth(TileProps[type]['health']);
     }
 
     function setHealth(coord, val) {

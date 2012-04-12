@@ -37,7 +37,6 @@ var GameEvents = (function() {
 	function placeTile(coord) {
 		var color, t;
 		if(coord.dom.hasClass("place_good") == false) {
-            console.log("bad");
 			return;
 		}
 
