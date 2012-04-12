@@ -32,15 +32,17 @@ var Coord = function(x, y) {
     // Sets the tile type
     this.setType = function(type) {
         if(type == 1) {
-            this.dom.attr("class", "col t1");
+            this.ovr.attr("class", "ocol t1");
+        } else {
+            this.ovr.attr("class", "ocol t" + type);
         }
-        this.ovr.attr("class", "ocol t" + type);
     }
 
     // Sets the owner of the tile and its color
     this.setOwner = function(owner) {
         if(GameData['colors'][owner] == undefined) return;
 
+        if(!this.ovr.hasClass("t1")) this.ovr.addClass("t1");
         this.dom.css("color", GameData['colors'][owner]);
         this.dom.data("player", owner);
     }
