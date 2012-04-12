@@ -21,8 +21,10 @@ var Grid = (function() {
             // See if we're placing a tile
             if(Grid.place_mode) {
                 if (PlaceCheck[Grid.place_type](coord)) {
+                    coord.dom.css("color", "");
                     coord.dom.addClass("place_good");
                 } else {
+                    coord.dom.css("color", "");
                     coord.dom.addClass("place_bad");
                 }
             }
@@ -32,6 +34,7 @@ var Grid = (function() {
 
             if(Grid.place_mode) {
                 coord.dom.removeClass("place_good place_bad");
+                coord.dom.css("color", GameData['colors'][coord.getData("player")]);
             }
         }).mouseup(function(e) {
             if(Grid.place_mode && e.which == 1) {
@@ -49,7 +52,7 @@ var Grid = (function() {
         $("#grid").addClass("place_mode");
         if (Grid.hover != null) {
             on.dom.css("background-color", "")
-                .data("class", on.attr("class"));
+                .data("class", on.dom.attr("class"));
             if (PlaceCheck[Grid.place_type](Grid.hover)) {
                 on.dom.addClass("place_good");
             } else {
@@ -60,9 +63,9 @@ var Grid = (function() {
 
     function normalMode() {
         $("#grid").removeClass("place_mode");
-        $("#grid td.place_good, #grid td.place_bad").each(function() {
-            $(this).removeClass().addClass($(this).data("class"));
-            $(this).css("background-color", GameData['colors'][$(this).data("player")]);
+        $("#grid .place_good, #grid .place_bad").each(function() {
+            $(this).removeClass("place_good place_bad");
+            $(this).css("color", GameData['colors'][$(this).data("player")]);
         });
 
         Grid.place_type = 0;

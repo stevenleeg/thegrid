@@ -25,6 +25,7 @@ var GameView = (function() {
 
 		setupEvents();
 		Grid.setupEvents();
+        KeyEvents.setup();
 	}
 
 	function postFade(pass) {

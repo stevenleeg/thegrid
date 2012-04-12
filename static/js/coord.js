@@ -103,6 +103,6 @@ var Coord = function(x, y) {
     // Does this coord exist?
     // TODO: Make this work with naturals
     this.exists = function() {
-        return this.dom.hasClass('t1');
+        return this.ovr.hasClass('t1');
     }
 }
