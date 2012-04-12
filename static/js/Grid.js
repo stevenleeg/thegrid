@@ -156,7 +156,7 @@ var PlaceCheck = {
         }
     },
     3: function(coord) {
-        if (coord.inRangeOf(99) && coord.isOwnedBy(GameData['pid'])) {
+        if (coord.inRangeOf(99) && coord.isOwnedBy(GameData['pid']) && coord.getType() == 1) {
             return true;
         }
 
