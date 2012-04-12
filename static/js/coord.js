@@ -16,6 +16,14 @@ var Coord = function(x, y) {
     this.getData = function(key) {
         return this.dom.data(key);
     }
+    
+    this.setData = function(key, val) {
+        this.dom.data(key, val);
+    }
+
+    this.rmData = function(key) {
+        this.dom.removeData(key);
+    }
 
     // Returns tile type
     this.getType = function() {

@@ -36,11 +36,22 @@ var Grid = (function() {
                 coord.dom.removeClass("place_good place_bad");
                 coord.dom.css("color", GameData['colors'][coord.getData("player")]);
             }
+        }).mousedown(function(e) {
+            if(Grid.place_mode) return;
+            var coord = new Coord($(this).attr("id").replace("o",""));
+
+            if(coord.getType() == 1 || coord.getType() == 0) return;
+            coord.ovr.children(".health").animate({"opacity":1}, 75);
+            coord.dom.animate({"color": "#F0F3F6"}, 75);
         }).mouseup(function(e) {
+            var coord = new Coord($(this).attr("id").replace("o",""));
             if(Grid.place_mode && e.which == 1) {
-                var coord = new Coord($(this).attr("id").replace("o",""));
                 console.log("placing");
                 GameEvents.placeTile(coord);
+            } else {
+                if(coord.getType() == 1 || coord.getType() == 0) return;
+                coord.dom.animate({"color": GameData['colors'][coord.getData("player")]}, 75);
+                coord.ovr.children(".health").animate({"opacity":0}, 75);
             }
         });
     }
@@ -79,49 +90,19 @@ var Grid = (function() {
         coord.setHealth(TileProps[type]['health']);
     }
 
-    function setHealth(coord, val) {
-        var percentage, color;
-        // Determine percentage
-        percentage = val / TileProps[coord.getType()]['health'] * 100;
-        // Determine the color
-        if (percentage >= 66) color = "green";
-        if (percentage < 66 && percentage > 33) color = "yellow";
-        if (percentage <= 33) color = "red";
-        coord.dom.children(".health").css("width", percentage + "%")
-            .attr("class", "health " + color);
-    }
-
     function pingHealth(coord) {
-        var health;
-        coord = coord.dom;
-        if (coord.length != 0) {
-            health = coord.children(".health");
-            clearTimeout(health.data("to"));
-            clearTimeout(coord.data("in-to"));
-            // Fade background
-            coord.animate({
-                "background-color": "#F0F3F6"
-            },
-            100,
-            function() {
-                coord.data("in-to", setTimeout(function() {
-                    coord.animate({
-                        "background-color": GameData['colors'][coord.data("player")]
-                    },
-                    100);
-                },
-                1000));
-            });
+        var to;
+        if(coord.getData("to_ping") == undefined) {
+            coord.ovr.children(".health").animate({"opacity":1}, 75);
+            coord.dom.animate({"color": "#F0F3F6"}, 75);
+        } else clearTimeout(coord.getData("to_ping"));
 
-            // Fade in health
-            health.fadeIn(100,
-            function() {
-                health.data("to", setTimeout(function() {
-                    health.fadeOut(100);
-                },
-                1000));
-            });
-        }
+        to = setTimeout(function() {
+            coord.dom.animate({"color": GameData['colors'][coord.getData("player")]}, 75);
+            coord.ovr.children(".health").animate({"opacity":0}, 75);
+            coord.rmData("to_ping");
+        }, 750);
+        coord.setData("to_ping", to);
     }
 
     function defaultCheck(coord) {
@@ -140,7 +121,6 @@ var Grid = (function() {
         "place_type": place_type,
         "setupEvents": setupEvents,
         "place_mode": false,
-        "setHealth": setHealth,
         "pingHealth": pingHealth,
         "defaultCheck": defaultCheck,
         "hover": null,

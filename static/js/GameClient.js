@@ -57,8 +57,8 @@ var GameClient = (function() {
 
 	function setHealth(data) {
         var coord = new Coord(data['coord']);
-		Grid.setHealth(coord, data['health']);
-		Grid.pingHealth(coord);
+        coord.setHealth(data['health']);
+        Grid.pingHealth(coord);
 	}
 
     function newGrid(data) {
