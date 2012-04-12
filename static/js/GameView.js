@@ -6,17 +6,20 @@ var GameView = (function() {
 	 * INITIAL LOADING FUNCTIONS/CALLBACKS
 	 */
 	function onLoad(pass) {
-		var x, y, grid, open;
+		var x, y, grid, overlay;
 
 		// Populate the grid
-		grid = $("#grid")
+		grid = $("#grid");
+        overlay = $("#overlay");
 		for(y = 0; y < GameData['size']; y++) {
-			tr = $("<div class='row' id='"+y+"'></div>").appendTo(grid)
+			tr = $("<div class='row' id='"+y+"'></div>").appendTo(grid);
+			otr = $("<div class='orow' id='o"+y+"'></div>").appendTo(overlay);
 			for(x = 0; x < GameData['size']; x++) {
-				$("<div class='col' id='"+x+"_"+y+"'>&#x2B22;</div>").appendTo(tr)
+				$("<div class='col' id='"+x+"_"+y+"'>&#x2B22;</div>").appendTo(tr);
+				$("<div class='ocol' id='o"+x+"_"+y+"'>&nbsp;</div>").appendTo(otr);
 			}
 		}
-        
+
 		// Start the client
         AsyncClient.connect(joinGame);
 

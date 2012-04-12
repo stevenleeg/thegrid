@@ -20,7 +20,7 @@ var Grid = (function() {
         }
     }
 
-    function setupEvents() {
+    function setupEventsOld() {
         $("#grid").bind("contextmenu", function() {
             return false;
         });
@@ -78,6 +78,16 @@ var Grid = (function() {
                     health.fadeOut(50);
                 }
             }
+        });
+    }
+
+    function setupEvents() {
+        $("#overlay .ocol").mouseenter(function() {
+            var c = new Coord($(this).attr("id").replace("o",""));
+            c.dom.addClass("hl");
+        }).mouseleave(function() {
+            var c = new Coord($(this).attr("id").replace("o",""));
+            c.dom.removeClass("hl");
         });
     }
 
