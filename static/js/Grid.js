@@ -53,6 +53,8 @@ var Grid = (function() {
                 coord.dom.animate({"color": GameData['colors'][coord.getData("player")]}, 75);
                 coord.ovr.children(".health").animate({"opacity":0}, 75);
             }
+        }).contextmenu(function(e) {
+            e.preventDefault();
         });
     }
 
