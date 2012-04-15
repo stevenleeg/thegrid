@@ -40,7 +40,7 @@ var Grid = (function() {
             if(Grid.place_mode) return;
             var coord = new Coord($(this).attr("id").replace("o",""));
 
-            if(coord.getType() == 1 || coord.getType() == 0) return;
+            if(coord.getType() < 2 || coord.getType() > 50) return;
             coord.ovr.children(".health").animate({"opacity":1}, 75);
             coord.dom.animate({"color": "#F0F3F6"}, 75);
         }).mouseup(function(e) {
