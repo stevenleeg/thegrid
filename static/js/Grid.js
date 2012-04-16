@@ -1,133 +1,26 @@
-var Grid = (function() {
-    var colors,
-    pid,
-    place_type;
+var Grid = function(canvas) {
+    this.canvas = new Raphael(document.getElementById("grid"), canvas.width(), canvas.height());
+    this.grid = {};
 
-    function load(coords) {
-        var coord, selected;
-        for (coord in coords) {
-            selected = new Coord(coord);
-            selected.setType(coords[coord]['type']);
-            selected.setOwner(coords[coord]['player']);
-            selected.setHealth(coords[coord]['health']);
-        }
-    }
-
-    function setupEvents() {
-        $("#overlay .ocol").mouseenter(function() {
-            var coord = new Coord($(this).attr("id").replace("o",""));
-            Grid.hover = coord;
-
-            // See if we're placing a tile
-            if(Grid.place_mode) {
-                if (PlaceCheck[Grid.place_type](coord)) {
-                    coord.dom.css("color", "");
-                    coord.dom.addClass("place_good");
-                } else {
-                    coord.dom.css("color", "");
-                    coord.dom.addClass("place_bad");
-                }
-            }
-        }).mouseleave(function() {
-            var coord = new Coord($(this).attr("id").replace("o",""));
-            Grid.hover = null;
-
-            if(Grid.place_mode) {
-                coord.dom.removeClass("place_good place_bad");
-                coord.dom.css("color", GameData['colors'][coord.getData("player")]);
-            }
-        }).mousedown(function(e) {
-            if(Grid.place_mode) return;
-            var coord = new Coord($(this).attr("id").replace("o",""));
-
-            if(coord.getType() < 2 || coord.getType() > 50) return;
-            coord.ovr.children(".health").animate({"opacity":1}, 75);
-            coord.dom.animate({"color": "#F0F3F6"}, 75);
-        }).mouseup(function(e) {
-            var coord = new Coord($(this).attr("id").replace("o",""));
-            if(Grid.place_mode && e.which == 1) {
-                console.log("placing");
-                GameEvents.placeTile(coord);
-            } else {
-                if(coord.getType() == 1 || coord.getType() == 0) return;
-                coord.dom.animate({"color": GameData['colors'][coord.getData("player")]}, 75);
-                coord.ovr.children(".health").animate({"opacity":0}, 75);
-            }
-        }).contextmenu(function(e) {
-            e.preventDefault();
-        });
-    }
-
-    function placeMode(type) {
-        var on = Grid.hover;
-        Grid.place_type = type;
-        Grid.place_mode = true;
-        $("#grid").addClass("place_mode");
-        if (Grid.hover != null) {
-            on.dom.css("background-color", "")
-                .data("class", on.dom.attr("class"));
-            if (PlaceCheck[Grid.place_type](Grid.hover)) {
-                on.dom.addClass("place_good");
-            } else {
-                on.dom.addClass("place_bad");
+    this.render = function(sx, sy) {
+        var r = 32;
+        var xoffset;
+        for(var x = 0; x < sx; x++) {
+            this.grid[x] = {};
+            for(var y = 0; y < sy; y++) {
+                if(y % 2 == 1) xoffset = r - 2;
+                else xoffset = 0;
+                this.grid[x][y] = this.canvas.hexagon(
+                        (x * (r - 2) * 2) + r + xoffset, 
+                        (y * (r - 6) * 2) + r, 
+                        r
+                    );
+                this.grid[x][y].rotate(30);
+                this.grid[x][y].attr({fill: "#FFF", stroke: "#F0F3F6"});
             }
         }
     }
-
-    function normalMode() {
-        $("#grid").removeClass("place_mode");
-        $("#grid .place_good, #grid .place_bad").each(function() {
-            $(this).removeClass("place_good place_bad");
-            $(this).css("color", GameData['colors'][$(this).data("player")]);
-        });
-
-        Grid.place_type = 0;
-        Grid.place_mode = false;
-    }
-
-    function place(coord, type, color) {
-        coord.dom.removeClass("place_good")
-        coord.setType(type);
-        coord.setOwner(GameData['pid']);
-        coord.setHealth(TileProps[type]['health']);
-    }
-
-    function pingHealth(coord) {
-        var to;
-        if(coord.getData("to_ping") == undefined) {
-            coord.ovr.children(".health").animate({"opacity":1}, 75);
-            coord.dom.animate({"color": "#F0F3F6"}, 75);
-        } else clearTimeout(coord.getData("to_ping"));
-
-        to = setTimeout(function() {
-            coord.dom.animate({"color": GameData['colors'][coord.getData("player")]}, 75);
-            coord.ovr.children(".health").animate({"opacity":0}, 75);
-            coord.rmData("to_ping");
-        }, 750);
-        coord.setData("to_ping", to);
-    }
-
-    function defaultCheck(coord) {
-        if (coord.isOwnedBy(GameData['pid']) && coord.getType() == 1) {
-            return true;
-        }
-        return false;
-    }
-
-    return {
-        "load": load,
-        "colors": colors,
-        "placeMode": placeMode,
-        "normalMode": normalMode,
-        "place": place,
-        "place_type": place_type,
-        "setupEvents": setupEvents,
-        "place_mode": false,
-        "pingHealth": pingHealth,
-        "defaultCheck": defaultCheck,
-        "hover": null,
-    };
-})();
+}
 
 var PlaceCheck = {
     1: function(coord) {
