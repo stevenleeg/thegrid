@@ -21,10 +21,10 @@ var Grid = function(canvas) {
                 this.grid[x][y].rotate(30).attr({fill: "#FFF", stroke: "#F0F3F6"})
                     .data("coord", x + "_" + y)
                     .data("grid", this)
-                    .mousedown(this.mousedown)
-                    .mouseup(this.mouseup)
-                    .mouseover(this.mouseover)
-                    .mouseout(this.mouseout);
+                    .mousedown(Coord.mousedown)
+                    .mouseup(Coord.mouseup)
+                    .mouseover(Coord.mouseover)
+                    .mouseout(Coord.mouseout);
             }
         }
     }
@@ -58,62 +58,6 @@ var Grid = function(canvas) {
         this.place_mode = false;
     }
 
-    // 
-    // Events:
-    // 
-    this.mousedown = function() {
-        var grid = this.data("grid");
-        var coord = grid.get(this.data("coord"));
-        
-        if(grid.place_mode) return;
-        if(coord.getType() < 2 || coord.getType() > 50) return;
-
-        coord.getData("healthbar").animate({opacity:1}, 75);
-        if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:0}, 75);
-        coord.elem.animate({fill: "#F0F3F6"}, 75);
-    }
-
-    this.mouseup = function(e) {
-        var grid = this.data("grid");
-        var coord = grid.get(this.data("coord"));
-
-        if(grid.place_mode) {
-            GameEvents.placeTile(coord);
-        } else {
-            if(coord.getType() < 2 || coord.getType() > 50) return;
-            coord.getData("healthbar").animate({opacity:0}, 75);
-            if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:1}, 75);
-            coord.elem.animate({fill: GameData['colors'][coord.getData("player")]}, 75);
-        }
-    }
-
-    this.mouseover = function() {
-        var grid = this.data("grid");
-        var coord = grid.get(this.data("coord"));
-
-        grid.hover = coord;
-        if(grid.place_mode) {
-            if(PlaceCheck[grid.place_type](coord)) {
-                coord.elem.attr({fill: GameStyle['color']['place_good']});
-            } else {
-                coord.elem.attr({fill: GameStyle['color']['place_bad']});
-            }
-        }
-    }
-
-    this.mouseout = function() {
-        var grid = this.data("grid");
-        var coord = grid.get(this.data("coord"));
-        grid.hover = null;
-
-        if(grid.place_mode) {
-            if(coord.getData("player") > 0) {
-                coord.elem.attr({fill: GameData['colors'][coord.getData("player")]});
-            } else {
-                coord.elem.attr({fill: GameStyle['color']['coord']});
-            }
-        }
-    };
 }
 
 var PlaceCheck = {

@@ -44,6 +44,12 @@ var Coord = function(grid, x, y) {
             32,
             32
         );
+        img.data("coord", this.str)
+            .data("grid", this.grid)
+            .mousedown(Coord.mousedown)
+            .mouseup(Coord.mouseup)
+            .mouseover(Coord.mouseover)
+            .mouseout(Coord.mouseout);
         this.setData("tile", img);
     }
 
@@ -79,7 +85,11 @@ var Coord = function(grid, x, y) {
 
         point = this.point();
         rect = this.grid.canvas.rect(point[0] - this.grid.r + 10, point[1] - 5 + 10, (this.grid.r * 1.5) - 4, 5);
-        rect.attr({fill: GameStyle['color'][cls], stroke:"none", opacity:0});
+        rect.attr({fill: GameStyle['color'][cls], stroke:"none", opacity:0})
+            .data("grid", this.grid)
+            .data("coord", this.str)
+            .mouseup(Coord.mouseup)
+            .toBack();
         this.setData("healthbar", rect);
     }
 
@@ -133,5 +143,64 @@ var Coord = function(grid, x, y) {
     // TODO: Make this work with naturals
     this.exists = function() {
         return this.getData("type") > 0;
+    }
+}
+
+// 
+// Events:
+// 
+Coord.mousedown = function() {
+    var grid = this.data("grid");
+    var coord = grid.get(this.data("coord"));
+    
+    if(grid.place_mode) return;
+    if(coord.getType() < 2 || coord.getType() > 50) return;
+
+    coord.getData("healthbar").toFront().animate({opacity:1}, 75);
+    if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:0}, 75);
+    coord.elem.animate({fill: "#F0F3F6"}, 75);
+    grid.health = coord;
+}
+
+Coord.mouseup = function(e) {
+    var grid = this.data("grid");
+    var coord = grid.get(this.data("coord"));
+
+    if(grid.place_mode) {
+        GameEvents.placeTile(coord);
+    } else {
+        coord = grid.health;
+        if(coord.getType() < 2 || coord.getType() > 50) return;
+        coord.getData("healthbar").animate({opacity:0}, 75, function() { this.toBack(); });
+        if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:1}, 75);
+        coord.elem.animate({fill: GameData['colors'][coord.getData("player")]}, 75);
+    }
+}
+
+Coord.mouseover = function() {
+    var grid = this.data("grid");
+    var coord = grid.get(this.data("coord"));
+
+    grid.hover = coord;
+    if(grid.place_mode) {
+        if(PlaceCheck[grid.place_type](coord)) {
+            coord.elem.attr({fill: GameStyle['color']['place_good']});
+        } else {
+            coord.elem.attr({fill: GameStyle['color']['place_bad']});
+        }
+    }
+}
+
+Coord.mouseout = function() {
+    var grid = this.data("grid");
+    var coord = grid.get(this.data("coord"));
+    grid.hover = null;
+
+    if(grid.place_mode) {
+        if(coord.getData("player") > 0) {
+            coord.elem.attr({fill: GameData['colors'][coord.getData("player")]});
+        } else {
+            coord.elem.attr({fill: GameStyle['color']['coord']});
+        }
     }
 }
