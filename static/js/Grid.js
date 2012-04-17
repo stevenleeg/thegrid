@@ -69,6 +69,7 @@ var Grid = function(canvas) {
         if(coord.getType() < 2 || coord.getType() > 50) return;
 
         coord.getData("healthbar").animate({opacity:1}, 75);
+        if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:0}, 75);
         coord.elem.animate({fill: "#F0F3F6"}, 75);
     }
 
@@ -81,6 +82,7 @@ var Grid = function(canvas) {
         } else {
             if(coord.getType() < 2 || coord.getType() > 50) return;
             coord.getData("healthbar").animate({opacity:0}, 75);
+            if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:1}, 75);
             coord.elem.animate({fill: GameData['colors'][coord.getData("player")]}, 75);
         }
     }
