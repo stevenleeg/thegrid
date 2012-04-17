@@ -37,6 +37,15 @@ var Coord = function(grid, x, y) {
         // TODO: Add images!
     }
 
+    // Returns the absolute X/Y coordinates on the svg
+    this.point = function() {
+        var xoffset = 0;
+        if(this.y % 2 == 1) xoffset = this.grid.r - 2;
+        else xoffset = 0;
+        return [(this.x * (this.grid.r - 2) * 2) + this.grid.r + xoffset,
+            (this.y * (this.grid.r - 6) * 2) + this.grid.r];
+    }
+
     // Sets the owner of the tile and its color
     this.setOwner = function(owner) {
         if(GameData['colors'][owner] == undefined) return;
@@ -47,19 +56,21 @@ var Coord = function(grid, x, y) {
     }
 
     this.setHealth = function(health) {
-        var perc, cls;
+        var perc, point, rect, cls;
         if(TileProps[this.getType()] != undefined) {
-            perc = parseInt((health / TileProps[this.getType()]['health']) * 100);
+            perc = (health / TileProps[this.getType()]['health']);
         }
         this.setData("health", health);
-        return;
 
         // TODO: This...
-        cls = "green";
-        if(perc <= 50) cls = "yellow";
-        if(perc <= 25) cls = "red";
-        this.ovr.children(".health").css("width", perc + "%").attr("class", "health " + cls);
-        this.dom.data("health", health);
+        cls = "health_good";
+        if(perc <= .5) cls = "health_poor";
+        if(perc <= .25) cls = "health_bad";
+
+        point = this.point();
+        rect = this.grid.canvas.rect(point[0] - this.grid.r + 10, point[1] - 5 + 10, (this.grid.r * 1.5) - 4, 5);
+        rect.attr({fill: GameStyle['color'][cls], stroke:"none", opacity:0});
+        this.setData("healthbar", rect);
     }
 
     // Destroys the coord without leaving a trace.

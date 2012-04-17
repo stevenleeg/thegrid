@@ -4,19 +4,19 @@ var Grid = function(canvas) {
     this.place_mode = false;
     this.place_type = 0;
     this.hover = null;
+    this.r = 32;
 
     this.render = function(sx, sy) {
-        var r = 32;
         var xoffset;
         for(var x = 0; x < sx; x++) {
             this.grid[x] = {};
             for(var y = 0; y < sy; y++) {
-                if(y % 2 == 1) xoffset = r - 2;
+                if(y % 2 == 1) xoffset = this.r - 2;
                 else xoffset = 0;
                 this.grid[x][y] = this.canvas.hexagon(
-                        (x * (r - 2) * 2) + r + xoffset, 
-                        (y * (r - 6) * 2) + r, 
-                        r
+                        (x * (this.r - 2) * 2) + this.r + xoffset, 
+                        (y * (this.r - 6) * 2) + this.r, 
+                        this.r
                     );
                 this.grid[x][y].rotate(30).attr({fill: "#FFF", stroke: "#F0F3F6"})
                     .data("coord", x + "_" + y)
@@ -62,6 +62,14 @@ var Grid = function(canvas) {
     // Events:
     // 
     this.mousedown = function() {
+        var grid = this.data("grid");
+        var coord = grid.get(this.data("coord"));
+        
+        if(grid.place_mode) return;
+        if(coord.getType() < 2 || coord.getType() > 50) return;
+
+        coord.getData("healthbar").animate({opacity:1}, 75);
+        coord.elem.animate({fill: "#F0F3F6"}, 75);
     }
 
     this.mouseup = function(e) {
@@ -70,6 +78,10 @@ var Grid = function(canvas) {
 
         if(grid.place_mode) {
             GameEvents.placeTile(coord);
+        } else {
+            if(coord.getType() < 2 || coord.getType() > 50) return;
+            coord.getData("healthbar").animate({opacity:0}, 75);
+            coord.elem.animate({fill: GameData['colors'][coord.getData("player")]}, 75);
         }
     }
 

@@ -224,6 +224,9 @@ var GameStyle = {
     "color": {
         "coord": "#FFF",
         "place_good": "#2BE671",
-        "place_bad": "#FF4A37"
+        "place_bad": "#FF4A37",
+        "health_poor": "#FEBE07",
+        "health_good": "#3FCD45",
+        "health_bad": "#FF401C"
     }
 }
