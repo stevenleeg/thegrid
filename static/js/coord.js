@@ -87,10 +87,10 @@ var Coord = function(grid, x, y) {
         // Start scanning
         for(x = startX; x <= (this.x + 1); x++) {
             for(y = startY; y <= (this.y + 1); y++) {
-                selected = new Coord(x, y);
+                selected = this.grid.get(x, y);
                 if(skip.indexOf(selected.str) != -1) continue;
 
-                if(selected.dom.hasClass("t" + type) || selected.ovr.hasClass("t" + type)) {
+                if(selected.getType() == type) {
                     if(owner && selected.isOwnedBy(owner)) return true;
                     if(!owner) return true;
                 }

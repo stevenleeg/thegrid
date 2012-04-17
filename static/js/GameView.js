@@ -185,7 +185,7 @@ var GameView = (function() {
 		$(".submenu a").off("click", selectType).on("click",deselectType);
 		$(".submenu a:not(.selected)").hide();
 		places = $(e.target).attr("places");
-		Grid.placeMode(places);
+		GameData['grid'].placeMode(places);
 		KeyEvents.setScope("place", returnMain);
 	}
 
@@ -193,7 +193,7 @@ var GameView = (function() {
 		$(".submenu a.selected").removeClass("selected");
 		$(".submenu a").show();
 		$(".submenu a").off("click", deselectType).on("click",selectType);
-		Grid.normalMode();
+		GameData['grid'].normalMode();
 		KeyEvents.setScope("build", returnMain);
 	}
 
@@ -219,3 +219,11 @@ var GameView = (function() {
 		"returnMain": returnMain
 	}
 })();
+
+var GameStyle = {
+    "color": {
+        "coord": "#FFF",
+        "place_good": "#2BE671",
+        "place_bad": "#FF4A37"
+    }
+}

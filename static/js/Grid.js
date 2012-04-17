@@ -1,6 +1,9 @@
 var Grid = function(canvas) {
     this.canvas = new Raphael(document.getElementById("grid"), canvas.width(), canvas.height());
     this.grid = {};
+    this.place_mode = false;
+    this.place_type = 0;
+    this.hover = null;
 
     this.render = function(sx, sy) {
         var r = 32;
@@ -17,6 +20,7 @@ var Grid = function(canvas) {
                     );
                 this.grid[x][y].rotate(30).attr({fill: "#FFF", stroke: "#F0F3F6"})
                     .data("coord", x + "_" + y)
+                    .data("grid", this)
                     .mousedown(this.mousedown)
                     .mouseup(this.mouseup)
                     .mouseover(this.mouseover)
@@ -35,20 +39,67 @@ var Grid = function(canvas) {
             selected.setHealth(coords[coord]['health']);
         }
     }
+    //
     // Gets a coordinate on the grid
     this.get = function(x, y) {
         return new Coord(this, x, y);
     }
 
-    this.mousedown = function() {
-        alert(this.data("coord"));
+    // Sets the grid up for placing a tile
+    this.placeMode = function(type) {
+        this.place_type = type;
+        this.place_mode = true;
     }
 
-    this.mouseup = function() {};
+    this.normalMode = function() {
+        if(this.hover != null) this.hover.elem.attr({fill: GameStyle['color']['coord']});
+
+        this.place_type = 0;
+        this.place_mode = false;
+    }
+
+    // 
+    // Events:
+    // 
+    this.mousedown = function() {
+    }
+
+    this.mouseup = function(e) {
+        var grid = this.data("grid");
+        var coord = grid.get(this.data("coord"));
+
+        if(grid.place_mode) {
+            GameEvents.placeTile(coord);
+        }
+    }
+
     this.mouseover = function() {
-        //this.animate({fill:"#000"}, 100);
+        var grid = this.data("grid");
+        var coord = grid.get(this.data("coord"));
+
+        grid.hover = coord;
+        if(grid.place_mode) {
+            if(PlaceCheck[grid.place_type](coord)) {
+                coord.elem.attr({fill: GameStyle['color']['place_good']});
+            } else {
+                coord.elem.attr({fill: GameStyle['color']['place_bad']});
+            }
+        }
+    }
+
+    this.mouseout = function() {
+        var grid = this.data("grid");
+        var coord = grid.get(this.data("coord"));
+        grid.hover = null;
+
+        if(grid.place_mode) {
+            if(coord.getData("player") > 0) {
+                coord.elem.attr({fill: GameData['colors'][coord.getData("player")]});
+            } else {
+                coord.elem.attr({fill: GameStyle['color']['coord']});
+            }
+        }
     };
-    this.mouseout = function() {};
 }
 
 var PlaceCheck = {
