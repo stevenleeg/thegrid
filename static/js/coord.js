@@ -153,7 +153,7 @@ Coord.mousedown = function() {
     var grid = this.data("grid");
     var coord = grid.get(this.data("coord"));
     
-    if(grid.place_mode) return;
+    if(grid.place_mode || !coord.exists()) return;
     if(coord.getType() < 2 || coord.getType() > 50) return;
 
     coord.getData("healthbar").toFront().animate({opacity:1}, 75);
@@ -170,6 +170,7 @@ Coord.mouseup = function(e) {
         grid.hover = null;
         GameEvents.placeTile(coord);
     } else {
+        if(!coord.exists()) return;
         coord = grid.health;
         if(coord.getType() < 2 || coord.getType() > 50) return;
         coord.getData("healthbar").animate({opacity:0}, 75, function() { this.toBack(); });
