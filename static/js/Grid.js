@@ -15,11 +15,40 @@ var Grid = function(canvas) {
                         (y * (r - 6) * 2) + r, 
                         r
                     );
-                this.grid[x][y].rotate(30);
-                this.grid[x][y].attr({fill: "#FFF", stroke: "#F0F3F6"});
+                this.grid[x][y].rotate(30).attr({fill: "#FFF", stroke: "#F0F3F6"})
+                    .data("coord", x + "_" + y)
+                    .mousedown(this.mousedown)
+                    .mouseup(this.mouseup)
+                    .mouseover(this.mouseover)
+                    .mouseout(this.mouseout);
             }
         }
     }
+    
+    // Loads a json object into the grid
+    this.load = function(coords) {
+        var coord, selected;
+        for(coord in coords) {
+            selected = this.get(coord);
+            selected.setType(coords[coord]['type']);
+            selected.setOwner(coords[coord]['player']);
+            selected.setHealth(coords[coord]['health']);
+        }
+    }
+    // Gets a coordinate on the grid
+    this.get = function(x, y) {
+        return new Coord(this, x, y);
+    }
+
+    this.mousedown = function() {
+        alert(this.data("coord"));
+    }
+
+    this.mouseup = function() {};
+    this.mouseover = function() {
+        //this.animate({fill:"#000"}, 100);
+    };
+    this.mouseout = function() {};
 }
 
 var PlaceCheck = {

@@ -1,4 +1,4 @@
-var Coord = function(x, y) {
+var Coord = function(grid, x, y) {
     // Parse the arguments
     if(y == undefined && typeof(x) == "string") {
         var xy = x.split("_");
@@ -9,53 +9,41 @@ var Coord = function(x, y) {
         this.y = y;
     }
     this.str = this.x + "_" + this.y;
-    this.dom = $("#" + this.str);
-    this.ovr = $("#o" + this.str);
+    this.grid = grid;
+    this.elem = grid.grid[this.x][this.y];
 
     // Returns value from grid's data
     this.getData = function(key) {
-        return this.dom.data(key);
+        return this.elem.data(key);
     }
     
     this.setData = function(key, val) {
-        this.dom.data(key, val);
+        this.elem.data(key, val);
     }
 
     this.rmData = function(key) {
-        this.dom.removeData(key);
+        this.elem.removeData(key);
     }
 
     // Returns tile type
     this.getType = function() {
-        var cls = this.ovr.attr("class");
-        if(cls == "ocol t1") {
-            return 1;
-        } else if(cls == "ocol") {
-            return 0;
-        }
-        return parseInt(cls
-                .replace("ocol ", "")
-                .replace("t1 ","")
-                .replace("t", "")
-                .replace("place_good",""));
+        return this.getData("type");
     }
 
     // Sets the tile type
     this.setType = function(type) {
-        if(type == 1) {
-            this.ovr.attr("class", "ocol t1");
-        } else {
-            this.ovr.attr("class", "ocol t" + type);
-        }
+        this.setData("type", type);
+        
+        // TODO: Add images!
     }
 
     // Sets the owner of the tile and its color
     this.setOwner = function(owner) {
         if(GameData['colors'][owner] == undefined) return;
 
-        if(!this.ovr.hasClass("t1")) this.ovr.addClass("t1");
-        this.dom.css("color", GameData['colors'][owner]);
-        this.dom.data("player", owner);
+        if(this.getData("type") == undefined) this.setData("type", 1);
+        this.elem.attr({fill: GameData['colors'][owner]});
+        this.setData("player", owner);
     }
 
     this.setHealth = function(health) {
@@ -63,6 +51,10 @@ var Coord = function(x, y) {
         if(TileProps[this.getType()] != undefined) {
             perc = parseInt((health / TileProps[this.getType()]['health']) * 100);
         }
+        this.setData("health", health);
+        return;
+
+        // TODO: This...
         cls = "green";
         if(perc <= 50) cls = "yellow";
         if(perc <= 25) cls = "red";
@@ -72,10 +64,7 @@ var Coord = function(x, y) {
 
     // Destroys the coord without leaving a trace.
     this.destroy = function() {
-        this.dom.removeClass()
-            .css("color", "")
-            .removeData()
-            .addClass("col");
+        this.elem.attr({fill: "#FFF"}).removeData();
     }
 
     this.inRangeOf = function(type, owner) {
@@ -122,6 +111,6 @@ var Coord = function(x, y) {
     // Does this coord exist?
     // TODO: Make this work with naturals
     this.exists = function() {
-        return this.ovr.hasClass('t1');
+        return this.getData("type") > 0;
     }
 }
