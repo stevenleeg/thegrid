@@ -1,5 +1,6 @@
 var Grid = function(canvas) {
-    this.canvas = new Raphael(document.getElementById("grid"), canvas.width(), canvas.height());
+    paper.install(window);
+    paper.setup(canvas);
     this.grid = {};
 
     this.render = function(sx, sy) {
@@ -10,13 +11,13 @@ var Grid = function(canvas) {
             for(var y = 0; y < sy; y++) {
                 if(y % 2 == 1) xoffset = r - 2;
                 else xoffset = 0;
-                this.grid[x][y] = this.canvas.hexagon(
-                        (x * (r - 2) * 2) + r + xoffset, 
-                        (y * (r - 6) * 2) + r, 
-                        r
-                    );
-                this.grid[x][y].rotate(30);
-                this.grid[x][y].attr({fill: "#FFF", stroke: "#F0F3F6"});
+                this.grid[x][y] = new Path.RegularPolygon(new Point(
+                            (x * (r - 2) * 2) + r + xoffset, 
+                            (y * (r - 6) * 2) + r 
+                        ), 6, r);
+                //this.grid[x][y].rotate(30);
+                this.grid[x][y].fillColor = "#FFF";
+                this.grid[x][y].selected = true;
             }
         }
     }
