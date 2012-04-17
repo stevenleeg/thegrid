@@ -32,9 +32,18 @@ var Coord = function(grid, x, y) {
 
     // Sets the tile type
     this.setType = function(type) {
+        var point;
         this.setData("type", type);
         
-        // TODO: Add images!
+        if(type < 2) return;
+        point = this.point();
+        this.grid.canvas.image(
+            "/static/img/tiles/" + type + ".png",
+            point[0] - (this.grid.r / 2),
+            point[1] - (this.grid.r / 2),
+            32,
+            32
+        );
     }
 
     // Returns the absolute X/Y coordinates on the svg
