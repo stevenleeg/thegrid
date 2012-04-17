@@ -57,7 +57,11 @@ var Grid = function(canvas) {
         this.place_type = 0;
         this.place_mode = false;
     }
+}
 
+Grid.defaultCheck = function(coord) {
+    if(coord.isOwnedBy(GameData['pid']) && coord.getType() == 1) return true;
+    else return false;
 }
 
 var PlaceCheck = {

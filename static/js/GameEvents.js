@@ -35,40 +35,42 @@ var GameEvents = (function() {
 	}
 
 	function placeTile(coord) {
-		var color, t;
-		if(coord.dom.hasClass("place_good") == false) {
+		var t, grid;
+        grid = coord.getData("grid");
+		if(coord.getData("place") != true) {
 			return;
 		}
 
 		// Make sure they have enough cash for it
-		if(GameView.getCash() < TileProps[Grid.place_type]['price']) {
+		if(GameView.getCash() < TileProps[grid.place_type]['price']) {
 			BaseUI.notify("Not enough cash", true, 2);
 			return;
 		}
 
 		// And territory
 		t = GameView.getTerritory();
-		if(Grid.place_type == "1" && t[0] >= t[1]) {
+		if(grid.place_type == 1 && t[0] >= t[1]) {
 			BaseUI.notify("Not enough territory. Place more houses", true, 1);
 			return;
 		}
 
-		color = GameData['colors'][GameData['pid']];
-		Grid.place(coord, Grid.place_type, color);
+        // Place the tile
+        coord.setType(grid.place_type);
+        coord.setOwner(GameData['pid']);
+        coord.setHealth(TileProps[grid.place_type]['health']);
 
 		AsyncClient.send("place", {
 			"coord": coord.str,
-			"tile": Grid.place_type,
-			"color": color
+			"tile": grid.place_type,
 		}, placeTileCb);
 
-		Grid.normalMode();
+		grid.normalMode();
 		GameView.returnMain();
 	}
 
 	function placeTileCb(data) {
 		if(data['status'] != 200) {
-			Grid.destroy(data['coord']);
+			GameData['grid'].get(data['coord']).destroy();
 		}
 	}
 

@@ -32,7 +32,7 @@ var HomeView = (function() {
         $("input[name=start]").on("click", startGame);
         $(window).resize(windowResize);
 
-        generateGrid();
+        //generateGrid();
     }
 
     // Background animation stuff

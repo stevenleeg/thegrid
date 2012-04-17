@@ -167,6 +167,7 @@ Coord.mouseup = function(e) {
     var coord = grid.get(this.data("coord"));
 
     if(grid.place_mode) {
+        grid.hover = null;
         GameEvents.placeTile(coord);
     } else {
         coord = grid.health;
@@ -185,6 +186,7 @@ Coord.mouseover = function() {
     if(grid.place_mode) {
         if(PlaceCheck[grid.place_type](coord)) {
             coord.elem.attr({fill: GameStyle['color']['place_good']});
+            coord.setData("place", true);
         } else {
             coord.elem.attr({fill: GameStyle['color']['place_bad']});
         }
@@ -197,6 +199,7 @@ Coord.mouseout = function() {
     grid.hover = null;
 
     if(grid.place_mode) {
+        coord.rmData("place");
         if(coord.getData("player") > 0) {
             coord.elem.attr({fill: GameData['colors'][coord.getData("player")]});
         } else {
