@@ -256,6 +256,7 @@ var AsyncClient = (function() {
 $(document).ready(function() {
     // Prevent annoying caching
     $.ajaxSetup({ cache: false });
+    this.onselectstart = function() { return false; }
 
 	if($.cookie("gid") != undefined) {
         GameData['pid'] = $.cookie("pid");

@@ -8,7 +8,7 @@ var GameClient = (function() {
     }
 
 	function set(data) {
-        var coord = new Coord(data['coord']);
+        var coord = GameData['grid'].get(data['coord']);
         coord.destroy();
 
         coord.setType(data['tile']);
@@ -56,7 +56,7 @@ var GameClient = (function() {
 	}
 
 	function setHealth(data) {
-        var coord = new Coord(data['coord']);
+        var coord = GameData['grid'].get(data['coord']);
         coord.setHealth(data['health']);
         Grid.pingHealth(coord);
 	}

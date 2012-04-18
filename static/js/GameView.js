@@ -9,22 +9,14 @@ var GameView = (function() {
 		var x, y, grid, overlay;
 
 		// Populate the grid
-		grid = $("#grid");
-        overlay = $("#overlay");
-		for(y = 0; y < GameData['size']; y++) {
-			tr = $("<div class='row' id='"+y+"'></div>").appendTo(grid);
-			otr = $("<div class='orow' id='o"+y+"'></div>").appendTo(overlay);
-			for(x = 0; x < GameData['size']; x++) {
-				$("<div class='col' id='"+x+"_"+y+"'>&#x2B22;</div>").appendTo(tr);
-				$("<div class='ocol' id='o"+x+"_"+y+"'><div class='health'>&nbsp;</div></div>").appendTo(otr);
-			}
-		}
-
+        $("#grid").width($(document).width()).height($(document).height());
+        GameData['grid'] = new Grid($("#grid"));
+        GameData['grid'].render(GameData['size'], GameData['size']);
 		// Start the client
         AsyncClient.connect(joinGame);
 
 		setupEvents();
-		Grid.setupEvents();
+		//Grid.setupEvents();
         KeyEvents.setup();
 	}
 
@@ -74,7 +66,7 @@ var GameView = (function() {
 
         GameData['active'] = true;
         // Create the grid and set some initials on the UI
-		Grid.load(data['coords']);
+		GameData['grid'].load(data['coords']);
 		GameView.setCash(data['cash']);
 		GameView.setIncome(data['inc']);
 		GameView.setTerritory(parseInt(data['tused']), parseInt(data['tlim']));
@@ -193,7 +185,7 @@ var GameView = (function() {
 		$(".submenu a").off("click", selectType).on("click",deselectType);
 		$(".submenu a:not(.selected)").hide();
 		places = $(e.target).attr("places");
-		Grid.placeMode(places);
+		GameData['grid'].placeMode(places);
 		KeyEvents.setScope("place", returnMain);
 	}
 
@@ -201,7 +193,7 @@ var GameView = (function() {
 		$(".submenu a.selected").removeClass("selected");
 		$(".submenu a").show();
 		$(".submenu a").off("click", deselectType).on("click",selectType);
-		Grid.normalMode();
+		GameData['grid'].normalMode();
 		KeyEvents.setScope("build", returnMain);
 	}
 
@@ -227,3 +219,14 @@ var GameView = (function() {
 		"returnMain": returnMain
 	}
 })();
+
+var GameStyle = {
+    "color": {
+        "coord": "#FFF",
+        "place_good": "#2BE671",
+        "place_bad": "#FF4A37",
+        "health_poor": "#FEBE07",
+        "health_good": "#3FCD45",
+        "health_bad": "#FF401C"
+    }
+}
