@@ -18,6 +18,7 @@ var KeyEvents = (function() {
 		$(document).bind("keydown","up down left right", GameEvents.moveViewport)
 		$(document).bind("keyup","up down left right", GameEvents.stopMoveViewport)
 		$(document).bind("keydown", "return", enter);
+        KeyEvents.callback = function() {};
 	}
 
 	function setScope(to, backCb) {
