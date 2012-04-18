@@ -147,6 +147,40 @@ var Coord = function(grid, x, y) {
         return false;
     }
 
+    // Gets all coords around us
+    this.around = function() {
+        var x, y, startX, startY, endX, endY, selected, skip;
+        // Generate the scanning start points
+        startX = this.x - 1;
+        startY = this.y - 1;
+        endX = this.x + 1;
+        endY = this.y + 1;
+        if(startX < 0) startX = 0;
+        if(startY < 0) startY = 0;
+        if(endX > this.grid.x - 1) endX = this.grid.x - 1;
+        if(endY > this.grid.y - 1) endY = this.grid.y - 1;
+
+        skip = [this.x + "_" + this.y];
+        if(this.y % 2 == 1) {
+            skip.push((this.x - 1) + "_" + (this.y + 1));
+            skip.push((this.x - 1) + "_" + (this.y - 1));
+        } else {
+            skip.push((this.x + 1) + "_" + (this.y + 1));
+            skip.push((this.x + 1) + "_" + (this.y - 1));
+        }
+
+        // Start scanning
+        var pts = [];
+        for(x = startX; x <= endX; x++) {
+            for(y = startY; y <= endY; y++) {
+                selected = this.grid.get(x, y);
+                if(skip.indexOf(selected.str) != -1) continue;
+                pts.push(selected);
+            }
+        }
+        return pts;
+    }
+
     // Tells us if a player owns this or not
     this.isOwnedBy = function(pid) {
         if(this.getData("player") == pid) {
@@ -168,6 +202,23 @@ var Coord = function(grid, x, y) {
             if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:1}, 75);
             coord.elem.animate({fill: GameData['colors'][coord.getData("player")]}, 75);
         }, 750));
+    }
+
+    this.glow = function(color) {
+        var glow = this.elem.glow({
+            fill: GameStyle['color'][color],
+            opacity: 0
+        });
+        glow.animate({opacity:.1}, 200);
+        this.setData("glow", glow);
+    }
+
+    this.unGlow = function() {
+        if(this.getData("glow") == undefined) return;
+        var glow = this.getData("glow");
+        glow.animate({opacity:0}, 200, function() {
+            this.remove();   
+        });
     }
 
     // Does this coord exist?
