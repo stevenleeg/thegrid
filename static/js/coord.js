@@ -123,7 +123,7 @@ var Coord = function(grid, x, y) {
                 selected = this.grid.get(x, y);
                 if(skip.indexOf(selected.str) != -1) continue;
 
-                if(selected.getType() == type) {
+                if(selected.getType() == type || (owner && type == 1)) {
                     if(owner && selected.isOwnedBy(owner)) return true;
                     if(!owner) return true;
                 }
@@ -171,6 +171,7 @@ Coord.mouseup = function(e) {
     if(grid.place_mode) {
         grid.hover = null;
         GameEvents.placeTile(coord);
+        grid.hover = coord;
     } else {
         if(!coord.exists()) return;
         coord = grid.health;
