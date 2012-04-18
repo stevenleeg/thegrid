@@ -38,8 +38,8 @@ var Grid = function(canvas, sx, sy) {
         var coord, selected;
         for(coord in coords) {
             selected = this.get(coord);
-            selected.setType(coords[coord]['type']);
             selected.setOwner(coords[coord]['player']);
+            selected.setType(coords[coord]['type']);
             selected.setHealth(coords[coord]['health']);
         }
     }
@@ -101,6 +101,7 @@ var PlaceCheck = {
         }
         return false;
     },
+    9: Grid.defaultCheck
 };
 
 var TileProps = {
@@ -135,4 +136,23 @@ var TileProps = {
         "health": 25,
         "price": 25
     },
+    9: {
+        "health": 25,
+        "price": 200,
+        "onPlace": function(coord) {
+            $.each(coord.around(), function(i, c) {
+                if(!c.isOwnedBy(coord.getData("player"))) return;
+                c.glow("blue");
+            });
+        },
+        "onRemove": function(coord) {
+            $.each(coord.around(), function(i, c) {
+                if(!c.isOwnedBy(coord.getData("player"))) return;
+                c.unGlow();
+            });
+        }
+    },
+
+    // Natural tiles...
+    99: {},
 }

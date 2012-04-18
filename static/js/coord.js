@@ -55,6 +55,9 @@ var Coord = function(grid, x, y) {
             .attr({opacity:0})
             .animate({opacity:1}, 75);
         this.setData("tile", img);
+
+        // Anything else?
+        if(TileProps[type]['onPlace'] != undefined) TileProps[type]['onPlace'](this);
     }
 
     // Returns the absolute X/Y coordinates on the svg
@@ -105,6 +108,11 @@ var Coord = function(grid, x, y) {
     this.destroy = function() {
         if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
         if(this.getData("tile") != undefined) this.getData("tile").remove();
+        if(this.getType() != undefined) 
+            if(TileProps[this.getType()]['onRemove'] != undefined) TileProps[this.getType()]['onRemove'](this);
+
+        this.unGlow();
+
         this.elem.attr({fill: "#FFF"}).removeData()
             .data("grid", this.grid)
             .data("coord", this.str);
@@ -206,7 +214,7 @@ var Coord = function(grid, x, y) {
 
     this.glow = function(color) {
         var glow = this.elem.glow({
-            fill: GameStyle['color'][color],
+            color: GameStyle['color'][color],
             opacity: 0
         });
         glow.animate({opacity:.1}, 200);
