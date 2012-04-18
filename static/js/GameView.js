@@ -31,6 +31,7 @@ var GameView = (function() {
         // Menu events
         $("#main_close, .screen, #main_exit").off().on("click", closeMainMenu);
         $("#main_exit").on("click", exit);
+        $("#grid").on("contextmenu", function() { return false; });
 	}
 
 	function joinGame() {
