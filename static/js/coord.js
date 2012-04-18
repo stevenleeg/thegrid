@@ -44,6 +44,8 @@ var Coord = function(grid, x, y) {
             32,
             32
         );
+        // Natural tiles have a slightly different color
+        if(type > 50) this.elem.attr({fill: GameStyle['color']['coord_natural']});
         img.data("coord", this.str)
             .data("grid", this.grid)
             .mousedown(Coord.mousedown)

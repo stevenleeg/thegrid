@@ -223,6 +223,7 @@ var GameView = (function() {
 var GameStyle = {
     "color": {
         "coord": "#FFF",
+        "coord_natural": "#F0F3F6",
         "place_good": "#2BE671",
         "place_bad": "#FF4A37",
         "health_poor": "#FEBE07",
