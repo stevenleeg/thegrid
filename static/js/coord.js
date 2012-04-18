@@ -34,6 +34,7 @@ var Coord = function(grid, x, y) {
     this.setType = function(type) {
         var point, img;
         this.setData("type", type);
+        this.grid.sendEventCallback(this, "coord.setType");
         
         if(type < 2) return;
         point = this.point();
@@ -72,6 +73,7 @@ var Coord = function(grid, x, y) {
     // Sets the owner of the tile and its color
     this.setOwner = function(owner) {
         if(GameData['colors'][owner] == undefined) return;
+        this.grid.sendEventCallback(this, "coord.setOwner");
 
         if(this.getData("type") == undefined) this.setData("type", 1);
         this.elem.animate({fill: GameData['colors'][owner]}, 75);
@@ -84,6 +86,7 @@ var Coord = function(grid, x, y) {
             perc = (health / TileProps[this.getType()]['health']);
         }
         this.setData("health", health);
+        this.grid.sendEventCallback(this, "coord.setHealth");
 
         // TODO: This...
         cls = "health_good";
@@ -108,8 +111,8 @@ var Coord = function(grid, x, y) {
     this.destroy = function() {
         if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
         if(this.getData("tile") != undefined) this.getData("tile").remove();
-        if(this.getType() != undefined) 
-            if(TileProps[this.getType()]['onRemove'] != undefined) TileProps[this.getType()]['onRemove'](this);
+        // Send a modify alert
+        this.grid.sendEventCallback(this, "coord.destroy");
 
         this.unGlow();
 

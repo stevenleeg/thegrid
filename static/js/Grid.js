@@ -9,6 +9,7 @@ var Grid = function(canvas, sx, sy) {
     this.place_mode = false;
     this.place_type = 0;
     this.hover = null;
+    this.evt_callbacks = [];
 
     this.render = function() {
         var xoffset;
@@ -31,6 +32,12 @@ var Grid = function(canvas, sx, sy) {
                     .mouseout(Coord.mouseout);
             }
         }
+
+        // Setup modify callbacks
+        this.registerEventCallback({
+            events: ["coord.setOwner", "coord.destroy", "coord.setType"],
+            cb: TileProps[9]['evt_callback']
+        });
     }
     
     // Loads a json object into the grid
@@ -68,6 +75,26 @@ var Grid = function(canvas, sx, sy) {
 
         this.place_type = 0;
         this.place_mode = false;
+    }
+
+    // Registers a function to be called every time a
+    // tile is modified. Used especially with shields.
+    this.registerEventCallback = function(callback) {
+        this.evt_callbacks.push(callback);
+    }
+
+    // Called by modifying functions
+    // Goes through and notifies all registered callbacks
+    // that a coordinate has changed. Evt is the event type
+    // id. It has three possible values:
+    // 0: Remove
+    // 1: Add/Modify
+    this.sendEventCallback = function(data, evt) {
+        var selected;
+        for(i in this.evt_callbacks) {
+            selected = this.evt_callbacks[i];
+            if(selected['events'].indexOf(evt) != -1) selected['cb'](data, evt);
+        }
     }
 }
 
@@ -139,18 +166,13 @@ var TileProps = {
     9: {
         "health": 25,
         "price": 200,
-        "onPlace": function(coord) {
-            $.each(coord.around(), function(i, c) {
-                if(!c.isOwnedBy(coord.getData("player"))) return;
-                c.glow("blue");
-            });
+        "evt_callback": function(coord, evt) {
+            if(!coord.inRangeOf(9)) return;
+
+            if(!coord.isOwnedBy(coord.getData("player"))) return;
+            if(evt == "coord.destroy") c.unGlow();
+            else c.glow("blue");
         },
-        "onRemove": function(coord) {
-            $.each(coord.around(), function(i, c) {
-                if(!c.isOwnedBy(coord.getData("player"))) return;
-                c.unGlow();
-            });
-        }
     },
 
     // Natural tiles...
