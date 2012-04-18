@@ -8,6 +8,8 @@ var Grid = function(canvas) {
 
     this.render = function(sx, sy) {
         var xoffset;
+        this.x = sx;
+        this.y = sy;
         for(var x = 0; x < sx; x++) {
             this.grid[x] = {};
             for(var y = 0; y < sy; y++) {
@@ -49,6 +51,14 @@ var Grid = function(canvas) {
     this.placeMode = function(type) {
         this.place_type = type;
         this.place_mode = true;
+
+        if(this.hover == null) return;
+        if(PlaceCheck[this.place_type](this.hover)) {
+            this.hover.elem.attr({fill: GameStyle['color']['place_good']});
+            this.hover.setData("place", true);
+        } else {
+            this.hover.elem.attr({fill: GameStyle['color']['place_bad']});
+        }
     }
 
     this.normalMode = function() {
