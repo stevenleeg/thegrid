@@ -9,9 +9,8 @@ var GameView = (function() {
 		var x, y, grid, overlay;
 
 		// Populate the grid
-        $("#grid").width($(document).width()).height($(document).height());
-        GameData['grid'] = new Grid($("#grid"));
-        GameData['grid'].render(GameData['size'], GameData['size']);
+        GameData['grid'] = new Grid($("#grid"), GameData['size'], GameData['size']);
+        GameData['grid'].render();
 		// Start the client
         AsyncClient.connect(joinGame);
 

@@ -1,15 +1,17 @@
-var Grid = function(canvas) {
-    this.canvas = new Raphael(document.getElementById("grid"), canvas.width(), canvas.height());
+var Grid = function(canvas, sx, sy) {
+    this.r = 32;
+    this.x = sx;
+    this.y = sy;
+    canvas.width((sx * (this.r - 2) * 2) + (this.r) + 2);
+    canvas.height((sy * (this.r - 6) * 2) + (this.r / 2) - 3);
+    this.canvas = new Raphael(canvas.get(0), canvas.width(), canvas.height());
     this.grid = {};
     this.place_mode = false;
     this.place_type = 0;
     this.hover = null;
-    this.r = 32;
 
-    this.render = function(sx, sy) {
+    this.render = function() {
         var xoffset;
-        this.x = sx;
-        this.y = sy;
         for(var x = 0; x < sx; x++) {
             this.grid[x] = {};
             for(var y = 0; y < sy; y++) {
