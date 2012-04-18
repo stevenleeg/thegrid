@@ -87,6 +87,9 @@ var Coord = function(grid, x, y) {
         if(perc <= .5) cls = "health_poor";
         if(perc <= .25) cls = "health_bad";
 
+        // Out with the old!
+        if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
+
         point = this.point();
         rect = this.grid.canvas.rect(point[0] - this.grid.r + 10, point[1] - 5 + 10, (this.grid.r * 1.5) - 4, 5);
         rect.attr({fill: GameStyle['color'][cls], stroke:"none", opacity:0})
@@ -99,7 +102,11 @@ var Coord = function(grid, x, y) {
 
     // Destroys the coord without leaving a trace.
     this.destroy = function() {
-        this.elem.attr({fill: "#FFF"}).removeData();
+        if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
+        if(this.getData("tile") != undefined) this.getData("tile").remove();
+        this.elem.attr({fill: "#FFF"}).removeData()
+            .data("grid", this.grid)
+            .data("coord", this.str);
     }
 
     this.inRangeOf = function(type, owner) {
@@ -216,6 +223,7 @@ Coord.mouseover = function() {
 
 Coord.mouseout = function() {
     var grid = this.data("grid");
+    if(grid == undefined) return;
     var coord = grid.get(this.data("coord"));
     grid.hover = null;
 
