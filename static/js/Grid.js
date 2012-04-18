@@ -212,7 +212,7 @@ var TileProps = {
                     else coord.glow("blue");
                 },
                 filter: {"grid.loaded": true},
-                when: ["coord.destroy", "coord.setType"]
+                when: ["coord.destroy", "coord.setOwner"]
             }, 
             {
                 // Look for all shields on the grid and glow any tiles around

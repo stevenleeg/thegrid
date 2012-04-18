@@ -73,11 +73,12 @@ var Coord = function(grid, x, y) {
     // Sets the owner of the tile and its color
     this.setOwner = function(owner) {
         if(GameData['colors'][owner] == undefined) return;
-        this.grid.sendEventCallback({coord: this}, "coord.setOwner");
 
         if(this.getData("type") == undefined) this.setData("type", 1);
         this.elem.animate({fill: GameData['colors'][owner]}, 75);
         this.setData("player", owner);
+
+        this.grid.sendEventCallback({coord: this}, "coord.setOwner");
     }
 
     this.setHealth = function(health) {
@@ -267,6 +268,7 @@ Coord.mouseup = function(e) {
         GameEvents.placeTile(coord);
         grid.hover = coord;
     } else {
+        if(grid.health == null) return;
         coord = grid.health;
         if(coord.getType() < 2 || coord.getType() > 50) return;
         coord.getData("healthbar").animate({opacity:0}, 75, function() { this.toBack(); });
