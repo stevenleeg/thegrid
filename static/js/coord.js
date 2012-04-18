@@ -111,12 +111,16 @@ var Coord = function(grid, x, y) {
     }
 
     this.inRangeOf = function(type, owner) {
-        var x, y, startX, startY, selected, skip;
+        var x, y, startX, startY, endX, endY, selected, skip;
         // Generate the scanning start points
         startX = this.x - 1;
         startY = this.y - 1;
+        endX = this.x + 1;
+        endY = this.y + 1;
         if(startX < 0) startX = 0;
         if(startY < 0) startY = 0;
+        if(endX > this.grid.x - 1) endX = this.grid.x - 1;
+        if(endY > this.grid.y - 1) endY = this.grid.y - 1;
 
         skip = [this.x + "_" + this.y];
         if(this.y % 2 == 1) {
@@ -128,8 +132,8 @@ var Coord = function(grid, x, y) {
         }
 
         // Start scanning
-        for(x = startX; x <= (this.x + 1); x++) {
-            for(y = startY; y <= (this.y + 1); y++) {
+        for(x = startX; x <= endX; x++) {
+            for(y = startY; y <= endY; y++) {
                 selected = this.grid.get(x, y);
                 if(skip.indexOf(selected.str) != -1) continue;
 
