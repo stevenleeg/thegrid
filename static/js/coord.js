@@ -49,7 +49,9 @@ var Coord = function(grid, x, y) {
             .mousedown(Coord.mousedown)
             .mouseup(Coord.mouseup)
             .mouseover(Coord.mouseover)
-            .mouseout(Coord.mouseout);
+            .mouseout(Coord.mouseout)
+            .attr({opacity:0})
+            .animate({opacity:1}, 75);
         this.setData("tile", img);
     }
 
@@ -67,7 +69,7 @@ var Coord = function(grid, x, y) {
         if(GameData['colors'][owner] == undefined) return;
 
         if(this.getData("type") == undefined) this.setData("type", 1);
-        this.elem.attr({fill: GameData['colors'][owner]});
+        this.elem.animate({fill: GameData['colors'][owner]}, 75);
         this.setData("player", owner);
     }
 
