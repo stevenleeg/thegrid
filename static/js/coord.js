@@ -76,7 +76,7 @@ var Coord = function(grid, x, y) {
     }
 
     this.setHealth = function(health) {
-        var perc, point, rect, cls;
+        var perc, point, rect, width, cls;
         if(TileProps[this.getType()] != undefined) {
             perc = (health / TileProps[this.getType()]['health']);
         }
@@ -91,7 +91,8 @@ var Coord = function(grid, x, y) {
         if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
 
         point = this.point();
-        rect = this.grid.canvas.rect(point[0] - this.grid.r + 10, point[1] - 5 + 10, (this.grid.r * 1.5) - 4, 5);
+        width = ((this.grid.r * 1.5) - 4) * perc;
+        rect = this.grid.canvas.rect(point[0] - this.grid.r + 10, point[1] - 5 + 10, width, 5);
         rect.attr({fill: GameStyle['color'][cls], stroke:"none", opacity:0})
             .data("grid", this.grid)
             .data("coord", this.str)
