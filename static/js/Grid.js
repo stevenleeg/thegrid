@@ -10,6 +10,7 @@ var Grid = function(canvas, sx, sy) {
     this.place_type = 0;
     this.hover = null;
     this.evt_callbacks = [];
+    this.evt_filters = {};
 
     this.render = function() {
         var xoffset;
@@ -34,20 +35,32 @@ var Grid = function(canvas, sx, sy) {
         }
 
         // Setup modify callbacks
-        this.registerEventCallback({
-            events: ["coord.setOwner", "coord.destroy", "coord.setType"],
-            cb: TileProps[9]['evt_callback']
-        });
+        for(tile in TileProps) {
+            if(TileProps[tile]['events'] != undefined) {
+                for(evt in TileProps[tile]['events']) {
+                    this.registerEventCallback(TileProps[tile]['events'][evt]);
+                }
+            }
+        }
     }
     
     // Loads a json object into the grid
     this.load = function(coords) {
         var coord, selected;
+        this.setGlobalFilter("grid.loaded", false);
         for(coord in coords) {
             selected = this.get(coord);
             selected.setOwner(coords[coord]['player']);
             selected.setType(coords[coord]['type']);
             selected.setHealth(coords[coord]['health']);
+        }
+
+        this.setGlobalFilter("grid.loaded", true);
+        for(coord in coords) {
+            this.sendEventCallback({
+                coord: this.get(coord),   
+                filter: { type: coords[coord]['type'] }
+            }, "grid.load.tiles");
         }
     }
     //
@@ -91,10 +104,29 @@ var Grid = function(canvas, sx, sy) {
     // 1: Add/Modify
     this.sendEventCallback = function(data, evt) {
         var selected;
+        var filter_good = true;
         for(i in this.evt_callbacks) {
             selected = this.evt_callbacks[i];
-            if(selected['events'].indexOf(evt) != -1) selected['cb'](data, evt);
+            if(selected['when'].indexOf(evt) == -1) continue;
+
+            // Add global filters
+            if(data['filter'] == undefined) data['filter'] = this.evt_filters;
+            else for(var key in this.evt_filters) { data['filter'][key] = this.evt_filters[key]; }
+            
+            if(selected['filter'] != undefined && data['filter'] != undefined) {
+                for(i in selected['filter']) {
+                    if(selected['filter'][i] != data['filter'][i])
+                        filter_good = false;
+                }
+            }
+
+            if(filter_good) selected['cb'](data, evt);
         }
+    }
+
+    // Registers a filter that is added to all events
+    this.setGlobalFilter = function(name, val) {
+        this.evt_filters[name] = val;
     }
 }
 
@@ -166,13 +198,36 @@ var TileProps = {
     9: {
         "health": 25,
         "price": 200,
-        "evt_callback": function(coord, evt) {
-            if(!coord.inRangeOf(9)) return;
+        "events": [
+            {
+                // Determine if we should glow or not after every
+                // change of a coordinate
+                cb: function(data, evt) {
+                    // Look for shields owned by this player
+                    var coord = data['coord'];
+                    var around = coord.around(9, coord.getData("player"));
+                    if(around.length == 0) return;
 
-            if(!coord.isOwnedBy(coord.getData("player"))) return;
-            if(evt == "coord.destroy") c.unGlow();
-            else c.glow("blue");
-        },
+                    if(evt == "coord.destroy") coord.unGlow();
+                    else coord.glow("blue");
+                },
+                filter: {"grid.loaded": true},
+                when: ["coord.destroy", "coord.setType"]
+            }, 
+            {
+                // Look for all shields on the grid and glow any tiles around
+                // them
+                cb: function(data, evt) {
+                    var coord = data['coord'];
+                    var around = coord.around(0, coord.getData("player"));
+                    for(i in around) {
+                        around[i].glow("blue");
+                    }
+                },
+                filter: {type: 9},
+                when: ["grid.load.tiles"]
+            }
+        ],
     },
 
     // Natural tiles...

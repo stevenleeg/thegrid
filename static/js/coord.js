@@ -34,7 +34,7 @@ var Coord = function(grid, x, y) {
     this.setType = function(type) {
         var point, img;
         this.setData("type", type);
-        this.grid.sendEventCallback(this, "coord.setType");
+        this.grid.sendEventCallback({coord: this}, "coord.setType");
         
         if(type < 2) return;
         point = this.point();
@@ -73,7 +73,7 @@ var Coord = function(grid, x, y) {
     // Sets the owner of the tile and its color
     this.setOwner = function(owner) {
         if(GameData['colors'][owner] == undefined) return;
-        this.grid.sendEventCallback(this, "coord.setOwner");
+        this.grid.sendEventCallback({coord: this}, "coord.setOwner");
 
         if(this.getData("type") == undefined) this.setData("type", 1);
         this.elem.animate({fill: GameData['colors'][owner]}, 75);
@@ -86,7 +86,7 @@ var Coord = function(grid, x, y) {
             perc = (health / TileProps[this.getType()]['health']);
         }
         this.setData("health", health);
-        this.grid.sendEventCallback(this, "coord.setHealth");
+        this.grid.sendEventCallback({coord: this}, "coord.setHealth");
 
         // TODO: This...
         cls = "health_good";
@@ -112,7 +112,7 @@ var Coord = function(grid, x, y) {
         if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
         if(this.getData("tile") != undefined) this.getData("tile").remove();
         // Send a modify alert
-        this.grid.sendEventCallback(this, "coord.destroy");
+        this.grid.sendEventCallback({coord: this}, "coord.destroy");
 
         this.unGlow();
 
@@ -159,7 +159,7 @@ var Coord = function(grid, x, y) {
     }
 
     // Gets all coords around us
-    this.around = function() {
+    this.around = function(type, owner) {
         var x, y, startX, startY, endX, endY, selected, skip;
         // Generate the scanning start points
         startX = this.x - 1;
@@ -186,6 +186,8 @@ var Coord = function(grid, x, y) {
             for(y = startY; y <= endY; y++) {
                 selected = this.grid.get(x, y);
                 if(skip.indexOf(selected.str) != -1) continue;
+                if(type && selected.getType() != type) continue;
+                if(owner && selected.getData("player") != owner) continue;
                 pts.push(selected);
             }
         }
