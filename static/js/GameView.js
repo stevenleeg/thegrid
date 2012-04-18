@@ -222,6 +222,7 @@ var GameView = (function() {
 
 var GameStyle = {
     "color": {
+        "blue": "#10A1FF",
         "coord": "#FFF",
         "coord_natural": "#F0F3F6",
         "place_good": "#2BE671",
