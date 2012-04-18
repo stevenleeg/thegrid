@@ -143,6 +143,21 @@ var Coord = function(grid, x, y) {
         return false
     }
 
+    this.pingHealth = function() {
+        var coord = this;
+        coord.getData("healthbar").toFront().animate({opacity:1}, 75);
+        if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:0}, 75);
+        coord.elem.animate({fill: "#F0F3F6"}, 75);
+
+        if(coord.getData("ping") != undefined) clearTimeout(coord.getData("ping"));
+
+        coord.setData("ping", setTimeout(function() {
+            coord.getData("healthbar").animate({opacity:0}, 75, function() { this.toBack(); });
+            if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:1}, 75);
+            coord.elem.animate({fill: GameData['colors'][coord.getData("player")]}, 75);
+        }, 750));
+    }
+
     // Does this coord exist?
     // TODO: Make this work with naturals
     this.exists = function() {
