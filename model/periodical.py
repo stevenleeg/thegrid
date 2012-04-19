@@ -82,7 +82,7 @@ def damager():
         length = db.llen(grid.dbid + ":dam")
 
         # List of tiles that can be damaged
-        takes_damage = [2, 3, 4, 5, 6, 7]
+        takes_damage = [2, 3, 4, 5, 6, 7, 8, 9]
 
         for i in range(0, length):
             c = grid.get(db.lindex(grid.dbid + ":dam", i))

@@ -55,6 +55,10 @@ var Coord = function(grid, x, y) {
             .attr({opacity:0})
             .animate({opacity:1}, 75);
         this.setData("tile", img);
+        this.grid.sendEventCallback({coord: this}, "coord.setType");
+
+        // Anything else?
+        if(TileProps[type]['onPlace'] != undefined) TileProps[type]['onPlace'](this);
     }
 
     // Returns the absolute X/Y coordinates on the svg
@@ -73,6 +77,8 @@ var Coord = function(grid, x, y) {
         if(this.getData("type") == undefined) this.setData("type", 1);
         this.elem.animate({fill: GameData['colors'][owner]}, 75);
         this.setData("player", owner);
+
+        this.grid.sendEventCallback({coord: this}, "coord.setOwner");
     }
 
     this.setHealth = function(health) {
@@ -81,6 +87,7 @@ var Coord = function(grid, x, y) {
             perc = (health / TileProps[this.getType()]['health']);
         }
         this.setData("health", health);
+        this.grid.sendEventCallback({coord: this}, "coord.setHealth");
 
         // TODO: This...
         cls = "health_good";
@@ -105,18 +112,27 @@ var Coord = function(grid, x, y) {
     this.destroy = function() {
         if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
         if(this.getData("tile") != undefined) this.getData("tile").remove();
+        // Send a modify alert
+        this.grid.sendEventCallback({coord: this}, "coord.destroy");
+
+        this.unGlow();
+
         this.elem.attr({fill: "#FFF"}).removeData()
             .data("grid", this.grid)
             .data("coord", this.str);
     }
 
     this.inRangeOf = function(type, owner) {
-        var x, y, startX, startY, selected, skip;
+        var x, y, startX, startY, endX, endY, selected, skip;
         // Generate the scanning start points
         startX = this.x - 1;
         startY = this.y - 1;
+        endX = this.x + 1;
+        endY = this.y + 1;
         if(startX < 0) startX = 0;
         if(startY < 0) startY = 0;
+        if(endX > this.grid.x - 1) endX = this.grid.x - 1;
+        if(endY > this.grid.y - 1) endY = this.grid.y - 1;
 
         skip = [this.x + "_" + this.y];
         if(this.y % 2 == 1) {
@@ -128,8 +144,8 @@ var Coord = function(grid, x, y) {
         }
 
         // Start scanning
-        for(x = startX; x <= (this.x + 1); x++) {
-            for(y = startY; y <= (this.y + 1); y++) {
+        for(x = startX; x <= endX; x++) {
+            for(y = startY; y <= endY; y++) {
                 selected = this.grid.get(x, y);
                 if(skip.indexOf(selected.str) != -1) continue;
 
@@ -141,6 +157,42 @@ var Coord = function(grid, x, y) {
         }
 
         return false;
+    }
+
+    // Gets all coords around us
+    this.around = function(type, owner) {
+        var x, y, startX, startY, endX, endY, selected, skip;
+        // Generate the scanning start points
+        startX = this.x - 1;
+        startY = this.y - 1;
+        endX = this.x + 1;
+        endY = this.y + 1;
+        if(startX < 0) startX = 0;
+        if(startY < 0) startY = 0;
+        if(endX > this.grid.x - 1) endX = this.grid.x - 1;
+        if(endY > this.grid.y - 1) endY = this.grid.y - 1;
+
+        skip = [this.x + "_" + this.y];
+        if(this.y % 2 == 1) {
+            skip.push((this.x - 1) + "_" + (this.y + 1));
+            skip.push((this.x - 1) + "_" + (this.y - 1));
+        } else {
+            skip.push((this.x + 1) + "_" + (this.y + 1));
+            skip.push((this.x + 1) + "_" + (this.y - 1));
+        }
+
+        // Start scanning
+        var pts = [];
+        for(x = startX; x <= endX; x++) {
+            for(y = startY; y <= endY; y++) {
+                selected = this.grid.get(x, y);
+                if(skip.indexOf(selected.str) != -1) continue;
+                if(type && selected.getType() != type) continue;
+                if(owner && selected.getData("player") != owner) continue;
+                pts.push(selected);
+            }
+        }
+        return pts;
     }
 
     // Tells us if a player owns this or not
@@ -164,6 +216,23 @@ var Coord = function(grid, x, y) {
             if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:1}, 75);
             coord.elem.animate({fill: GameData['colors'][coord.getData("player")]}, 75);
         }, 750));
+    }
+
+    this.glow = function(color) {
+        var glow = this.elem.glow({
+            color: GameStyle['color'][color],
+            opacity: 0
+        });
+        glow.animate({opacity:.1}, 200);
+        this.setData("glow", glow);
+    }
+
+    this.unGlow = function() {
+        if(this.getData("glow") == undefined) return;
+        var glow = this.getData("glow");
+        glow.animate({opacity:0}, 200, function() {
+            this.remove();   
+        });
     }
 
     // Does this coord exist?
@@ -199,6 +268,7 @@ Coord.mouseup = function(e) {
         GameEvents.placeTile(coord);
         grid.hover = coord;
     } else {
+        if(grid.health == null) return;
         coord = grid.health;
         if(coord.getType() < 2 || coord.getType() > 50) return;
         coord.getData("healthbar").animate({opacity:0}, 75, function() { this.toBack(); });

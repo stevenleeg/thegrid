@@ -11,8 +11,8 @@ var GameClient = (function() {
         var coord = GameData['grid'].get(data['coord']);
         coord.destroy();
 
-        coord.setType(data['tile']);
         coord.setOwner(data['player']);
+        coord.setType(data['tile']);
         coord.setHealth(data['health']);
 	}
 
