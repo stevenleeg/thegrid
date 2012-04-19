@@ -34,7 +34,6 @@ var Coord = function(grid, x, y) {
     this.setType = function(type) {
         var point, img;
         this.setData("type", type);
-        this.grid.sendEventCallback({coord: this}, "coord.setType");
         
         if(type < 2) return;
         point = this.point();
@@ -56,6 +55,7 @@ var Coord = function(grid, x, y) {
             .attr({opacity:0})
             .animate({opacity:1}, 75);
         this.setData("tile", img);
+        this.grid.sendEventCallback({coord: this}, "coord.setType");
 
         // Anything else?
         if(TileProps[type]['onPlace'] != undefined) TileProps[type]['onPlace'](this);

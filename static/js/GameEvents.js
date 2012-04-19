@@ -56,8 +56,8 @@ var GameEvents = (function() {
 
         // Place the tile
         coord.destroy();
-        coord.setType(grid.place_type);
         coord.setOwner(GameData['pid']);
+        coord.setType(grid.place_type);
         coord.setHealth(TileProps[grid.place_type]['health']);
 
 		AsyncClient.send("place", {

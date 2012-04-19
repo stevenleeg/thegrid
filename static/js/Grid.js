@@ -203,16 +203,27 @@ var TileProps = {
                 // Determine if we should glow or not after every
                 // change of a coordinate
                 cb: function(data, evt) {
+                    var around;
                     // Look for shields owned by this player
                     var coord = data['coord'];
-                    var around = coord.around(9, coord.getData("player"));
-                    if(around.length == 0) return;
-
-                    if(evt == "coord.destroy") coord.unGlow();
-                    else coord.glow("blue");
+                    if(coord.getType() == 9 && evt == "coord.destroy") {
+                        around = coord.around(0, coord.getData("player"));
+                        for(i in around) {
+                            around[i].unGlow();
+                        }
+                    } else if(coord.getType() == 9 && evt == "coord.setType") {
+                        around = coord.around(0, coord.getData("player"));
+                        for(i in around) {
+                            around[i].glow("blue");
+                        }
+                    } else {
+                        around = coord.around(9, coord.getData("player"));
+                        if(around.length == 0) coord.unGlow();
+                        else coord.glow("blue");
+                    }
                 },
                 filter: {"grid.loaded": true},
-                when: ["coord.destroy", "coord.setOwner"]
+                when: ["coord.destroy", "coord.setType"]
             }, 
             {
                 // Look for all shields on the grid and glow any tiles around
