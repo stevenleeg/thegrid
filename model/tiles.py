@@ -50,6 +50,13 @@ def add_defender(grid, coord, player):
     return True
 
 def add_shield(grid, coord, player):
+    # Add health to every coord around it
+    around = grid.around(coord, 0)
+    for coord in around:
+        if coord['player'] == player['pid']:
+            coord['health'] = int(coord['health']) + 50
+            UpdateManager.sendGrid(grid, "setHealth", coord=str(coord), health=coord['health'])
+
     return True
 
 TileAdd = {
@@ -97,12 +104,24 @@ def dest_defender(grid, coord, player):
     db.rename("def:" + coord.dbid, coord.dbid)
     UpdateManager.sendCoord(grid, coord)
 
+def dest_shield(grid, coord, player):
+    # Add health to every coord around it
+    around = grid.around(coord, 0)
+    for coord in around:
+        if coord['player'] == player['pid']:
+            health = int(coord['health'])
+            if(health > TileProps[int(coord['type'])]['health']):
+                coord['health'] = health - 50
+                UpdateManager.sendGrid(grid, "setHealth", coord=str(coord), health=health - 50)
+
+
 TileDest = {
     1: dest_territory,
     3: dest_miner,
     4: dest_inf,
     5: dest_house,
-    8: dest_defender
+    8: dest_defender,
+    9: dest_shield
 }
 
 TileProps = {
