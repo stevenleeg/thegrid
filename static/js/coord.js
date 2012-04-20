@@ -81,37 +81,11 @@ var Coord = function(grid, x, y) {
         this.grid.sendEventCallback({coord: this}, "coord.setOwner");
     }
 
-    this.setHealth = function(health) {
-        var perc, point, rect, width, cls;
-        if(TileProps[this.getType()] != undefined) {
-            perc = (health / TileProps[this.getType()]['health']);
-        }
-        this.setData("health", health);
-        this.grid.sendEventCallback({coord: this}, "coord.setHealth");
-
-        // TODO: This...
-        cls = "health_good";
-        if(perc <= .5) cls = "health_poor";
-        if(perc <= .25) cls = "health_bad";
-
-        // Out with the old!
-        if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
-
-        point = this.point();
-        width = ((this.grid.r * 1.5) - 4) * perc;
-        rect = this.grid.canvas.rect(point[0] - this.grid.r + 10, point[1] - 5 + 10, width, 5);
-        rect.attr({fill: GameStyle['color'][cls], stroke:"none", opacity:0})
-            .data("grid", this.grid)
-            .data("coord", this.str)
-            .mouseup(Coord.mouseup)
-            .toBack();
-        this.setData("healthbar", rect);
-    }
-
     // Destroys the coord without leaving a trace.
     this.destroy = function() {
         if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
         if(this.getData("tile") != undefined) this.getData("tile").remove();
+        if(this.getData("glow") != undefined) this.getData("glow").remove();
         // Send a modify alert
         this.grid.sendEventCallback({coord: this}, "coord.destroy");
 
@@ -203,18 +177,75 @@ var Coord = function(grid, x, y) {
         return false
     }
 
+    this.setHealth = function(health) {
+        var perc, point, rect, width, cls;
+        if(TileProps[this.getType()] != undefined) {
+            perc = (health / TileProps[this.getType()]['health']);
+        }
+        this.setData("health", health);
+        this.grid.sendEventCallback({coord: this}, "coord.setHealth");
+
+        cls = "health_good";
+        if(perc > 1) cls = "blue";
+        if(perc <= .5) cls = "health_poor";
+        if(perc <= .25) cls = "health_bad";
+
+        // Out with the old!
+        if(this.getData("healthbar") != undefined) this.getData("healthbar").remove();
+
+        point = this.point();
+
+        // Determine the width and if we're boosted
+        if(perc > 1) width = ((this.grid.r * 1.5) - 4) * 1;
+        else width = ((this.grid.r * 1.5) - 4) * perc;
+
+        rect = this.grid.canvas.rect(point[0] - this.grid.r + 10, point[1] - 5 + 10, width, 5);
+
+        if(perc > 1) { 
+            rect.data("glow", rect.glow({color: GameStyle['color']['blue'], }));
+            rect.data("glow").attr({opacity:0})
+                .toBack()
+                .mouseup(Coord.mouseup) 
+                .data("grid", this.grid)
+                .data("coord", this.str);
+        }
+
+        rect.attr({fill: GameStyle['color'][cls], stroke:"none", opacity:0})
+            .data("grid", this.grid)
+            .data("coord", this.str)
+            .mouseup(Coord.mouseup)
+            .toBack();
+        this.setData("healthbar", rect);
+    }
+
+    this.showHealth = function() {
+        this.getData("healthbar").toFront().animate({opacity:1}, 75);
+        if(this.getData("tile") != undefined) this.getData("tile").animate({opacity:0}, 75);
+        if(this.getData("healthbar").data("glow") != undefined) {
+            this.getData("healthbar").data("glow").toFront().animate({opacity:.05}, 75);
+        }
+        if(this.getData("glow") != undefined) this.getData("glow").animate({opacity:0}, 75);
+        this.elem.animate({fill: "#F0F3F6"}, 75);
+    }
+
+    this.hideHealth = function() {
+        this.getData("healthbar").animate({opacity:0}, 75, function() { this.toBack(); });
+        if(this.getData("tile") != undefined) this.getData("tile").animate({opacity:1}, 75);
+        this.elem.animate({fill: GameData['colors'][this.getData("player")]}, 75);
+        if(this.getData("healthbar").data("glow") != undefined) {
+            this.getData("healthbar").data("glow").animate({opacity:0}, 75, function() { this.toBack() });
+        }
+        if(this.getData("glow") != undefined) this.getData("glow").animate({opacity:.1}, 75);
+    }
+
     this.pingHealth = function() {
         var coord = this;
-        coord.getData("healthbar").toFront().animate({opacity:1}, 75);
-        if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:0}, 75);
-        coord.elem.animate({fill: "#F0F3F6"}, 75);
+        this.showHealth();
 
         if(coord.getData("ping") != undefined) clearTimeout(coord.getData("ping"));
 
         coord.setData("ping", setTimeout(function() {
-            coord.getData("healthbar").animate({opacity:0}, 75, function() { this.toBack(); });
-            if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:1}, 75);
-            coord.elem.animate({fill: GameData['colors'][coord.getData("player")]}, 75);
+            coord.hideHealth();
         }, 750));
     }
 
@@ -253,9 +284,7 @@ Coord.mousedown = function(e) {
     if(grid.place_mode || !coord.exists()) return;
     if(coord.getType() < 2 || coord.getType() > 50) return;
 
-    coord.getData("healthbar").toFront().animate({opacity:1}, 75);
-    if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:0}, 75);
-    coord.elem.animate({fill: "#F0F3F6"}, 75);
+    coord.showHealth();
     grid.health = coord;
 }
 
@@ -271,9 +300,7 @@ Coord.mouseup = function(e) {
         if(grid.health == null) return;
         coord = grid.health;
         if(coord.getType() < 2 || coord.getType() > 50) return;
-        coord.getData("healthbar").animate({opacity:0}, 75, function() { this.toBack(); });
-        if(coord.getData("tile") != undefined) coord.getData("tile").animate({opacity:1}, 75);
-        coord.elem.animate({fill: GameData['colors'][coord.getData("player")]}, 75);
+        coord.hideHealth();
     }
 }
 
