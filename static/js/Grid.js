@@ -245,7 +245,7 @@ var TileProps = {
     10: {
         "health": 50,
         "price": 200,
-        "rot": true
+        "rotate": true
     },
 
     // Natural tiles...

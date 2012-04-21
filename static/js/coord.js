@@ -283,10 +283,15 @@ var Coord = function(grid, x, y) {
         else start = 0;
         
         end = start + deg;
-        if(end > 360) end -= 360;
+        if(end > 360) { 
+            this.getData("tile").transform("r0");
+            end -= 360;
+        }
+        if(end >= 120) scale = -1;
+        if(end < 120 || end >= 300) scale = 1;
 
         // Rotate the tile's image
-        this.getData("tile").animate({transform: "r" + end}, 75);
+        this.getData("tile").animate({transform: "r" + end + "s1," + scale}, 75);
         
         this.setData("rot", end);
     }
@@ -299,7 +304,12 @@ Coord.mousedown = function(e) {
     var grid = this.data("grid");
     var coord = grid.get(this.data("coord"));
     
-    if(e.which != 1) return;
+    // See if we can rotate
+    if(e.which == 3) {
+        if(TileProps[coord.getType()]['rotate'] == undefined) return;
+        coord.rotate(60);
+        return;
+    }
     if(grid.place_mode || !coord.exists()) return;
     if(coord.getType() < 2 || coord.getType() > 50) return;
 
