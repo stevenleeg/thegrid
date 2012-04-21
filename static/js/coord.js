@@ -273,16 +273,13 @@ var Coord = function(grid, x, y) {
     }
 
     this.rotate = function(deg, direct) {
-        if(direct) {
-            this.getData("tile").transform("r" + deg);
-            this.setData("rot", deg);
-            return;
-        }
         var start, end;
-        if(this.getData("rot") != undefined) start = this.getData("rot");
+        if(direct) start = 0;
+        else if(this.getData("rot") != undefined) start = this.getData("rot");
         else start = 0;
         
-        end = start + deg;
+        if(direct) end = deg;
+        else end = start + deg;
         if(end > 360) { 
             this.getData("tile").transform("r0");
             end -= 360;
@@ -308,6 +305,7 @@ Coord.mousedown = function(e) {
     if(e.which == 3) {
         if(TileProps[coord.getType()]['rotate'] == undefined) return;
         coord.rotate(60);
+        GameEvents.rotate(coord);
         return;
     }
     if(grid.place_mode || !coord.exists()) return;

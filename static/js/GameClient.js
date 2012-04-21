@@ -61,6 +61,11 @@ var GameClient = (function() {
         coord.pingHealth();
 	}
 
+    function rotate(data) {
+        var coord = GameData['grid'].get(data['coord']);
+        coord.rotate(data['rot'], true);
+    }
+
     function newGrid(data) {
         $("#loading_list").hide();
         $("<tr><td>"+ data['name'] +"</td><td>"+ data['players'] +" players</td></tr>")
@@ -84,6 +89,7 @@ var GameClient = (function() {
 		"del": del,
 		"setTerritory": setTerritory,
 		"setHealth": setHealth,
-        "newGrid": newGrid
+        "rotate": rotate,
+        "newGrid": newGrid,
 	}
 })();

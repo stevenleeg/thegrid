@@ -182,6 +182,22 @@ def place(handler, **args):
 
     return { "status": 200 }
 
+def rotate(handler, **args):
+    try:
+        coord = args['coord']
+        rot = args['rot']
+    except KeyError:
+        return { "status": 406 }
+
+    g = Grid(handler.user['grid'])
+    c = g.get(coord)
+
+    c['rot'] = rot
+
+    UpdateManager.sendGrid(g, "rotate", handler.user, coord=str(c), rot=rot)
+
+    return { "status": 200 }
+
 def sendMessage(handler, **args):
     UpdateManager.sendGrid(Grid(handler.user['grid']), "newMessage", handler.user,
         pid = handler.user['pid'],
