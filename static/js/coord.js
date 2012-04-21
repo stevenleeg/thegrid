@@ -303,7 +303,7 @@ Coord.mousedown = function(e) {
     
     // See if we can rotate
     if(e.which == 3) {
-        if(TileProps[coord.getType()]['rotate'] == undefined) return;
+        if(!coord.exists() || coord.getData("player") != GameData['pid'] || TileProps[coord.getType()]['rotate'] == undefined) return;
         coord.rotate(60);
         GameEvents.rotate(coord);
         return;
