@@ -271,6 +271,27 @@ var Coord = function(grid, x, y) {
     this.exists = function() {
         return this.getData("type") > 0;
     }
+
+    this.rotate = function(deg, direct) {
+        var start, end;
+        if(direct) start = 0;
+        else if(this.getData("rot") != undefined) start = this.getData("rot");
+        else start = 0;
+        
+        if(direct) end = deg;
+        else end = start + deg;
+        if(end > 360) { 
+            this.getData("tile").transform("r0");
+            end -= 360;
+        }
+        if(end >= 120) scale = -1;
+        if(end < 120 || end >= 300) scale = 1;
+
+        // Rotate the tile's image
+        this.getData("tile").animate({transform: "r" + end + "s1," + scale}, 75);
+        
+        this.setData("rot", end);
+    }
 }
 
 // 
@@ -280,7 +301,13 @@ Coord.mousedown = function(e) {
     var grid = this.data("grid");
     var coord = grid.get(this.data("coord"));
     
-    if(e.which != 1) return;
+    // See if we can rotate
+    if(e.which == 3) {
+        if(!coord.exists() || coord.getData("player") != GameData['pid'] || TileProps[coord.getType()]['rotate'] == undefined) return;
+        coord.rotate(60);
+        GameEvents.rotate(coord);
+        return;
+    }
     if(grid.place_mode || !coord.exists()) return;
     if(coord.getType() < 2 || coord.getType() > 50) return;
 

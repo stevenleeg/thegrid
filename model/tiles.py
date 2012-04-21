@@ -59,6 +59,9 @@ def add_shield(grid, coord, player):
 
     return True
 
+def add_cannon(grid, coord, player):
+    return True
+
 TileAdd = {
     1: add_territory,
     2: add_headquarters,
@@ -69,6 +72,7 @@ TileAdd = {
     7: add_wall,
     8: add_defender,
     9: add_shield,
+    10: add_cannon,
 }
 
 #
@@ -158,6 +162,10 @@ TileProps = {
     },
     9: {
         "health": 25,
+        "price": 200
+    },
+    10: {
+        "health": 50,
         "price": 200
     }
 }

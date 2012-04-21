@@ -75,8 +75,16 @@ var GameEvents = (function() {
 		}
 	}
 
+    function rotate(coord) {
+        AsyncClient.send("rotate", {
+            "coord": coord.str,
+            "rot": coord.getData("rot")
+        });
+    }
+
 	return {
 		"placeTile": placeTile,
+        "rotate": rotate,
 		"moveViewport": moveViewport,
 		"stopMoveViewport": stopMoveViewport,
 	};

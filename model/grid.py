@@ -318,7 +318,7 @@ class Coord:
             self['health'] = new
     
     def baseInfo(self):
-        keys = ["type", "player", "health"]
+        keys = ["type", "player", "health", "rot"]
         vals = db.hmget(self.dbid, keys)
         return dict(zip(keys, vals))
 

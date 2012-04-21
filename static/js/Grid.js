@@ -53,6 +53,7 @@ var Grid = function(canvas, sx, sy) {
             selected.setOwner(coords[coord]['player']);
             selected.setType(coords[coord]['type']);
             selected.setHealth(coords[coord]['health']);
+            if(coords[coord]['rot'] != null) selected.rotate(parseInt(coords[coord]['rot']), true);
         }
 
         this.setGlobalFilter("grid.loaded", true);
@@ -160,7 +161,8 @@ var PlaceCheck = {
         }
         return false;
     },
-    9: Grid.defaultCheck
+    9: Grid.defaultCheck,
+    10: Grid.defaultCheck
 };
 
 var TileProps = {
@@ -239,6 +241,12 @@ var TileProps = {
                 when: ["grid.load.tiles"]
             }
         ],
+    },
+
+    10: {
+        "health": 50,
+        "price": 200,
+        "rotate": true
     },
 
     // Natural tiles...
