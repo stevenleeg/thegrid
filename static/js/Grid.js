@@ -160,7 +160,8 @@ var PlaceCheck = {
         }
         return false;
     },
-    9: Grid.defaultCheck
+    9: Grid.defaultCheck,
+    10: Grid.defaultCheck
 };
 
 var TileProps = {
@@ -239,6 +240,12 @@ var TileProps = {
                 when: ["grid.load.tiles"]
             }
         ],
+    },
+
+    10: {
+        "health": 50,
+        "price": 200,
+        "rot": true
     },
 
     // Natural tiles...
