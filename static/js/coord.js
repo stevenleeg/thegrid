@@ -271,6 +271,25 @@ var Coord = function(grid, x, y) {
     this.exists = function() {
         return this.getData("type") > 0;
     }
+
+    this.rotate = function(deg, direct) {
+        if(direct) {
+            this.getData("tile").transform("r" + deg);
+            this.setData("rot", deg);
+            return;
+        }
+        var start, end;
+        if(this.getData("rot") != undefined) start = this.getData("rot");
+        else start = 0;
+        
+        end = start + deg;
+        if(end > 360) end -= 360;
+
+        // Rotate the tile's image
+        this.getData("tile").animate({transform: "r" + end}, 75);
+        
+        this.setData("rot", end);
+    }
 }
 
 // 
