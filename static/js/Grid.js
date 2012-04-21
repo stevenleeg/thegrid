@@ -53,6 +53,7 @@ var Grid = function(canvas, sx, sy) {
             selected.setOwner(coords[coord]['player']);
             selected.setType(coords[coord]['type']);
             selected.setHealth(coords[coord]['health']);
+            if(coords[coord]['rot'] != null) selected.rotate(parseInt(coords[coord]['rot']), true);
         }
 
         this.setGlobalFilter("grid.loaded", true);
