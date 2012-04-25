@@ -312,6 +312,7 @@ Coord.mousedown = function(e) {
     if(coord.getType() < 2 || coord.getType() > 50) return;
 
     coord.showHealth();
+    grid.showMenu(coord);
     grid.health = coord;
 }
 
@@ -328,6 +329,7 @@ Coord.mouseup = function(e) {
         coord = grid.health;
         if(coord.getType() < 2 || coord.getType() > 50) return;
         coord.hideHealth();
+        grid.hideMenu(coord);
     }
 }
 

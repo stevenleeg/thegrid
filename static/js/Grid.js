@@ -129,6 +129,51 @@ var Grid = function(canvas, sx, sy) {
     this.setGlobalFilter = function(name, val) {
         this.evt_filters[name] = val;
     }
+
+    this.showMenu = function(coord) {
+        // Find the locations of each hexagon around us
+        var around = coord.around();
+        var points = {};
+        for(point in around) {
+            if(TileProps[coord.getType()]['menu'] == undefined || !(point in TileProps[coord.getType()]['menu'])) continue;
+            points[point] = around[point].point();
+        }
+            
+        var hexes = [];
+        // Now let's create menu hexagons
+        for(point in points) {
+            var set = this.canvas.set();
+            var hex = this.canvas.hexagon(points[point][0], points[point][1], 32);
+            hex.attr({
+                fill: "#000",
+                opacity:0,
+                transform:"r30"
+            });
+            hex.animate({opacity:.95}, 75);
+            set.push(hex);
+            // Find out if we're overlaying text
+            if(TileProps[coord.getType()]['menu'][point]['text'] != undefined) {
+                var text = this.canvas.text(points[point][0], points[point][1], TileProps[coord.getType()]['menu'][point]['text']);
+                text.attr({fill:"#FFF", "font-size": 14});
+                set.push(text);
+            }
+            
+            hexes.push(set);
+        }
+
+        coord.setData("menu", hexes);
+    }
+
+    this.hideMenu = function(coord) {
+        var hexes = coord.getData("menu");
+        if(hexes == undefined) return;
+        for(item in hexes) {
+            hexes[item].animate({opacity:0});
+            hexes[item].remove();
+        }
+
+        coord.rmData("menu");
+    }
 }
 
 Grid.defaultCheck = function(coord) {
@@ -165,6 +210,15 @@ var PlaceCheck = {
     10: Grid.defaultCheck
 };
 
+//
+// For reference with menus:
+// 0: W
+// 1: NW
+// 2: SW
+// 3: NE
+// 4: E
+// 5: SE
+//
 var TileProps = {
     1: {
         "health": 25,
@@ -246,7 +300,13 @@ var TileProps = {
     10: {
         "health": 50,
         "price": 200,
-        "rotate": true
+        "rotate": true,
+        "menu": {
+            4: {
+                "text": "shoot",
+                "func": function() { console.log("SHOTS FIRED!"); }
+            }
+        }
     },
 
     // Natural tiles...
