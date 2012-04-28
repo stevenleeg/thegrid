@@ -1,35 +1,35 @@
 #
+# Update the system
+#
+exec { "backports":
+  command => "/bin/echo 'deb http://backports.debian.org/debian-backports squeeze-backports main' >> /etc/apt/sources.list",
+  user => root
+}
+
+exec { "update1":
+  command => "/usr/bin/sudo /usr/bin/apt-get update",
+  require => Exec['backports']
+}
+
+#
 # General packages
 #
-package { "python2":
+package { "python":
   ensure => "present",
-  provider => "pacman"
+  provider => "apt",
+  require => Exec['update1']
 }
 
-package { "python2-pip":
+package { "python-pip":
   ensure => "present",
-  require => Package['python2'],
-  provider => "pacman"
+  require => Package['python'],
+  provider => "apt",
 }
 
-package { "redis":
+package { "redis-server/squeeze-backports":
   ensure => present,
-  provider => "pacman"
-}
-
-#
-# Link execs
-#
-exec { "Link-python":
-  command => "/usr/bin/sudo ln /usr/bin/python2 /usr/bin/python",
-  creates => "/usr/bin/python",
-  require => Package['python2']
-}
-
-exec { "Link-pip":
-  command => "/usr/bin/sudo ln /usr/bin/pip2 /usr/bin/pip",
-  creates => "/usr/bin/pip",
-  require => Package['python2-pip']
+  provider => "apt",
+  require => Exec['update1']
 }
 
 #
@@ -37,5 +37,10 @@ exec { "Link-pip":
 #
 exec { "Install-Py-Libraries":
   command => "/usr/bin/sudo pip install -r /vagrant/requirements.txt",
-  require => Exec['Link-pip']
+  require => Package['python-pip']
+}
+
+exec { "Start redis":
+  command => "/usr/bin/sudo service redis-server start",
+  require => Package['redis-server/squeeze-backports']
 }
