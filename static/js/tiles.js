@@ -121,7 +121,7 @@ var TileProps = {
         "menu": {
             4: {
                 "text": "shoot",
-                "func": function() { console.log("SHOTS FIRED!"); }
+                "onSelect": function() { console.log("SHOTS FIRED!"); }
             }
         }
     },

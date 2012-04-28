@@ -147,6 +147,7 @@ var Grid = function(canvas, sx, sy) {
             hex.attr({
                 fill: "#000",
                 opacity:0,
+                stroke: 0,
                 transform:"r30"
             });
             hex.animate({opacity:.95}, 75);
@@ -157,6 +158,13 @@ var Grid = function(canvas, sx, sy) {
                 text.attr({fill:"#FFF", "font-size": 14});
                 set.push(text);
             }
+            set.data("coord", coord)
+                .data("grid", this)
+                .data("hex", hex)
+                .data("point", point);
+            set.mouseup(Grid.menuUp);
+            set.mouseover(Grid.menuOver);
+            set.mouseout(Grid.menuOut);
             
             hexes.push(set);
         }
@@ -181,3 +189,20 @@ Grid.defaultCheck = function(coord) {
     else return false;
 }
 
+Grid.menuUp = function() {
+    var coord = this.data("coord");
+    var grid = this.data("grid");
+
+    TileProps[coord.getType()]['menu'][this.data("point")]['onSelect'](grid, coord);
+
+    grid.hideMenu(coord);
+    coord.hideHealth();
+}
+
+Grid.menuOver = function() {
+    this.data("hex").attr({fill: GameStyle['color']['blue']});
+}
+
+Grid.menuOut = function() {
+    this.data("hex").attr({fill: GameStyle['color']['dark']});
+}
