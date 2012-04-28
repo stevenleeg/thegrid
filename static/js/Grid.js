@@ -135,7 +135,7 @@ var Grid = function(canvas, sx, sy) {
         var around = coord.around();
         var points = {};
         for(point in around) {
-            if(TileProps[coord.getType()]['menu'] == undefined || !(point in TileProps[coord.getType()]['menu'])) continue;
+            if(coord.property("menu") == undefined || !(point in coord.property("menu"))) continue;
             points[point] = around[point].point();
         }
             
@@ -153,8 +153,8 @@ var Grid = function(canvas, sx, sy) {
             hex.animate({opacity:.95}, 75);
             set.push(hex);
             // Find out if we're overlaying text
-            if(TileProps[coord.getType()]['menu'][point]['text'] != undefined) {
-                var text = this.canvas.text(points[point][0], points[point][1], TileProps[coord.getType()]['menu'][point]['text']);
+            if(coord.property("menu")[point]['text'] != undefined) {
+                var text = this.canvas.text(points[point][0], points[point][1], coord.property("menu")[point]['text']);
                 text.attr({fill:"#FFF", "font-size": 14});
                 set.push(text);
             }
@@ -193,7 +193,7 @@ Grid.menuUp = function() {
     var coord = this.data("coord");
     var grid = this.data("grid");
 
-    TileProps[coord.getType()]['menu'][this.data("point")]['onSelect'](grid, coord);
+    coord.property("menu")['menu'][this.data("point")]['onSelect'](grid, coord);
 
     grid.hideMenu(coord);
     coord.hideHealth();

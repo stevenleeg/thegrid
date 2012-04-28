@@ -25,6 +25,11 @@ var Coord = function(grid, x, y) {
         this.elem.removeData(key);
     }
 
+    // Makes it easier to get tile properties
+    this.property = function(key) {
+        return TileProps[this.getType()][key];
+    }
+    
     // Returns tile type
     this.getType = function() {
         return this.getData("type");
@@ -58,7 +63,7 @@ var Coord = function(grid, x, y) {
         this.grid.sendEventCallback({coord: this}, "coord.setType");
 
         // Anything else?
-        if(TileProps[type]['onPlace'] != undefined) TileProps[type]['onPlace'](this);
+        if(this.property("onPlace") != undefined) this.property("onPlace")(this);
     }
 
     // Returns the absolute X/Y coordinates on the svg
@@ -180,7 +185,7 @@ var Coord = function(grid, x, y) {
     this.setHealth = function(health) {
         var perc, point, rect, width, cls;
         if(TileProps[this.getType()] != undefined) {
-            perc = (health / TileProps[this.getType()]['health']);
+            perc = (health / this.property("health"));
         }
         this.setData("health", health);
         this.grid.sendEventCallback({coord: this}, "coord.setHealth");
@@ -303,7 +308,7 @@ Coord.mousedown = function(e) {
     
     // See if we can rotate
     if(e.which == 3) {
-        if(!coord.exists() || coord.getData("player") != GameData['pid'] || TileProps[coord.getType()]['rotate'] == undefined) return;
+        if(!coord.exists() || coord.getData("player") != GameData['pid'] || coord.property("rotate") == undefined) return;
         coord.rotate(60);
         GameEvents.rotate(coord);
         return;
