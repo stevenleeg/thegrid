@@ -204,5 +204,6 @@ Grid.menuOver = function() {
 }
 
 Grid.menuOut = function() {
+    if(this.data("hex") == undefined) return;
     this.data("hex").attr({fill: GameStyle['color']['dark']});
 }
