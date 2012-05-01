@@ -299,6 +299,39 @@ var Coord = function(grid, x, y) {
     }
 }
 
+Coord.directions = {
+    "NE": function(coord) {
+        if(coord.y % 2 == 0)
+            return coord.grid.get(coord.x, coord.y - 1);
+        else
+            return coord.grid.get(coord.x + 1, coord.y - 1);
+    },
+    "NW": function(coord) {
+        if(coord.y % 2 == 0)
+            return coord.grid.get(coord.x - 1, coord.y - 1);
+        else
+            return coord.grid.get(coord.x, coord.y - 1);
+    },
+    "W": function(coord) {
+        return coord.grid.get(coord.x - 1, coord.y);
+    },
+    "E": function(coord) {
+        return coord.grid.get(coord.x + 1, coord.y);
+    },
+    "SE": function(coord) {
+        if(coord.y % 2 == 0)
+            return coord.grid.get(coord.x, coord.y + 1);
+        else
+            return coord.grid.get(coord.x + 1, coord.y + 1);
+    },
+    "SW": function(coord) {
+        if(coord.y % 2 == 0)
+            return coord.grid.get(coord.x - 1, coord.y + 1);
+        else
+            return coord.grid.get(coord.x, coord.y + 1);
+    }
+}
+
 // 
 // Events:
 // 
