@@ -27,16 +27,18 @@ var PlaceCheck = {
     10: Grid.defaultCheck
 };
 
-//
-// For reference with menus:
-// 0: W
-// 1: NW
-// 2: SW
-// 3: NE
-// 4: E
-// 5: SE
-//
 var TileProps = {
+    // Default tile properties
+    0: {
+        "menu": {
+            "NE": {
+                "text": "destroy",
+                "onSelect": function() {
+                    console.log("Destroy me!");
+                },
+            }
+        },
+    },
     1: {
         "health": 25,
         "price": 25

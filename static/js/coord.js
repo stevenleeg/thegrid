@@ -300,6 +300,10 @@ Coord.compass = {
     }
 }
 
+Coord.defaultProperty = function(prop) {
+    return TileProps[0][prop];
+}
+
 // 
 // Events:
 // 
