@@ -119,7 +119,7 @@ var TileProps = {
         "price": 200,
         "rotate": true,
         "menu": {
-            4: {
+            "E": {
                 "text": "shoot",
                 "onSelect": function() { console.log("SHOTS FIRED!"); }
             }

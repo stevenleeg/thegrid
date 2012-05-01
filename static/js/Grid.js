@@ -134,16 +134,12 @@ var Grid = function(canvas, sx, sy) {
         // Find the locations of each hexagon around us
         var around = coord.around();
         var points = {};
-        for(point in around) {
-            if(coord.property("menu") == undefined || !(point in coord.property("menu"))) continue;
-            points[point] = around[point].point();
-        }
-            
         var hexes = [];
         // Now let's create menu hexagons
-        for(point in points) {
+        for(dir in coord.property("menu")) {
+            var point = coord.direction(dir).point();
             var set = this.canvas.set();
-            var hex = this.canvas.hexagon(points[point][0], points[point][1], 32);
+            var hex = this.canvas.hexagon(point[0], point[1], 32);
             hex.attr({
                 fill: "#000",
                 opacity:0,
@@ -153,15 +149,15 @@ var Grid = function(canvas, sx, sy) {
             hex.animate({opacity:.95}, 75);
             set.push(hex);
             // Find out if we're overlaying text
-            if(coord.property("menu")[point]['text'] != undefined) {
-                var text = this.canvas.text(points[point][0], points[point][1], coord.property("menu")[point]['text']);
+            if(coord.property("menu")[dir]['text'] != undefined) {
+                var text = this.canvas.text(point[0], point[1], coord.property("menu")[dir]['text']);
                 text.attr({fill:"#FFF", "font-size": 14});
                 set.push(text);
             }
             set.data("coord", coord)
                 .data("grid", this)
-                .data("hex", hex)
-                .data("point", point);
+                .data("dir", dir)
+                .data("hex", hex);
             set.mouseup(Grid.menuUp);
             set.mouseover(Grid.menuOver);
             set.mouseout(Grid.menuOut);
@@ -193,7 +189,7 @@ Grid.menuUp = function() {
     var coord = this.data("coord");
     var grid = this.data("grid");
 
-    coord.property("menu")['menu'][this.data("point")]['onSelect'](grid, coord);
+    coord.property("menu")[this.data("dir")]['onSelect'](grid, coord);
 
     grid.hideMenu(coord);
     coord.hideHealth();
