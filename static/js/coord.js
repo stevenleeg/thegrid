@@ -10,6 +10,7 @@ var Coord = function(grid, x, y) {
     }
     this.str = this.x + "_" + this.y;
     this.grid = grid;
+    if(this.x < 0 || this.y < 0) return undefined;
     this.elem = grid.grid[this.x][this.y];
 
     // Returns value from grid's data
@@ -102,36 +103,14 @@ var Coord = function(grid, x, y) {
     }
 
     this.inRangeOf = function(type, owner) {
-        var x, y, startX, startY, endX, endY, selected, skip;
-        // Generate the scanning start points
-        startX = this.x - 1;
-        startY = this.y - 1;
-        endX = this.x + 1;
-        endY = this.y + 1;
-        if(startX < 0) startX = 0;
-        if(startY < 0) startY = 0;
-        if(endX > this.grid.x - 1) endX = this.grid.x - 1;
-        if(endY > this.grid.y - 1) endY = this.grid.y - 1;
-
-        skip = [this.x + "_" + this.y];
-        if(this.y % 2 == 1) {
-            skip.push((this.x - 1) + "_" + (this.y + 1));
-            skip.push((this.x - 1) + "_" + (this.y - 1));
-        } else {
-            skip.push((this.x + 1) + "_" + (this.y + 1));
-            skip.push((this.x + 1) + "_" + (this.y - 1));
-        }
-
+        var selected;
         // Start scanning
-        for(x = startX; x <= endX; x++) {
-            for(y = startY; y <= endY; y++) {
-                selected = this.grid.get(x, y);
-                if(skip.indexOf(selected.str) != -1) continue;
-
-                if(selected.getType() == type || (owner && type == 1)) {
-                    if(owner && selected.isOwnedBy(owner)) return true;
-                    if(!owner) return true;
-                }
+        for(dir in Coord.compass) {
+            selected = this.direction(dir);
+            if(selected == undefined) continue;
+            if(selected.getType() == type || (owner && type == 1)) {
+                if(owner && selected.isOwnedBy(owner)) return true;
+                if(!owner) return true;
             }
         }
 
@@ -140,38 +119,27 @@ var Coord = function(grid, x, y) {
 
     // Gets all coords around us
     this.around = function(type, owner) {
-        var x, y, startX, startY, endX, endY, selected, skip;
-        // Generate the scanning start points
-        startX = this.x - 1;
-        startY = this.y - 1;
-        endX = this.x + 1;
-        endY = this.y + 1;
-        if(startX < 0) startX = 0;
-        if(startY < 0) startY = 0;
-        if(endX > this.grid.x - 1) endX = this.grid.x - 1;
-        if(endY > this.grid.y - 1) endY = this.grid.y - 1;
-
-        skip = [this.x + "_" + this.y];
-        if(this.y % 2 == 1) {
-            skip.push((this.x - 1) + "_" + (this.y + 1));
-            skip.push((this.x - 1) + "_" + (this.y - 1));
-        } else {
-            skip.push((this.x + 1) + "_" + (this.y + 1));
-            skip.push((this.x + 1) + "_" + (this.y - 1));
-        }
-
+        var selected, pts;
         // Start scanning
-        var pts = [];
-        for(x = startX; x <= endX; x++) {
-            for(y = startY; y <= endY; y++) {
-                selected = this.grid.get(x, y);
-                if(skip.indexOf(selected.str) != -1) continue;
-                if(type && selected.getType() != type) continue;
-                if(owner && selected.getData("player") != owner) continue;
-                pts.push(selected);
-            }
+        pts = [];
+        for(dir in Coord.compass) {
+            selected = this.direction(dir);
+            if(selected == undefined) continue;
+            if(type && selected.getType() != type) continue;
+            if(owner && selected.getData("player") != owner) continue;
+            pts.push(selected);
         }
         return pts;
+    }
+
+    this.direction = function(dir) {
+        var coord = Coord.compass[dir](this);
+        if(coord.x < 0) return undefined;
+        if(coord.y < 0) return undefined;
+        if(coord.x > this.grid.x) return undefined;
+        if(coord.y > this.grid.y) return undefined;
+        
+        return coord;
     }
 
     // Tells us if a player owns this or not
@@ -299,7 +267,7 @@ var Coord = function(grid, x, y) {
     }
 }
 
-Coord.directions = {
+Coord.compass = {
     "NE": function(coord) {
         if(coord.y % 2 == 0)
             return coord.grid.get(coord.x, coord.y - 1);
