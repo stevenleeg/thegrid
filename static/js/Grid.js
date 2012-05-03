@@ -154,7 +154,7 @@ var Grid = function(canvas, sx, sy) {
         for(var dir in Coord.defaultProperty("menu")) menus[dir] = Coord.defaultProperty("menu")[dir];
 
         for(var dir in menus) {
-            var point = coord.direction(dir).point();
+            var point = coord.direction(dir, true).point();
             var set = this.canvas.set();
             var hex = this.canvas.hexagon(point[0], point[1], 32);
             hex.attr({

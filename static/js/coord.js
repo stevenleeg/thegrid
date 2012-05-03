@@ -10,8 +10,8 @@ var Coord = function(grid, x, y) {
     }
     this.str = this.x + "_" + this.y;
     this.grid = grid;
-    if(this.x < 0 || this.y < 0) return undefined;
-    this.elem = grid.grid[this.x][this.y];
+    if(!(this.x < 0) && !(this.y < 0))
+        this.elem = grid.grid[this.x][this.y];
 
     // Returns value from grid's data
     this.getData = function(key) {
@@ -128,12 +128,12 @@ var Coord = function(grid, x, y) {
         return pts;
     }
 
-    this.direction = function(dir) {
+    this.direction = function(dir, allow_neg) {
         var coord = Coord.compass[dir](this);
-        if(coord.x < 0) return undefined;
-        if(coord.y < 0) return undefined;
-        if(coord.x > this.grid.x) return undefined;
-        if(coord.y > this.grid.y) return undefined;
+        if(coord.x < 0 && !allow_neg) return undefined;
+        if(coord.y < 0 && !allow_neg) return undefined;
+        if(coord.x > this.grid.x && !allow_neg) return undefined;
+        if(coord.y > this.grid.y && !allow_neg) return undefined;
         
         return coord;
     }
