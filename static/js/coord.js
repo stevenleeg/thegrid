@@ -69,11 +69,7 @@ var Coord = function(grid, x, y) {
 
     // Returns the absolute X/Y coordinates on the svg
     this.point = function() {
-        var xoffset = 0;
-        if(this.y % 2 == 1) xoffset = this.grid.r - 2;
-        else xoffset = 0;
-        return [(this.x * (this.grid.r - 2) * 2) + this.grid.r + xoffset,
-            (this.y * (this.grid.r - 6) * 2) + this.grid.r];
+        return this.grid.translate(this.x, this.y);
     }
 
     // Sets the owner of the tile and its color

@@ -1,9 +1,10 @@
 var Grid = function(canvas, sx, sy) {
     this.r = 32;
+    this.padding = 32;
     this.x = sx;
     this.y = sy;
-    canvas.width((sx * (this.r - 2) * 2) + (this.r) + 2);
-    canvas.height((sy * (this.r - 6) * 2) + (this.r / 2) - 3);
+    canvas.width(this.padding + (sx * (this.r - 2) * 2) + (this.r) + 2);
+    canvas.height(this.padding + (sy * (this.r - 6) * 2) + (this.r / 2) - 3);
     this.canvas = new Raphael(canvas.get(0), canvas.width(), canvas.height());
     this.grid = {};
     this.place_mode = false;
@@ -13,15 +14,14 @@ var Grid = function(canvas, sx, sy) {
     this.evt_filters = {};
 
     this.render = function() {
-        var xoffset;
+        var coord;
         for(var x = 0; x < sx; x++) {
             this.grid[x] = {};
             for(var y = 0; y < sy; y++) {
-                if(y % 2 == 1) xoffset = this.r - 2;
-                else xoffset = 0;
+                coord = this.translate(x, y);
                 this.grid[x][y] = this.canvas.hexagon(
-                        (x * (this.r - 2) * 2) + this.r + xoffset, 
-                        (y * (this.r - 6) * 2) + this.r, 
+                        coord[0], 
+                        coord[1], 
                         this.r
                     );
                 this.grid[x][y].rotate(30).attr({fill: "#FFF", stroke: "#F0F3F6"})
@@ -42,6 +42,19 @@ var Grid = function(canvas, sx, sy) {
                 }
             }
         }
+    }
+
+    // Translates an x, y into a set of actual coordinates
+    this.translate = function(x, y) {
+        var xoffset;
+
+        if(y % 2 == 1) xoffset = this.r - 2;
+        else xoffset = 0;
+
+        return [
+            this.padding + (x * (this.r - 2) * 2) + this.r + xoffset,
+            this.padding + (y * (this.r - 6) * 2) + this.r
+        ];
     }
     
     // Loads a json object into the grid
