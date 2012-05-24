@@ -154,7 +154,8 @@ var Grid = function(canvas, sx, sy) {
         for(var dir in Coord.defaultProperty("menu")) menus[dir] = Coord.defaultProperty("menu")[dir];
 
         for(var dir in menus) {
-            var point = coord.direction(dir, true).point();
+            var around = coord.direction(dir, true);
+            var point = this.translate(around[0], around[1]);
             var set = this.canvas.set();
             var hex = this.canvas.hexagon(point[0], point[1], 32);
             hex.attr({
@@ -205,8 +206,10 @@ Grid.defaultCheck = function(coord) {
 Grid.menuUp = function() {
     var coord = this.data("coord");
     var grid = this.data("grid");
+    var menu =  coord.property("menu");
 
-    coord.property("menu")[this.data("dir")]['onSelect'](grid, coord);
+    if(menu == undefined) menu = Coord.defaultProperty("menu");
+    menu[this.data("dir")]['onSelect'](grid, coord);
 
     grid.hideMenu(coord);
     coord.hideHealth();

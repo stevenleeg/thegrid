@@ -10,8 +10,7 @@ var Coord = function(grid, x, y) {
     }
     this.str = this.x + "_" + this.y;
     this.grid = grid;
-    if(!(this.x < 0) && !(this.y < 0))
-        this.elem = grid.grid[this.x][this.y];
+    this.elem = grid.grid[this.x][this.y];
 
     // Returns value from grid's data
     this.getData = function(key) {
@@ -128,13 +127,14 @@ var Coord = function(grid, x, y) {
         return pts;
     }
 
-    this.direction = function(dir, allow_neg) {
-        var coord = Coord.compass[dir](this);
-        if(coord.x < 0 && !allow_neg) return undefined;
-        if(coord.y < 0 && !allow_neg) return undefined;
-        if(coord.x > this.grid.x && !allow_neg) return undefined;
-        if(coord.y > this.grid.y && !allow_neg) return undefined;
+    this.direction = function(dir, points_only) {
+        var coord;
+        if(points_only == true)
+            coord = Coord.XYCompass[dir](this);
+        else
+            coord = Coord.compass[dir](this);
         
+        if(coord.x < 0 || coord.y < 0) return undefined;
         return coord;
     }
 
@@ -295,6 +295,40 @@ Coord.compass = {
             return coord.grid.get(coord.x, coord.y + 1);
     }
 }
+
+Coord.XYCompass = {
+    "NE": function(coord) {
+        if(coord.y % 2 == 0)
+            return [coord.x, coord.y - 1];
+        else
+            return [coord.x + 1, coord.y - 1];
+    },
+    "NW": function(coord) {
+        if(coord.y % 2 == 0)
+            return [coord.x - 1, coord.y - 1];
+        else
+            return [coord.x, coord.y - 1];
+    },
+    "W": function(coord) {
+        return [coord.x - 1, coord.y];
+    },
+    "E": function(coord) {
+        return [coord.x + 1, coord.y];
+    },
+    "SE": function(coord) {
+        if(coord.y % 2 == 0)
+            return [coord.x, coord.y + 1];
+        else
+            return [coord.x + 1, coord.y + 1];
+    },
+    "SW": function(coord) {
+        if(coord.y % 2 == 0)
+            return [coord.x - 1, coord.y + 1];
+        else
+            return [coord.x, coord.y + 1];
+    }
+}
+
 
 Coord.defaultProperty = function(prop) {
     return TileProps[0][prop];
