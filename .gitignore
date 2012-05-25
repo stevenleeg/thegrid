@@ -1,0 +1,4 @@
+syntax: glob
+_site/
+*.swp
+.DS_Store
