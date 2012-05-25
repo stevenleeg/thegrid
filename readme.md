@@ -2,6 +2,8 @@ thegrid
 =========
 Thegrid is a multiplayer RTS game. Your goal is to defeat any other colonies on your grid by placing special tiles and collecting resources.
 
+For updates on the development of the game follow [@thegridsays](http://twitter.com/thegridsays) on Twitter.
+
 ![Thegrid in action](http://i.imgur.com/lVJiw.png)
 
 **Now with 100% more hexagons!**
