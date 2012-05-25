@@ -1,9 +1,10 @@
 var Grid = function(canvas, sx, sy) {
     this.r = 32;
-    this.x = sx;
-    this.y = sy;
-    canvas.width((sx * (this.r - 2) * 2) + (this.r) + 2);
-    canvas.height((sy * (this.r - 6) * 2) + (this.r / 2) - 3);
+    this.padding = 128;
+    this.x = parseInt(sx);
+    this.y = parseInt(sy);
+    canvas.width(this.padding + (sx * (this.r - 2) * 2) + (this.r) + 2);
+    canvas.height(this.padding + (sy * (this.r - 6) * 2) + (this.r / 2) - 3);
     this.canvas = new Raphael(canvas.get(0), canvas.width(), canvas.height());
     this.grid = {};
     this.place_mode = false;
@@ -13,15 +14,14 @@ var Grid = function(canvas, sx, sy) {
     this.evt_filters = {};
 
     this.render = function() {
-        var xoffset;
+        var coord;
         for(var x = 0; x < sx; x++) {
             this.grid[x] = {};
             for(var y = 0; y < sy; y++) {
-                if(y % 2 == 1) xoffset = this.r - 2;
-                else xoffset = 0;
+                coord = this.translate(x, y);
                 this.grid[x][y] = this.canvas.hexagon(
-                        (x * (this.r - 2) * 2) + this.r + xoffset, 
-                        (y * (this.r - 6) * 2) + this.r, 
+                        coord[0], 
+                        coord[1], 
                         this.r
                     );
                 this.grid[x][y].rotate(30).attr({fill: "#FFF", stroke: "#F0F3F6"})
@@ -42,6 +42,19 @@ var Grid = function(canvas, sx, sy) {
                 }
             }
         }
+    }
+
+    // Translates an x, y into a set of actual coordinates
+    this.translate = function(x, y) {
+        var xoffset;
+
+        if(y % 2 == 1) xoffset = this.r - 2;
+        else xoffset = 0;
+
+        return [
+            (this.padding / 2) + (x * (this.r - 2) * 2) + this.r + xoffset,
+            (this.padding / 2) + (y * (this.r - 6) * 2) + this.r
+        ];
     }
     
     // Loads a json object into the grid
@@ -129,6 +142,60 @@ var Grid = function(canvas, sx, sy) {
     this.setGlobalFilter = function(name, val) {
         this.evt_filters[name] = val;
     }
+
+    this.showMenu = function(coord) {
+        // Find the locations of each hexagon around us
+        var around = coord.around();
+        var points = {};
+        var hexes = [];
+
+        // Add in any default menus
+        var menus = (coord.property("menu") != undefined) ? coord.property("menu") : {};
+        for(var dir in Coord.defaultProperty("menu")) menus[dir] = Coord.defaultProperty("menu")[dir];
+
+        for(var dir in menus) {
+            var around = coord.direction(dir, true);
+            var point = this.translate(around[0], around[1]);
+            var set = this.canvas.set();
+            var hex = this.canvas.hexagon(point[0], point[1], 32);
+            hex.attr({
+                fill: "#000",
+                opacity:0,
+                stroke: 0,
+                transform:"r30"
+            });
+            hex.animate({opacity:.95}, 75);
+            set.push(hex);
+            // Find out if we're overlaying text
+            if(menus[dir]['text'] != undefined) {
+                var text = this.canvas.text(point[0], point[1], menus[dir]['text']);
+                text.attr({fill:"#FFF", "font-size": 14});
+                set.push(text);
+            }
+            set.data("coord", coord)
+                .data("grid", this)
+                .data("dir", dir)
+                .data("hex", hex);
+            set.mouseup(Grid.menuUp);
+            set.mouseover(Grid.menuOver);
+            set.mouseout(Grid.menuOut);
+            
+            hexes.push(set);
+        }
+
+        coord.setData("menu", hexes);
+    }
+
+    this.hideMenu = function(coord) {
+        var hexes = coord.getData("menu");
+        if(hexes == undefined) return;
+        for(item in hexes) {
+            hexes[item].animate({opacity:0});
+            hexes[item].remove();
+        }
+
+        coord.rmData("menu");
+    }
 }
 
 Grid.defaultCheck = function(coord) {
@@ -136,119 +203,23 @@ Grid.defaultCheck = function(coord) {
     else return false;
 }
 
-var PlaceCheck = {
-    1: function(coord) {
-        if (coord.inRangeOf(1, GameData['pid']) && !coord.exists()) {
-            return true;
-        } else {
-            return false;
-        }
-    },
-    3: function(coord) {
-        if (coord.inRangeOf(99) && coord.isOwnedBy(GameData['pid']) && coord.getType() == 1) {
-            return true;
-        }
+Grid.menuUp = function() {
+    var coord = this.data("coord");
+    var grid = this.data("grid");
+    var menu =  coord.property("menu");
 
-        return false
-    },
-    4: Grid.defaultCheck,
-    5: Grid.defaultCheck,
-    6: Grid.defaultCheck,
-    7: Grid.defaultCheck,
-    8: function(coord) {
-        if(coord.isOwnedBy(GameData['pid'])) {
-            return true;
-        }
-        return false;
-    },
-    9: Grid.defaultCheck,
-    10: Grid.defaultCheck
-};
+    if(menu == undefined) menu = Coord.defaultProperty("menu");
+    menu[this.data("dir")]['onSelect'](grid, coord);
 
-var TileProps = {
-    1: {
-        "health": 25,
-        "price": 25
-    },
-    2: {
-        "health": 100,
-    },
-    3: {
-        "health": 50,
-        "price": 100
-    },
-    4: {
-        "health": 25,
-        "price": 100
-    },
-    5: {
-        "health": 50,
-        "price": 50,
-    },
-    6: {
-        "health": 50,
-        "price": 200
-    },
-    7: {
-        "health": 50,
-        "price": 100
-    },
-    8: {
-        "health": 25,
-        "price": 25
-    },
-    9: {
-        "health": 25,
-        "price": 200,
-        "events": [
-            {
-                // Determine if we should glow or not after every
-                // change of a coordinate
-                cb: function(data, evt) {
-                    var around;
-                    // Look for shields owned by this player
-                    var coord = data['coord'];
-                    if(coord.getType() == 9 && evt == "coord.destroy") {
-                        around = coord.around(0, coord.getData("player"));
-                        for(i in around) {
-                            around[i].unGlow();
-                        }
-                    } else if(coord.getType() == 9 && evt == "coord.setType") {
-                        around = coord.around(0, coord.getData("player"));
-                        for(i in around) {
-                            around[i].glow("blue");
-                        }
-                    } else {
-                        around = coord.around(9, coord.getData("player"));
-                        if(around.length == 0) coord.unGlow();
-                        else coord.glow("blue");
-                    }
-                },
-                filter: {"grid.loaded": true},
-                when: ["coord.destroy", "coord.setType"]
-            }, 
-            {
-                // Look for all shields on the grid and glow any tiles around
-                // them
-                cb: function(data, evt) {
-                    var coord = data['coord'];
-                    var around = coord.around(0, coord.getData("player"));
-                    for(i in around) {
-                        around[i].glow("blue");
-                    }
-                },
-                filter: {type: 9},
-                when: ["grid.load.tiles"]
-            }
-        ],
-    },
+    grid.hideMenu(coord);
+    coord.hideHealth();
+}
 
-    10: {
-        "health": 50,
-        "price": 200,
-        "rotate": true
-    },
+Grid.menuOver = function() {
+    this.data("hex").attr({fill: GameStyle['color']['blue']});
+}
 
-    // Natural tiles...
-    99: {},
+Grid.menuOut = function() {
+    if(this.data("hex") == undefined) return;
+    this.data("hex").attr({fill: GameStyle['color']['dark']});
 }

@@ -10,6 +10,14 @@ var Coord = function(grid, x, y) {
     }
     this.str = this.x + "_" + this.y;
     this.grid = grid;
+    
+    // Make sure they are in the grid
+    if((this.x < 0 || this.y < 0) || (this.x >= this.grid.x || this.y >= this.grid.y)) {
+        this.is_real = false;
+        return;
+    }
+    this.is_real = true;
+
     this.elem = grid.grid[this.x][this.y];
 
     // Returns value from grid's data
@@ -25,6 +33,11 @@ var Coord = function(grid, x, y) {
         this.elem.removeData(key);
     }
 
+    // Makes it easier to get tile properties
+    this.property = function(key) {
+        return TileProps[this.getType()][key];
+    }
+    
     // Returns tile type
     this.getType = function() {
         return this.getData("type");
@@ -58,16 +71,12 @@ var Coord = function(grid, x, y) {
         this.grid.sendEventCallback({coord: this}, "coord.setType");
 
         // Anything else?
-        if(TileProps[type]['onPlace'] != undefined) TileProps[type]['onPlace'](this);
+        if(this.property("onPlace") != undefined) this.property("onPlace")(this);
     }
 
     // Returns the absolute X/Y coordinates on the svg
     this.point = function() {
-        var xoffset = 0;
-        if(this.y % 2 == 1) xoffset = this.grid.r - 2;
-        else xoffset = 0;
-        return [(this.x * (this.grid.r - 2) * 2) + this.grid.r + xoffset,
-            (this.y * (this.grid.r - 6) * 2) + this.grid.r];
+        return this.grid.translate(this.x, this.y);
     }
 
     // Sets the owner of the tile and its color
@@ -97,36 +106,15 @@ var Coord = function(grid, x, y) {
     }
 
     this.inRangeOf = function(type, owner) {
-        var x, y, startX, startY, endX, endY, selected, skip;
-        // Generate the scanning start points
-        startX = this.x - 1;
-        startY = this.y - 1;
-        endX = this.x + 1;
-        endY = this.y + 1;
-        if(startX < 0) startX = 0;
-        if(startY < 0) startY = 0;
-        if(endX > this.grid.x - 1) endX = this.grid.x - 1;
-        if(endY > this.grid.y - 1) endY = this.grid.y - 1;
-
-        skip = [this.x + "_" + this.y];
-        if(this.y % 2 == 1) {
-            skip.push((this.x - 1) + "_" + (this.y + 1));
-            skip.push((this.x - 1) + "_" + (this.y - 1));
-        } else {
-            skip.push((this.x + 1) + "_" + (this.y + 1));
-            skip.push((this.x + 1) + "_" + (this.y - 1));
-        }
-
+        var selected;
         // Start scanning
-        for(x = startX; x <= endX; x++) {
-            for(y = startY; y <= endY; y++) {
-                selected = this.grid.get(x, y);
-                if(skip.indexOf(selected.str) != -1) continue;
-
-                if(selected.getType() == type || (owner && type == 1)) {
-                    if(owner && selected.isOwnedBy(owner)) return true;
-                    if(!owner) return true;
-                }
+        for(dir in Coord.compass) {
+            selected = this.direction(dir);
+            // Make sure the coord we're looking at is in the grid
+            if(selected.is_real == false) continue;
+            if(selected.getType() == type || (owner && type == 1)) {
+                if(owner && selected.isOwnedBy(owner)) return true;
+                if(!owner) return true;
             }
         }
 
@@ -135,38 +123,28 @@ var Coord = function(grid, x, y) {
 
     // Gets all coords around us
     this.around = function(type, owner) {
-        var x, y, startX, startY, endX, endY, selected, skip;
-        // Generate the scanning start points
-        startX = this.x - 1;
-        startY = this.y - 1;
-        endX = this.x + 1;
-        endY = this.y + 1;
-        if(startX < 0) startX = 0;
-        if(startY < 0) startY = 0;
-        if(endX > this.grid.x - 1) endX = this.grid.x - 1;
-        if(endY > this.grid.y - 1) endY = this.grid.y - 1;
-
-        skip = [this.x + "_" + this.y];
-        if(this.y % 2 == 1) {
-            skip.push((this.x - 1) + "_" + (this.y + 1));
-            skip.push((this.x - 1) + "_" + (this.y - 1));
-        } else {
-            skip.push((this.x + 1) + "_" + (this.y + 1));
-            skip.push((this.x + 1) + "_" + (this.y - 1));
-        }
-
+        var selected, pts;
         // Start scanning
-        var pts = [];
-        for(x = startX; x <= endX; x++) {
-            for(y = startY; y <= endY; y++) {
-                selected = this.grid.get(x, y);
-                if(skip.indexOf(selected.str) != -1) continue;
-                if(type && selected.getType() != type) continue;
-                if(owner && selected.getData("player") != owner) continue;
-                pts.push(selected);
-            }
+        pts = [];
+        for(dir in Coord.compass) {
+            selected = this.direction(dir);
+            // Make sure the coord we're looking at is in the grid
+            if(selected.is_real == false) continue;
+            if(type && selected.getType() != type) continue;
+            if(owner && selected.getData("player") != owner) continue;
+            pts.push(selected);
         }
         return pts;
+    }
+
+    this.direction = function(dir, points_only) {
+        var coord;
+        if(points_only == true)
+            coord = Coord.XYCompass[dir](this);
+        else
+            coord = Coord.compass[dir](this);
+        
+        return coord;
     }
 
     // Tells us if a player owns this or not
@@ -180,7 +158,7 @@ var Coord = function(grid, x, y) {
     this.setHealth = function(health) {
         var perc, point, rect, width, cls;
         if(TileProps[this.getType()] != undefined) {
-            perc = (health / TileProps[this.getType()]['health']);
+            perc = (health / this.property("health"));
         }
         this.setData("health", health);
         this.grid.sendEventCallback({coord: this}, "coord.setHealth");
@@ -294,6 +272,77 @@ var Coord = function(grid, x, y) {
     }
 }
 
+Coord.compass = {
+    "NE": function(coord) {
+        if(coord.y % 2 == 0)
+            return coord.grid.get(coord.x, coord.y - 1);
+        else
+            return coord.grid.get(coord.x + 1, coord.y - 1);
+    },
+    "NW": function(coord) {
+        if(coord.y % 2 == 0)
+            return coord.grid.get(coord.x - 1, coord.y - 1);
+        else
+            return coord.grid.get(coord.x, coord.y - 1);
+    },
+    "W": function(coord) {
+        return coord.grid.get(coord.x - 1, coord.y);
+    },
+    "E": function(coord) {
+        return coord.grid.get(coord.x + 1, coord.y);
+    },
+    "SE": function(coord) {
+        if(coord.y % 2 == 0)
+            return coord.grid.get(coord.x, coord.y + 1);
+        else
+            return coord.grid.get(coord.x + 1, coord.y + 1);
+    },
+    "SW": function(coord) {
+        if(coord.y % 2 == 0)
+            return coord.grid.get(coord.x - 1, coord.y + 1);
+        else
+            return coord.grid.get(coord.x, coord.y + 1);
+    }
+}
+
+Coord.XYCompass = {
+    "NE": function(coord) {
+        if(coord.y % 2 == 0)
+            return [coord.x, coord.y - 1];
+        else
+            return [coord.x + 1, coord.y - 1];
+    },
+    "NW": function(coord) {
+        if(coord.y % 2 == 0)
+            return [coord.x - 1, coord.y - 1];
+        else
+            return [coord.x, coord.y - 1];
+    },
+    "W": function(coord) {
+        return [coord.x - 1, coord.y];
+    },
+    "E": function(coord) {
+        return [coord.x + 1, coord.y];
+    },
+    "SE": function(coord) {
+        if(coord.y % 2 == 0)
+            return [coord.x, coord.y + 1];
+        else
+            return [coord.x + 1, coord.y + 1];
+    },
+    "SW": function(coord) {
+        if(coord.y % 2 == 0)
+            return [coord.x - 1, coord.y + 1];
+        else
+            return [coord.x, coord.y + 1];
+    }
+}
+
+
+Coord.defaultProperty = function(prop) {
+    return TileProps[0][prop];
+}
+
 // 
 // Events:
 // 
@@ -303,7 +352,7 @@ Coord.mousedown = function(e) {
     
     // See if we can rotate
     if(e.which == 3) {
-        if(!coord.exists() || coord.getData("player") != GameData['pid'] || TileProps[coord.getType()]['rotate'] == undefined) return;
+        if(!coord.exists() || coord.getData("player") != GameData['pid'] || coord.property("rotate") == undefined) return;
         coord.rotate(60);
         GameEvents.rotate(coord);
         return;
@@ -312,6 +361,7 @@ Coord.mousedown = function(e) {
     if(coord.getType() < 2 || coord.getType() > 50) return;
 
     coord.showHealth();
+    grid.showMenu(coord);
     grid.health = coord;
 }
 
@@ -328,6 +378,7 @@ Coord.mouseup = function(e) {
         coord = grid.health;
         if(coord.getType() < 2 || coord.getType() > 50) return;
         coord.hideHealth();
+        grid.hideMenu(coord);
     }
 }
 

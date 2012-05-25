@@ -42,7 +42,7 @@ var GameEvents = (function() {
 		}
 
 		// Make sure they have enough cash for it
-		if(GameView.getCash() < TileProps[grid.place_type]['price']) {
+		if(GameView.getCash() < TileProps[grid.place_type]["price"]) {
 			BaseUI.notify("Not enough cash", true, 2);
 			return;
 		}
@@ -58,7 +58,7 @@ var GameEvents = (function() {
         coord.destroy();
         coord.setOwner(GameData['pid']);
         coord.setType(grid.place_type);
-        coord.setHealth(TileProps[grid.place_type]['health']);
+        coord.setHealth(coord.property("health"));
 
 		AsyncClient.send("place", {
 			"coord": coord.str,
