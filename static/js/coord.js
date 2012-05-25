@@ -144,7 +144,6 @@ var Coord = function(grid, x, y) {
         else
             coord = Coord.compass[dir](this);
         
-        if(coord.x < 0 || coord.y < 0) return undefined;
         return coord;
     }
 
