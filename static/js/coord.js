@@ -10,6 +10,14 @@ var Coord = function(grid, x, y) {
     }
     this.str = this.x + "_" + this.y;
     this.grid = grid;
+    
+    // Make sure they are in the grid
+    if((this.x < 0 || this.y < 0) || (this.x >= this.grid.x || this.y >= this.grid.y)) {
+        this.is_real = false;
+        return;
+    }
+    this.is_real = true;
+
     this.elem = grid.grid[this.x][this.y];
 
     // Returns value from grid's data
@@ -102,7 +110,8 @@ var Coord = function(grid, x, y) {
         // Start scanning
         for(dir in Coord.compass) {
             selected = this.direction(dir);
-            if(selected == undefined) continue;
+            // Make sure the coord we're looking at is in the grid
+            if(selected.is_real == false) continue;
             if(selected.getType() == type || (owner && type == 1)) {
                 if(owner && selected.isOwnedBy(owner)) return true;
                 if(!owner) return true;
@@ -119,7 +128,8 @@ var Coord = function(grid, x, y) {
         pts = [];
         for(dir in Coord.compass) {
             selected = this.direction(dir);
-            if(selected == undefined) continue;
+            // Make sure the coord we're looking at is in the grid
+            if(selected.is_real == false) continue;
             if(type && selected.getType() != type) continue;
             if(owner && selected.getData("player") != owner) continue;
             pts.push(selected);

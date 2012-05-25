@@ -1,8 +1,8 @@
 var Grid = function(canvas, sx, sy) {
     this.r = 32;
-    this.padding = 32;
-    this.x = sx;
-    this.y = sy;
+    this.padding = 128;
+    this.x = parseInt(sx);
+    this.y = parseInt(sy);
     canvas.width(this.padding + (sx * (this.r - 2) * 2) + (this.r) + 2);
     canvas.height(this.padding + (sy * (this.r - 6) * 2) + (this.r / 2) - 3);
     this.canvas = new Raphael(canvas.get(0), canvas.width(), canvas.height());
@@ -52,8 +52,8 @@ var Grid = function(canvas, sx, sy) {
         else xoffset = 0;
 
         return [
-            this.padding + (x * (this.r - 2) * 2) + this.r + xoffset,
-            this.padding + (y * (this.r - 6) * 2) + this.r
+            (this.padding / 2) + (x * (this.r - 2) * 2) + this.r + xoffset,
+            (this.padding / 2) + (y * (this.r - 6) * 2) + this.r
         ];
     }
     
