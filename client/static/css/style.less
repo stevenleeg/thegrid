@@ -237,60 +237,62 @@ div.room {
 div.room_select {
     border:1px solid @darkish;
 	color: @dark;
+}
+div.listcontainer {
+    background: @light;
+    width:100%;
+    height:100px;
+    margin:10px 0px 10px 0px;
+    overflow-y:auto;
+    border:1px solid @gray;
 
-    div.listcontainer {
-        background: @light;
-        width:100%;
-        height:100px;
-        margin:10px 0px 10px 0px;
-        overflow-y:auto;
-        border:1px solid @gray;
+    .listcontainer_loading {
+        color: @dark;
+        text-align:center;
+        margin:40px auto 0px auto;
+        text-weight:400;
+    }
+}
 
-        #loading_list {
-            color: @dark;
-            text-align:center;
-            margin:40px auto 0px auto;
-            text-weight:400;
+table.listcontainer_list {
+    background:@light;
+    width:100%;
+    vertical-align:top;
+    margin:0px;
+    border-spacing:0px;
+
+    tr {
+        td {
+            padding:10px;
+            cursor:pointer;
+            border-bottom:1px solid @gray;
         }
     }
 
-    table.gridlist {
-        background:@light;
-        width:100%;
-        vertical-align:top;
-        margin:0px;
-        border-spacing:0px;
+    tr:last {
+        border-bottom:0px;
+    }
+    
+    tr:hover {
+        background:@gray;
+    }
 
-        tr {
-            td {
-                padding:10px;
-                cursor:pointer;
-                border-bottom:1px solid @gray;
-            }
-            td:first-child {
-                width:75%;
-                font-weight:400;
-                font-size:18px;
-            }
-            td:last-child {
-                font-size:12px;
-                color:@darkish;
-                text-align:right;
-            }
-        }
+    tr:active, tr.selected {
+        background:@blue;
+        color:@light;
+    }
+}
 
-        tr:last {
-            border-bottom:0px;
-        }
-        
-        tr:hover {
-            background:@gray;
-        }
-
-        tr:active, tr.selected {
-            background:@blue;
-            color:@light;
-        }
+#gridList {
+    td:first-child {
+        width:75%;
+        font-weight:400;
+        font-size:18px;
+    }
+    td:last-child {
+        font-size:12px;
+        color:@darkish;
+        text-align:right;
     }
 }
 
@@ -311,6 +313,10 @@ div.room_create {
 		color:@light;
 		padding:2px;
 	}
+}
+
+div.server_browser {
+    
 }
 
 div.screen {

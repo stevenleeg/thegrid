@@ -3,9 +3,21 @@ var HomeView = (function() {
 
     function onLoad() {
         var xTiles, yTiles, grid;
-        AsyncClient.connect(function() {
-            AsyncClient.send("getGrids", {}, getGridsCb);           
+        
+        // Load list views
+        this.gridList = new BaseUI.List("#gridList");
+        this.serverList = new BaseUI.List("#serverList", function(val) {
+            GameData['server'] = val;
         });
+
+        if(GameData['server'])
+            fetchGrids();
+        else {
+            $("#screen").show();
+            $("#server_browser").show();
+            this.serverList.addItem(["thegrid public"], 'localhost:8080');
+        }
+
         $("#enter").click(function() {
             var selected = $(".gridlist tr.selected");
             if(selected.length == 0) {
@@ -33,6 +45,15 @@ var HomeView = (function() {
         $(window).resize(windowResize);
 
         //generateGrid();
+    }
+
+    // Makes sure we're connected to the server
+    // and then fetches a list of active grids
+    // for the player to join
+    function fetchGrids() {
+        AsyncClient.connect(function() {
+            AsyncClient.send("getGrids", {}, getGridsCb);
+        });
     }
 
     // Background animation stuff

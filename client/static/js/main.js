@@ -170,6 +170,38 @@ var BaseUI = (function() {
 		}
 	}
 
+    // List container element
+    // element: The element of the list container
+    // callback: The function to be called whenever an item
+    // is selected. function(val)
+    var List = function(element, callback) {
+        if(callback == undefined) selectCallback = function() {};
+
+        this.el = $(element);
+        this.callback = callback;
+        this.table = this.el.children("table");
+        this.loading = this.el.children(".listcontainer_loading");
+
+        function clickItem() {
+            $(this).addClass("selected");
+            $(this).data("list").callback($(this).attr("value"));
+        }
+
+        this.addItem = function(item, value) {
+            this.loading.hide();
+            var str = "<tr>";
+            for(var i in item) {
+                str += "<td>" + item[i] + "</td>";
+            };
+            str += "</tr>";
+            var el = $(str);
+            el.click(clickItem);
+            el.attr("value", value);
+            el.data("list", this);
+            this.table.append(el);
+        }
+    }
+
 	return {
 		"loading": loading,
 	 	"done": done,
@@ -180,6 +212,7 @@ var BaseUI = (function() {
 		"hideChatbox": hideChatbox,
 		"show_msg": show_msg,
         "notif_disp": [],
+        "List": List
 	};
 })();
 
@@ -204,7 +237,12 @@ var AsyncClient = (function() {
 
 	function connect(callback) {
         if(ws != undefined && ws.readyState == ws.OPEN) return callback();
-		ws = new WebSocket("ws://"+ document.domain + ":" + window.location.port + "/api/socket");
+
+        if(GameData['server'] == undefined)
+            ws = new WebSocket("ws://"+ document.domain + ":" + window.location.port + "/api/socket");
+        else
+            ws = new WebSocket("ws://" + GameData['server'] + "/api/socket")
+
 		ws.onopen = callback; 
 		ws.onmessage = newMessage;
 		ws.onclose = closeSocket;
@@ -256,7 +294,8 @@ $(document).ready(function() {
     $.ajaxSetup({ cache: false });
     this.onselectstart = function() { return false; }
 
-	if($.cookie("gid") != undefined) {
+	if($.cookie("server") != undefined && $.cookie("gid") != undefined) {
+        GameData['server'] = $.cookie("server");
         GameData['pid'] = $.cookie("pid");
         GameData['gid'] = $.cookie("gid");
         GameData['size'] = $.cookie("size");
