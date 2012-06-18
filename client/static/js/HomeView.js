@@ -42,9 +42,6 @@ var HomeView = (function() {
 		$("a.option").click(BaseUI.optionSelect);
 		$("input[name=create]").click(createGame);
         $("input[name=start]").on("click", startGame);
-        $(window).resize(windowResize);
-
-        //generateGrid();
     }
 
     // Makes sure we're connected to the server
@@ -141,10 +138,6 @@ var HomeView = (function() {
     return {
         "tpl": tpl,
         "onLoad": onLoad,
-        "cleanup": cleanup,
-        "startBgAnimation": startBgAnimation,
-        "stopBgAnimation": stopBgAnimation,
-        "sendBgWave": sendBgWave,
         "setupList": setupList,
     }
 })();
