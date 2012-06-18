@@ -56,99 +56,6 @@ var HomeView = (function() {
         });
     }
 
-    // Background animation stuff
-    // Compass starts at 0 and goes clockwise
-    function startBgAnimation() {
-        HomeView.anim = setInterval(proceedBgAnimation, 50);
-        HomeView.dots = [];
-        sendBgWave();
-    }
-    function sendBgWave() {
-        var classes = ["blue", "green", "red", "yellow"];
-        var elems = $("#home_grid tr:first-child td").get().sort(function(){ 
-          return Math.round(Math.random())-0.5
-        }).slice(0,1)
-        $(elems).each(function() {
-            var coord = new Coord($(this).attr("id"));
-            var cls = classes[Math.floor(Math.random() * classes.length)]; 
-            $("#" + coord.x + "_" + coord.y).addClass(cls);
-            HomeView.dots.push({"x": coord.x, "y": coord.y, "class": cls});
-        });
-        HomeView.wave = setTimeout(sendBgWave, Math.floor(Math.random() * (800 - 300 + 1)) + 300); 
-    }
-
-    function proceedBgAnimation() {
-        $.each(HomeView.dots, function(i, dot) {
-            var coord, dir, next;
-            if(dot == undefined) return;
-            coord = $("#" + dot['x'] + "_" + dot['y']);
-            dir = checkDir(dot['x'], dot['y'], 2);
-            if(dir != true) {
-                HomeView.dots.splice(i, 1);
-                coord.removeClass(dot['class']);
-                return;
-            }
-            next = getMovedCoords(dot['x'], dot['y'], 2);
-            coord.removeClass(dot['class']);
-            coord = $("#" + next[0] + "_" + next[1]);
-            coord.addClass(dot['class']);
-            HomeView.dots[i]['x'] = next[0];
-            HomeView.dots[i]['y'] = next[1];
-        });
-    }
-
-    function stopBgAnimation() {
-        clearInterval(HomeView.anim);
-        clearTimeout(HomeView.wave);
-    }
-
-    function checkDir(x, y, d) {
-        var next;
-        next = getMovedCoords(x, y, d);
-        if($("#"+ next[0] + "_" + next[1]).length == 0) {
-            return false
-        } else return true;
-    }
-
-    function getMovedCoords(x, y, d) {
-        switch(d) {
-            case 0:
-                y--;
-                break;
-            case 1:
-                x++;
-                break;
-            case 2:
-                y++;
-                break;
-            case 3:
-                x--;
-                break;
-        }
-        return [x, y];
-    }
-
-    function generateGrid() {
-        // Populate the homegrid based on the window size
-        HomeView.x_tiles = parseInt($(window).width() / 32) - 1;
-        HomeView.y_tiles = parseInt($(window).height() / 32) - 1;
-        grid = $("#home_grid").html("");
-        $(".grid_container").css("width", $(window).width()).css("height", $(window).height())
-		for(var y = 0; y < HomeView.y_tiles; y++) {
-			tr = $("<tr id='"+y+"'></tr>").appendTo(grid)
-			for(var x = 0; x < HomeView.x_tiles; x++) {
-				$("<td id='"+x+"_"+y+"'>&nbsp;</td>").appendTo(tr)
-			}
-        }
-        startBgAnimation();
-    }
-
-    function windowResize() {
-        stopBgAnimation();
-        clearTimeout(HomeView.resize_to);
-        HomeView.resize_to = setTimeout(generateGrid, 250);
-    }
-
     function getGridsCb(data) {
         var grids = data['grids'];
         $("#loading_list").hide();
@@ -229,10 +136,6 @@ var HomeView = (function() {
         }
         $(".open").removeClass("open");
         $("#waiting").fadeIn(250).addClass("open");
-    }
-
-    function cleanup() {
-        stopBgAnimation();
     }
 
     return {
