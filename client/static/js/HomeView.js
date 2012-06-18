@@ -1,15 +1,22 @@
 var HomeView = (function() {
     var tpl = "home.html";
+    this.grids = {};
 
     function onLoad() {
         var xTiles, yTiles, grid;
         
         // Load list views
-        this.gridList = new BaseUI.List("#gridList");
+        this.gridList = new BaseUI.List("#gridList", function(val) {
+            GameData['gid'] = val;
+            GameData['size'] = parseInt(this.grids[val]['size']);
+            GameData['name'] = this.grids[val]['name'];
+            GameData['active'] = this.grids[val]['active'];
+        });
         this.serverList = new BaseUI.List("#serverList", function(val) {
             GameData['server'] = val;
         });
 
+        // If we've connected to a server try to load it up
         if(GameData['server'])
             fetchGrids();
         else {
@@ -19,16 +26,10 @@ var HomeView = (function() {
         }
 
         $("#enter").click(function() {
-            var selected = $(".gridlist tr.selected");
-            if(selected.length == 0) {
-                return;
-            }
-            GameData['gid'] = selected.data("gid");
-            GameData['size'] = parseInt(selected.data("size"));
-            GameData['name'] = selected.data("name");
-            if(selected.data("active") == 1) ViewController.load(GameView);
+            if(GameData['active'] == 1) ViewController.load(GameView);
             else enterRoom();
         });
+
         $(".side_menu a").on("click", function() {
             if($(".fade.open").attr("id") == $(this).attr("fade")) return;
 
@@ -39,6 +40,7 @@ var HomeView = (function() {
             $("#" + $(this).attr("fade")).fadeIn(250).addClass("open");
             HomeView.current = $(this).attr("fade");
         });
+
 		$("a.option").click(BaseUI.optionSelect);
 		$("input[name=create]").click(createGame);
         $("input[name=start]").on("click", startGame);
@@ -57,26 +59,14 @@ var HomeView = (function() {
         var grids = data['grids'];
         $("#loading_list").hide();
         for(grid in grids) {
-            $("<tr><td>"+ grids[grid]['name'] +"</td><td>"+ grids[grid]['players'] +" players</td></tr>")
-                .appendTo(".gridlist")
-                .data("gid", grids[grid]['gid'])
-                .data("active", grids[grid]['active'])
-                .data("name", grids[grid]['name'])
-                .data("size", grids[grid]['size']);
+            this.gridList.addItem([grids[grid]['name'], grids[grid]['players'] + " players"], grids[grid]['gid']);
+            this.grids[grids[grid]['gid']] = grids[grid];
         }
 
         if(grids.length == 0) {
-            $("#loading_list").text("No grids found.").show();
+            this.gridList.setLoadingText("No grids found.");
         }
         setupList();
-    }
-
-    function setupList() {
-        $(".gridlist tr").off().click(function(e) {
-            $(".gridlist tr.selected").removeClass("selected");
-            $(this).addClass("selected");
-            $("#enter").removeClass("disabled");
-        });
     }
 
 	function createGame() {
@@ -138,6 +128,5 @@ var HomeView = (function() {
     return {
         "tpl": tpl,
         "onLoad": onLoad,
-        "setupList": setupList,
     }
 })();
