@@ -14,6 +14,7 @@ var HomeView = (function() {
         });
         this.serverList = new BaseUI.List("#serverList", function(val) {
             GameData['server'] = val;
+            $("#connect").removeClass("disabled");
         });
 
         // If we've connected to a server try to load it up
@@ -28,6 +29,11 @@ var HomeView = (function() {
         $("#enter").click(function() {
             if(GameData['active'] == 1) ViewController.load(GameView);
             else enterRoom();
+        });
+
+        $("#connect").click(function() {
+            fetchGrids();
+            $("#server_browser, #screen").fadeOut(150);
         });
 
         $(".side_menu a").on("click", function() {
@@ -64,9 +70,8 @@ var HomeView = (function() {
         }
 
         if(grids.length == 0) {
-            this.gridList.setLoadingText("No grids found.");
+            ViewController.current.gridList.setLoadingText("No grids found.");
         }
-        setupList();
     }
 
 	function createGame() {

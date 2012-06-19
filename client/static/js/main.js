@@ -200,6 +200,10 @@ var BaseUI = (function() {
             el.data("list", this);
             this.table.append(el);
         }
+
+        this.setLoadingText = function(val) {
+            this.loading.text(val);
+        }
     }
 
 	return {
