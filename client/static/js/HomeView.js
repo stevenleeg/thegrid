@@ -8,10 +8,15 @@ var HomeView = (function() {
         this.grids = {};
         this.gridList = new BaseUI.List("#gridList", function(val) {
             var grids = ViewController.current.grids;
-            GameData['gid'] = val;
-            GameData['size'] = parseInt(grids[val]['size']);
-            GameData['name'] = grids[val]['name'];
-            GameData['active'] = grids[val]['active'];
+            if(val == null) {
+                $("#enter").addClass("disabled");
+            } else {
+                GameData['gid'] = val;
+                GameData['size'] = parseInt(grids[val]['size']);
+                GameData['name'] = grids[val]['name'];
+                GameData['active'] = grids[val]['active'];
+                $("#enter").removeClass("disabled");
+            }
         });
         this.serverList = new BaseUI.List("#serverList", function(val) {
             if(val == "other") {
