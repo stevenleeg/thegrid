@@ -13,11 +13,25 @@
     <a href="#" id="menu_lobby" fade="waiting"></a>
 </div>
 
+<div id="server_browser" class="home_menu server_browser">
+    <h1>connect to a server</h1>
+    <div class="listcontainer" id="serverList">
+        <div class="listcontainer_loading">Loading servers...</div>
+        <table class="listcontainer_list">
+        </table>
+    </div>
+    <div class="server_browser_other" id="server_browser_other">
+        <h2>server address:</h2>
+        <input type="text" id="server_browser_address" />
+    </div>
+    <input type="button" class="disabled" id="connect" value="connect" />
+</div>
+
 <div id="room_select" class="home_menu room_select fade">
     <h1>enter or start a game</h1>
-    <div class="listcontainer disabled">
-        <div id="loading_list">Loading grids...</div>
-        <table class="gridlist">
+    <div id="gridList" class="listcontainer disabled">
+        <div class="listcontainer_loading">Loading grids...</div>
+        <table class="listcontainer_list">
         </table>
     </div>
 
@@ -48,3 +62,9 @@
 
     <input type="button" class="disabled" name="start" value="start game" />
 </div>
+
+<div class="connection" id="connection">
+    connected to <span id="connection_server">[none]</span>
+</div>
+
+<div class="screen" id="screen">&nbsp;</div>
