@@ -14,6 +14,11 @@ var HomeView = (function() {
             GameData['active'] = grids[val]['active'];
         });
         this.serverList = new BaseUI.List("#serverList", function(val) {
+            if(val == "other") {
+                $("#server_browser_other").show();
+                return;
+            } else $("#server_browser_other").hide();
+
             GameData['server'] = val;
             $("#connect").removeClass("disabled");
         });
@@ -24,8 +29,16 @@ var HomeView = (function() {
         else {
             $("#screen").show();
             $("#server_browser").show();
-            this.serverList.addItem(["thegrid public"], 'localhost:8080');
+            this.serverList.addItem(["local testing"], 'localhost:8080');
+            this.serverList.addItem(["other"], "other");
         }
+
+        $("#server_browser_address").on("keyup", function() {
+            if($(this).val().length > 0) $("#connect").removeClass("disabled");
+            else $("#connect").addClass("disabled");
+
+            GameData['server'] = $(this).val();
+        });
 
         $("#enter").click(function() {
             if(GameData['active'] == 1) ViewController.load(GameView);
