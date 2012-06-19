@@ -183,6 +183,7 @@ var BaseUI = (function() {
         this.loading = this.el.children(".listcontainer_loading");
 
         function clickItem() {
+            $(this).siblings(".selected").removeClass("selected");
             $(this).addClass("selected");
             $(this).data("list").callback($(this).attr("value"));
         }
