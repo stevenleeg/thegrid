@@ -34,6 +34,8 @@ var HomeView = (function() {
         $("#connect").click(function() {
             fetchGrids();
             $("#server_browser, #screen").fadeOut(150);
+            $("#connection_server").text(GameData['server']);
+            $("#connection").show();
         });
 
         $(".side_menu a").on("click", function() {
