@@ -26,6 +26,42 @@ def getGrids(handler, **args):
 
     return {"status": 200, "grids": grids}
 
+def createGrid(handler, **args):
+    name = args['name']
+    size = args['size']
+    mapfile = "default"
+
+    if name is None or size is None:
+        return jsonify(self, status=406, error = "name")
+    try:
+        int(size)
+    except ValueError:
+        return jsonify(self, status=406, error = "size")
+
+
+    if size not in ['16', '32', '64']:
+        return jsonify(self, status=404)
+
+    # Make sure the name doesn't already exist
+    if Grid.fromName(name).exists():
+        return jsonify(self, status=406, error = "Name taken")
+
+    status, g = Grid.create(name, size, "default")
+
+    if status == False:
+        return jsonify(self, status=406, error=g)
+
+    # Send to nogrids
+    UpdateManager.sendNogrids("newGrid", 
+        gid = g['id'],
+        size = size,
+        active = g['active'],
+        name = g['name'], 
+        players = 1,
+    )
+
+    return {"status": 200, "gid": g['id']}
+
 def startGame(handler, **args):
     g = Grid(handler.user['grid'])
 

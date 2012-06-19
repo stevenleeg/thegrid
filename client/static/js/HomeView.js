@@ -67,8 +67,8 @@ var HomeView = (function() {
         var grids = data['grids'];
         $("#loading_list").hide();
         for(grid in grids) {
-            this.gridList.addItem([grids[grid]['name'], grids[grid]['players'] + " players"], grids[grid]['gid']);
-            this.grids[grids[grid]['gid']] = grids[grid];
+            ViewController.current.gridList.addItem([grids[grid]['name'], grids[grid]['players'] + " players"], grids[grid]['gid']);
+            ViewController.current.grids[grids[grid]['gid']] = grids[grid];
         }
 
         if(grids.length == 0) {
@@ -77,18 +77,13 @@ var HomeView = (function() {
     }
 
 	function createGame() {
-		SyncClient.post("grid/create", {
+		AsyncClient.send("createGrid", {
 			"name": $("input[name=room]").val(),
 			"size": $("input[name=size]").val(),
 		}, createGameCb);
 	}
 
 	function createGameCb(data) {
-		if(data['status'] != 200) {
-			alert("Error! " + data['status']);
-			return;
-		}
-
         GameData['gid'] = data['gid'];
         GameData['size'] = parseInt($("input[name=size]").val());
         GameData['name'] = $("input[name=room]").val();

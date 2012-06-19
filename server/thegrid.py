@@ -12,7 +12,6 @@ import model.periodical
 app = tornado.web.Application([
     # The API... Hereeee we go.
     ('/api/grid/exists', api.grid.Exists),
-    ('/api/grid/create', api.grid.Create),
     ('/api/grid/info', api.grid.Info),
 
     ('/api/socket', controller.SocketHandler),

@@ -157,7 +157,7 @@ class Grid:
         return True
 
     def loadEvent(self, event):
-        f = open(config.path + "static/maps/%s_%s.json" % (self['size'], self['map']), "r")
+        f = open(config.path + "maps/%s_%s.json" % (self['size'], self['map']), "r")
         data = json.loads(f.read())
         f.close()
 

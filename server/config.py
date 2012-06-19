@@ -11,4 +11,4 @@ database = {
 }
 
 # Path to installation, with trailing slash
-path = '/vagrant/'
+path = '/Users/john/Code/thegrid/server/'
