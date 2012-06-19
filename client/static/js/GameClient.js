@@ -67,14 +67,9 @@ var GameClient = (function() {
     }
 
     function newGrid(data) {
-        $("#loading_list").hide();
-        $("<tr><td>"+ data['name'] +"</td><td>"+ data['players'] +" players</td></tr>")
-            .appendTo(".gridlist")
-            .data("gid", data['gid'])
-            .data("active", data['active'])
-            .data("name", data['name'])
-            .data("size", data['size']);
-        HomeView.setupList();
+        if(ViewController.current != HomeView) return;
+        ViewController.current.grids[grids[grid]['gid']] = grids[grid];
+        ViewController.current.gridList.addItem([data['name'], data['players'] + " players"], data['gid']);
     }
 
 	return {
