@@ -29,9 +29,11 @@ var HomeView = (function() {
         });
 
         // If we've connected to a server try to load it up
-        if(GameData['server'])
+        if(GameData['server']) {
+            $("#connection_server").text(GameData['server']);
+            $("#connection").show();
             fetchGrids();
-        else {
+        } else {
             $("#screen").show();
             $("#server_browser").show();
             this.serverList.addItem(["local testing"], 'localhost:8080');
