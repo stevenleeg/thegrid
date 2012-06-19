@@ -68,7 +68,7 @@ var GameClient = (function() {
 
     function newGrid(data) {
         if(ViewController.current != HomeView) return;
-        ViewController.current.grids[grids[grid]['gid']] = grids[grid];
+        ViewController.current.grids[data['gid']] = data;
         ViewController.current.gridList.addItem([data['name'], data['players'] + " players"], data['gid']);
     }
 

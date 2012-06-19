@@ -1,16 +1,17 @@
 var HomeView = (function() {
     var tpl = "home.html";
-    this.grids = {};
 
     function onLoad() {
         var xTiles, yTiles, grid;
         
         // Load list views
+        this.grids = {};
         this.gridList = new BaseUI.List("#gridList", function(val) {
+            var grids = ViewController.current.grids;
             GameData['gid'] = val;
-            GameData['size'] = parseInt(this.grids[val]['size']);
-            GameData['name'] = this.grids[val]['name'];
-            GameData['active'] = this.grids[val]['active'];
+            GameData['size'] = parseInt(grids[val]['size']);
+            GameData['name'] = grids[val]['name'];
+            GameData['active'] = grids[val]['active'];
         });
         this.serverList = new BaseUI.List("#serverList", function(val) {
             GameData['server'] = val;
