@@ -1,5 +1,15 @@
 thegrid
 =========
+
+## State of thegrid
+Thegrid is currently being redone from scratch. The new version is coming along incredibly well, and I can say that it runs *significantly* better than what you see here. I've been putting a lot of effort into this new version and I think anyone who is interested in this game will really love what's to come. Unfortuntely this increased effort has made me begin to consider different ways of releasing the game. I'll elaborate more on this as the new version becomes closer to a playable product, so stay tuned. 
+
+Needless to say this project will remain up on Github as a sort of classic version. You're welcome to do whatever you'd like with it, but if anyone would really like to help out I'd encourage you to contact me to help with the new project!
+
+Also, if you're really interested in the game, I'd encourage you to follow @thegridsays on twitter. I'll only use it for occasional updates and it'd mean a lot to me if I could see people are actually interested in my work!
+
+---
+
 Thegrid is a multiplayer RTS game. Your goal is to defeat any other colonies on your grid by placing special tiles and collecting resources.
 
 For updates on the development of the game follow [@thegridsays](http://twitter.com/thegridsays) on Twitter.
