@@ -8,6 +8,8 @@ Needless to say this project will remain up on Github as a sort of classic versi
 
 Also, if you're really interested in the game, I'd encourage you to follow @thegridsays on twitter. I'll only use it for occasional updates and it'd mean a lot to me if I could see people are actually interested in my work!
 
+**(9/12/12) Update:** Turns out college is a lot of work and time is incredibly precious. That said, the rewrite of the grid should be appearing on Github soon for all who are interested. I just need to document some things then it'll be ready to go!
+
 ---
 
 Thegrid is a multiplayer RTS game. Your goal is to defeat any other colonies on your grid by placing special tiles and collecting resources.
